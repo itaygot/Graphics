@@ -19,9 +19,9 @@
 *.dylib
 *.dll
 
-# but do track .lib files from Lib, even though you're ignoring .a files above
-!./**/glew32.dll
-!./**/freeglut.dll
+# but do track glew32.dll and freeglut.dll
+!glew32.dll
+!freeglut.dll
 
 # Fortran module files
 *.mod
