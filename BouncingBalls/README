@@ -3,7 +3,14 @@ Bouncing Balls Project
 Author: Itay Gothelf 
 Contact: itaygot@gmail.com
 
+
+Program Usage:
+	Mouse click on the screen to create new balls.
+
 Running Instructions:
+
+	Linux:
+		Using the Makefile: 'make build'
 
 	Windows: 
 		Open the WindowsSolution.sln solution file - that's in the
@@ -11,5 +18,5 @@ Running Instructions:
 		Switch to the current project.
 		Build and Run.
 		Note: you might need to change the 'platform toolset' settings 
-		to match your windows' one.
+		to your installed version
 		
