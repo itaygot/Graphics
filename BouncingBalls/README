@@ -1,0 +1,15 @@
+Bouncing Balls Project
+
+Author: Itay Gothelf 
+Contact: itaygot@gmail.com
+
+Running Instructions:
+
+	Windows: 
+		Open the WindowsSolution.sln solution file - that's in the
+		WindowsSolution folder - with visual studio.
+		Switch to the current project.
+		Build and Run.
+		Note: you might need to change the 'platform toolset' settings 
+		to match your windows' one.
+		
