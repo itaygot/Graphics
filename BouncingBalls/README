@@ -3,10 +3,13 @@ Bouncing Balls Project
 Author: Itay Gothelf 
 Contact: itaygot@gmail.com
 
+Description:
+	Mouse click on the screen to create new bouncing balls.
+	Based on homework assignment at Hebrew University Computer Graphics course, 2013. 
+	Using OpenGL library.
 
-Program Usage:
-	Mouse click on the screen to create new balls.
-
+	
+	
 Running Instructions:
 
 	Linux:
