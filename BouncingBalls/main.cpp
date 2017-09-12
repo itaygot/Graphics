@@ -2,7 +2,7 @@
 //  ex0.cpp
 //  cg-projects
 //
-//  Created by HUJI Computer Graphics course staff, 2013.
+//  Code template by HUJI Computer Graphics course staff, 2013.
 //
 
 #include <GL/glew.h>
@@ -42,7 +42,6 @@
 
 /*** Animation Times ***/
 #define FRAME_RATE_MILIS 25
-#define ANIMATION_DURATION_SECS 5
 
 
 
@@ -240,18 +239,8 @@ void motion(int x, int y)
 
 void timer(int frame) {
 
-	const static unsigned int 
-		total_frames = ANIMATION_DURATION_SECS * 1000 / FRAME_RATE_MILIS;
-    
-	if (frame >= total_frames) {
-		g_animate = false;
-		frame = 0;
-	}
-
-	if (g_animate) {	/* g_animate can turn on by user input */
-		++frame;
+	if (g_animate)
 		glutPostRedisplay();
-	}
 
 	glutTimerFunc(FRAME_RATE_MILIS, timer, frame);
     
