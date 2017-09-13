@@ -72,7 +72,7 @@ bool g_animate = true;
 /** main function */
 int main(int argc, char* argv[])
 {
-	std::cout << "Starting ex0..." << std::endl;
+	std::cout << "Starting Bouncing Balls 15.14..." << std::endl;
 	
 
 	// Initialize GLUT
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 #endif
     glutInitWindowSize(WINDOW_SIZE, WINDOW_SIZE);
     glutInitWindowPosition(WINDOW_POS_X, WINDOW_POS_Y);
-    glutCreateWindow("CG Ex0");
+    glutCreateWindow("Bouncing Balls");
 	
 	// Initialize GLEW
     glewExperimental = GL_TRUE;
@@ -210,7 +210,7 @@ void mouse(int button, int state, int x, int y)
 	
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-		g_model.addCircle((float)x * 2 / WINDOW_SIZE - 1, 1 - (float)y * 2 / WINDOW_SIZE);
+		g_model.addBall((float)x * 2 / WINDOW_SIZE - 1, 1 - (float)y * 2 / WINDOW_SIZE);
     }
     else if (button == GLUT_RIGHT_BUTTON)
     {

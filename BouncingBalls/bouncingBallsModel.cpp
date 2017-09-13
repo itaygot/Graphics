@@ -72,70 +72,70 @@ static const float* pickAColor()
 
 /***************** Circle Implementation *******************/
 
-Model::Circle::Circle(float x, float y) {
-	_pos.x = x;
-	_pos.y = y;
-}
-
-inline bool Model::Circle::onFloor() {
-	//return _y - _cur_radius <= -1;
-	return _pos.y - _cur_radius <= -1;
-}
-
-inline bool Model::Circle::onRightWall() {
-	//return _x + _cur_radius >= 1;
-	return _pos.x + _cur_radius >= 1;
-}
-
-inline bool Model::Circle::onLeftWall() {
-	//return _x - _cur_radius <= -1;;
-	return _pos.x - _cur_radius <= -1;
-}
-
-inline void  Model::Circle::wallCollison()
-{
-	// side walls_velo. 
-	if((onLeftWall() && _velo.x < 0) || (onRightWall() && _velo.x > 0))
-		_velo.x *= -WALL_COLLISION_DECELERATION;
-
-	// floor
-	if (onFloor() && _velo.y != 0) {
-		if (_velo.y < 0)
-			_velo.y *= -FLOOR_COLLISION_DECELERATION;
-		else if (_velo.y < GRAVITY_PER_FRAME) {
-			_pos.y = _cur_radius - 1;
-			_velo.y = 0;
-		}
-	}
-}
-
-void Model::Circle::ballCollision(Circle& other)
-{
-	glm::vec2 axis;
-	float dist, axis_speed, other_axis_speed, delta_speed;
-
-
-	if ((_pos.x - _cur_radius <= other._pos.x + other._cur_radius) &&
-		(_pos.x + _cur_radius >= other._pos.x - other._cur_radius) &&
-		(_pos.y - _cur_radius <= other._pos.y + other._cur_radius) &&
-		(_pos.y + _cur_radius >= other._pos.y - other._cur_radius))
-		// filtering far away balls
-	{
-		dist = glm::length(other._pos - _pos);
-		if (dist <= _cur_radius + other._cur_radius && dist > 0.f){		// balls touching
-			axis = glm::normalize((other._pos - _pos));
-			axis_speed = glm::dot(_velo, axis);
-			other_axis_speed = glm::dot(other._velo, axis);
-
-			if ((delta_speed = axis_speed - other_axis_speed) > 0) {	// going at eachother
-				_velo -= axis * delta_speed * BALL_COLLISION_DECELERATION;
-				other._velo += axis * delta_speed * BALL_COLLISION_DECELERATION;
-			}
-		}
-	}
-
-	
-}
+//Model::Circle::Circle(float x, float y) {
+//	_pos.x = x;
+//	_pos.y = y;
+//}
+//
+//inline bool Model::Circle::onFloor() {
+//	//return _y - _cur_radius <= -1;
+//	return _pos.y - _cur_radius <= -1;
+//}
+//
+//inline bool Model::Circle::onRightWall() {
+//	//return _x + _cur_radius >= 1;
+//	return _pos.x + _cur_radius >= 1;
+//}
+//
+//inline bool Model::Circle::onLeftWall() {
+//	//return _x - _cur_radius <= -1;;
+//	return _pos.x - _cur_radius <= -1;
+//}
+//
+//inline void  Model::Circle::wallCollison()
+//{
+//	// side walls_velo. 
+//	if((onLeftWall() && _velo.x < 0) || (onRightWall() && _velo.x > 0))
+//		_velo.x *= -WALL_COLLISION_DECELERATION;
+//
+//	// floor
+//	if (onFloor() && _velo.y != 0) {
+//		if (_velo.y < 0)
+//			_velo.y *= -FLOOR_COLLISION_DECELERATION;
+//		else if (_velo.y < GRAVITY_PER_FRAME) {
+//			_pos.y = _cur_radius - 1;
+//			_velo.y = 0;
+//		}
+//	}
+//}
+//
+//void Model::Circle::ballCollision(Circle& other)
+//{
+//	glm::vec2 axis;
+//	float dist, axis_speed, other_axis_speed, delta_speed;
+//
+//
+//	if ((_pos.x - _cur_radius <= other._pos.x + other._cur_radius) &&
+//		(_pos.x + _cur_radius >= other._pos.x - other._cur_radius) &&
+//		(_pos.y - _cur_radius <= other._pos.y + other._cur_radius) &&
+//		(_pos.y + _cur_radius >= other._pos.y - other._cur_radius))
+//		// filtering far away balls
+//	{
+//		dist = glm::length(other._pos - _pos);
+//		if (dist <= _cur_radius + other._cur_radius && dist > 0.f){		// balls touching
+//			axis = glm::normalize((other._pos - _pos));
+//			axis_speed = glm::dot(_velo, axis);
+//			other_axis_speed = glm::dot(other._velo, axis);
+//
+//			if ((delta_speed = axis_speed - other_axis_speed) > 0) {	// going at eachother
+//				_velo -= axis * delta_speed * BALL_COLLISION_DECELERATION;
+//				other._velo += axis * delta_speed * BALL_COLLISION_DECELERATION;
+//			}
+//		}
+//	}
+//
+//	
+//}
 	
 /************************************************************/
 
@@ -232,17 +232,19 @@ void Model::resize(int width, int height)
     _offsetY = 0;
 }
 
-void Model::addCircle(float x, float y)
+//void Model::addCircle(float x, float y)
+void Model::addBall(float x, float y)
 {
-	Circle circle = Circle(x, y);
+	//Circle circle = Circle(x, y);
+	Ball ball = Ball(x, y);
 
 	// Draw a color
-	circle._color = pickAColor();
+	ball._color = pickAColor();
 
 	// Draw a velocity
-	circle._velo.x = rand_float(3) * 0.1f / 2;
+	ball._velo.x = rand_float(3) * 0.1f / 2;
 	//circle._velo.y = rand_float(3) * 0.1f / 2;
-	circle._velo.y = 0.f;
+	ball._velo.y = 0.f;
 	/*circle._dx  = 0;
 	circle._dy = 0;*/
 
@@ -252,23 +254,23 @@ void Model::addCircle(float x, float y)
 	radius = std::min(radius, y + 1);
 	radius = std::min(radius, 1 - y);
 	if (radius <= 0.f) return;
-	circle._def_radius = (circle._cur_radius = radius);
+	ball._def_radius = (ball._cur_radius = radius);
 
 	// add to balls list
-	_circles.push_back(circle);
+	_balls.push_back(ball);
 }
 
 
 inline void Model::handleBallsCollisions()
 {
-	for (auto it1 = _circles.begin(); it1 != _circles.end(); it1++)
-	for (auto it2 = it1 + 1; it2 != _circles.end(); it2++)
+	for (auto it1 = _balls.begin(); it1 != _balls.end(); it1++)
+	for (auto it2 = it1 + 1; it2 != _balls.end(); it2++)
 		it1->ballCollision(*it2);
 }
 
 inline void Model::moveBalls()
 {
-	for (auto it = _circles.begin(); it != _circles.end(); it++)
+	for (auto it = _balls.begin(); it != _balls.end(); it++)
 	{
 		// restore ball's default radius
 		it->_cur_radius = it->_def_radius;
@@ -317,7 +319,7 @@ inline void Model::moveBalls()
 
 inline void Model::handleWallsCollisions()
 {
-	for (auto it = _circles.begin(); it != _circles.end(); it++)
+	for (auto it = _balls.begin(); it != _balls.end(); it++)
 	{
 		it->wallCollison();
 	}
@@ -327,7 +329,7 @@ inline void Model::drawBalls()
 {
 	float lightPoint[2];
 	float distFromLight;
-	for (auto it = _circles.begin(); it != _circles.end(); ++it)
+	for (auto it = _balls.begin(); it != _balls.end(); ++it)
 	{
 		glUniform2f(_centerUV, it->_pos.x, it->_pos.y);
 		glUniform1f(_radiusUV, it->_cur_radius);

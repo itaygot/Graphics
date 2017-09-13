@@ -9,14 +9,15 @@
 #define __ex0__Model__
 
 #include <GL/glew.h>		// typedef GLuint;
-#include <vector>			// storing the circles
-#include <glm/vec2.hpp>		// glm::vec2;
+#include "Ball.h"			// Ball;
+#include <vector>			// holding the balls
+//#include <glm/vec2.hpp>		// glm::vec2 (pos and velo)
 
 
 class Model {
 
 public:
-	struct Circle
+	/*struct Circle
 	{
 		glm::vec2 _pos, _velo;
 		const float* _color;
@@ -34,7 +35,7 @@ public:
 
 		void ballCollision(Circle& other);
 		
-	};
+	};*/
 
 
 	Model();
@@ -47,7 +48,8 @@ public:
 
 	void resize(int width, int height);
 
-	void addCircle(float x = 0, float y = 0);
+	//void addCircle(float x = 0, float y = 0);
+	void addBall(float x = 0, float y = 0);
 
 
 private:
@@ -62,7 +64,8 @@ private:
 	float _width, _height, _offsetX, _offsetY;
 
 	// Vector storing the balls
-	std::vector<Circle> _circles;
+	/*std::vector<Circle> _circles;*/
+	std::vector<Ball> _balls;
 
 	// Light source location
 	GLfloat _lightSource[2];
