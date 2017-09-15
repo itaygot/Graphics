@@ -9,21 +9,21 @@ Ball::Ball(float x, float y) {
 	_bounciness = 1.f;
 }
 
-inline bool Ball::onFloor() {
+bool Ball::onFloor() {
 	return _pos.y - _cur_radius <= -1;
 }
 
-inline bool Ball::onRightWall() {
+bool Ball::onRightWall() {
 	//return _x + _cur_radius >= 1;
 	return _pos.x + _cur_radius >= 1;
 }
 
-inline bool Ball::onLeftWall() {
+bool Ball::onLeftWall() {
 	//return _x - _cur_radius <= -1;;
 	return _pos.x - _cur_radius <= -1;
 }
 
-inline void  Ball::wallCollison()
+void  Ball::wallCollison()
 {
 	// side walls_velo. 
 	if ((onLeftWall() && _velo.x < 0) || (onRightWall() && _velo.x > 0))
@@ -40,6 +40,9 @@ inline void  Ball::wallCollison()
 			_velo.y = 0;
 		}
 	}
+	/*if (onFloor() && _velo.y < 0) {
+		_velo.y *= -_bounciness;
+	}*/
 }
 
 void Ball::ballCollision(Ball& other)

@@ -72,7 +72,7 @@ bool g_animate = true;
 /** main function */
 int main(int argc, char* argv[])
 {
-	std::cout << "Starting Bouncing Balls 15.14..." << std::endl;
+	std::cout << "Starting Bouncing Balls 17:18 9/15..." << std::endl;
 	
 
 	// Initialize GLUT

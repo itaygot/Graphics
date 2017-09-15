@@ -239,6 +239,8 @@ void Model::addBall(float x, float y)
 	//Circle circle = Circle(x, y);
 	Ball ball = Ball(x, y);
 
+	ball._bounciness = 0.85f;
+
 	// Draw a color
 	ball._color = pickAColor();
 
@@ -282,6 +284,23 @@ inline void Model::moveBalls()
 		// apply gravity
 		if(!it->onFloor())
 			it->_velo.y -= GRAVITY_PER_FRAME;	
+
+		//if (it->onFloor()) {					// floor touch
+		//	if(it->_velo.y >= 0.f)					// going up
+		//		if (it->_velo.y < GRAVITY_PER_FRAME) {	// too slow, rest the ball
+		//			it->_pos.y = it->_cur_radius - 1;
+		//			it->_velo.y = 0.f;
+		//		}
+		//		else
+		//			it->_velo.y -= GRAVITY_PER_FRAME;
+		//}
+
+		//else
+		//	it->_velo.y -= GRAVITY_PER_FRAME;
+
+
+
+
 	}
 
 	//bool floor;
