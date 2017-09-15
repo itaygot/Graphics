@@ -282,21 +282,21 @@ inline void Model::moveBalls()
 		it->_pos.y += it->_velo.y;
 
 		// apply gravity
-		if(!it->onFloor())
-			it->_velo.y -= GRAVITY_PER_FRAME;	
+		/*if(!it->onFloor())
+			it->_velo.y -= GRAVITY_PER_FRAME;	*/
+		make resting efficiency;
+		if (it->onFloor()) {					// floor touch
+			if(it->_velo.y >= 0.f)					// going up
+				if (it->_velo.y < GRAVITY_PER_FRAME) {	// too slow, rest the ball
+					it->_pos.y = it->_cur_radius - 1;
+					it->_velo.y = 0.f;
+				}
+				else
+					it->_velo.y -= GRAVITY_PER_FRAME;
+		}
 
-		//if (it->onFloor()) {					// floor touch
-		//	if(it->_velo.y >= 0.f)					// going up
-		//		if (it->_velo.y < GRAVITY_PER_FRAME) {	// too slow, rest the ball
-		//			it->_pos.y = it->_cur_radius - 1;
-		//			it->_velo.y = 0.f;
-		//		}
-		//		else
-		//			it->_velo.y -= GRAVITY_PER_FRAME;
-		//}
-
-		//else
-		//	it->_velo.y -= GRAVITY_PER_FRAME;
+		else
+			it->_velo.y -= GRAVITY_PER_FRAME;
 
 
 

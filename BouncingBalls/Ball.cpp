@@ -31,18 +31,19 @@ void  Ball::wallCollison()
 		_velo.x *= -_bounciness;
 	
 	// floor
-	if (onFloor() && _velo.y != 0) {
-		if (_velo.y < 0)
-			//_velo.y *= -FLOOR_COLLISION_DECELERATION;
-			_velo.y *= -_bounciness;
-		else if (_velo.y < GRAVITY_PER_FRAME) {
-			_pos.y = _cur_radius - 1;
-			_velo.y = 0;
-		}
-	}
-	/*if (onFloor() && _velo.y < 0) {
+	//if (onFloor() && _velo.y != 0) {
+	//	if (_velo.y < 0)
+	//		//_velo.y *= -FLOOR_COLLISION_DECELERATION;
+	//		_velo.y *= -_bounciness;
+	//	else if (_velo.y < GRAVITY_PER_FRAME) {
+	//		_pos.y = _cur_radius - 1;
+	//		_velo.y = 0;
+	//	}
+	//}
+
+	if (onFloor() && _velo.y < 0) {
 		_velo.y *= -_bounciness;
-	}*/
+	}
 }
 
 void Ball::ballCollision(Ball& other)
