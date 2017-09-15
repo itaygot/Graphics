@@ -67,6 +67,8 @@ static const float* pickAColor()
 
 }
 
+
+
 /***********************************************************/
 
 
@@ -278,28 +280,35 @@ inline void Model::moveBalls()
 		// restore ball's default radius
 		it->_cur_radius = it->_def_radius;
 
+		// move
 		it->_pos.x += it->_velo.x;
 		it->_pos.y += it->_velo.y;
 
-		// apply gravity
+		// Apply Gravity
 		/*if(!it->onFloor())
 			it->_velo.y -= GRAVITY_PER_FRAME;	*/
-		make resting efficiency;
-		if (it->onFloor()) {					// floor touch
-			if(it->_velo.y >= 0.f)					// going up
-				if (it->_velo.y < GRAVITY_PER_FRAME) {	// too slow, rest the ball
+		
+		if (it->insideFloor()) { // "touching" floor, several cases:
+
+			// if tangent to floor and no vertical movement: keep it still, don't apply gravity
+			if (it->_velo.y == 0.f && it->_pos.y == -1 + it->_cur_radius);
+
+
+			else if(it->_velo.y >= 0.f)	// going up from within floor, couple case:
+
+				if (it->_velo.y < GRAVITY_PER_FRAME) {	// too slow up, make the ball "rest" on floor (vertically)
 					it->_pos.y = it->_cur_radius - 1;
 					it->_velo.y = 0.f;
 				}
-				else
+				else	// not too slow up, apply gravity
 					it->_velo.y -= GRAVITY_PER_FRAME;
+			
+			else;	// touching floor and going down: don't apply gravity
 		}
 
-		else
+		else 	// not touching floor - apply gravity
 			it->_velo.y -= GRAVITY_PER_FRAME;
-
-
-
+			
 
 	}
 

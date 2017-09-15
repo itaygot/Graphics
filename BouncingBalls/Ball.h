@@ -12,7 +12,7 @@ struct Ball
 
 	Ball(float x = 0.f, float y = 0.f);
 
-	bool onFloor();
+	bool insideFloor();
 
 	bool onLeftWall();
 

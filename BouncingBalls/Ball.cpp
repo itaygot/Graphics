@@ -9,7 +9,7 @@ Ball::Ball(float x, float y) {
 	_bounciness = 1.f;
 }
 
-bool Ball::onFloor() {
+bool Ball::insideFloor() {
 	return _pos.y - _cur_radius <= -1;
 }
 
@@ -41,7 +41,7 @@ void  Ball::wallCollison()
 	//	}
 	//}
 
-	if (onFloor() && _velo.y < 0) {
+	if (insideFloor() && _velo.y < 0) {
 		_velo.y *= -_bounciness;
 	}
 }
