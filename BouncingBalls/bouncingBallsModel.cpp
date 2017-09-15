@@ -281,14 +281,8 @@ inline void Model::moveBalls()
 
 		// apply gravity
 		if(!it->onFloor())
-			it->_velo.y -= GRAVITY_PER_FRAME;
-
-		
+			it->_velo.y -= GRAVITY_PER_FRAME;	
 	}
-
-
-
-
 
 	//bool floor;
 	//for (auto it = _circles.begin(); it != _circles.end(); it++)

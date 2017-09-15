@@ -25,9 +25,4 @@ struct Ball
 };
 
 
-
-
-
-
-
 #endif	// BALL_H

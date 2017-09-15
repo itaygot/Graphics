@@ -10,7 +10,6 @@ Ball::Ball(float x, float y) {
 }
 
 inline bool Ball::onFloor() {
-	//return _y - _cur_radius <= -1;
 	return _pos.y - _cur_radius <= -1;
 }
 
