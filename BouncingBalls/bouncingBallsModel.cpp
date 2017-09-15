@@ -33,9 +33,10 @@ const int DELTA = 32;
 const float SPEED = 0.007f;
 
 static float GRAVITY_PER_FRAME = 1.0f / (16 * 32);
-static float WALL_COLLISION_DECELERATION = 0.9f;
-static float FLOOR_COLLISION_DECELERATION = 0.85f;
-static float BALL_COLLISION_DECELERATION = 0.8f;
+static float BOUNCINESS = 0.85f;
+//static float WALL_COLLISION_DECELERATION = 0.9f;
+//static float FLOOR_COLLISION_DECELERATION = 0.85f;
+//static float BALL_COLLISION_DECELERATION = 0.8f;
 
 /************************************************************/
 //															//
