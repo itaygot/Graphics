@@ -129,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BouncingBalls\Ball.cpp" />
-    <ClCompile Include="..\BouncingBalls\bouncingBallsModel.cpp" />
+    <ClCompile Include="..\BouncingBalls\bouncingBalls.cpp" />
     <ClCompile Include="..\BouncingBalls\main.cpp" />
     <ClCompile Include="..\BouncingBalls\ShaderIO.cpp" />
   </ItemGroup>

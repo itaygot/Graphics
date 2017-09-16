@@ -35,10 +35,10 @@
     <ClCompile Include="..\BouncingBalls\ShaderIO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BouncingBalls\bouncingBallsModel.cpp">
+    <ClCompile Include="..\BouncingBalls\Ball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BouncingBalls\Ball.cpp">
+    <ClCompile Include="..\BouncingBalls\bouncingBalls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
