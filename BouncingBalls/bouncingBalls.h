@@ -1,25 +1,18 @@
-//
-//  Model.h
-//  cg-projects
-//
-//  Created by HUJI Computer Graphics course staff, 2013.
-//
-
-#ifndef __ex0__Model__
-#define __ex0__Model__
+#ifndef BOUNCING_BALLS_H
+#define BOUNCING_BALLS_H
 
 #include <GL/glew.h>		// typedef GLuint;
 #include "Ball.h"			// Ball;
 #include <vector>			// holding the balls
 
 
-class Model {
+class BouncingBalls {
 
 public:
 
-	Model();
+	BouncingBalls();
 
-	virtual ~Model();
+	virtual ~BouncingBalls();
 
 	void init();
 
@@ -59,4 +52,4 @@ private:
 
 };
 
-#endif /* __ex0__Model__ */
+#endif //BOUNCING_BALLS_H

@@ -14,7 +14,7 @@
 
 
 #include <iostream>
-#include "Model.h"
+#include "bouncingBalls.h"
 #include "ShaderIO.h"
 
 /** Internal Definitions */
@@ -66,7 +66,7 @@ void timer(int value) ;
 
 
 // Globals
-Model g_model;
+BouncingBalls g_model;
 bool g_animate = true;
 
 /** main function */

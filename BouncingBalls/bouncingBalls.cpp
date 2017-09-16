@@ -1,11 +1,11 @@
 //
-//  Model.cpp
+//  BouncingBalls.cpp
 //  cg-projects
 //
 //  Created by HUJI Computer Graphics course staff, 2013.
 //
 
-#include "Model.h"
+#include "bouncingBalls.h"
 #include "ShaderIO.h"
 
 
@@ -67,17 +67,17 @@ static const float* pickAColor()
 //				BOUNCING BALLS IMPLEMENTATION				//
 /************************************************************/
 
-/*** Model Implementations ***/
+/*** BouncingBalls Implementations ***/
 
-Model::Model(){}
+BouncingBalls::BouncingBalls(){}
 
-Model::~Model()
+BouncingBalls::~BouncingBalls()
 {
 	if (_vbo != 0)
 		glDeleteBuffers(1, &_vbo);
 }
 
-void Model::init()
+void BouncingBalls::init()
 {
 	// Create the program
 	GLuint program = programManager::sharedInstance().createProgram
@@ -130,7 +130,7 @@ void Model::init()
 
 }
 
-void Model::draw()
+void BouncingBalls::draw()
 {
 	//GLenum polygonMode = GL_POINT;   // Also try using GL_FILL and GL_POINT
 	GLenum polygonMode = GL_FILL;   // Also try using GL_FILL and GL_POINT
@@ -150,7 +150,7 @@ void Model::draw()
 	// Cleanup, not strictly necessary
 }
 
-void Model::resize(int width, int height)
+void BouncingBalls::resize(int width, int height)
 {
     _width	= (float)width;
     _height = (float)height;
@@ -158,7 +158,7 @@ void Model::resize(int width, int height)
     _offsetY = 0;
 }
 
-void Model::addBall(float x, float y)
+void BouncingBalls::addBall(float x, float y)
 {
 	
 	Ball ball = Ball(x, y);
@@ -188,14 +188,14 @@ void Model::addBall(float x, float y)
 }
 
 
-inline void Model::handleBallsCollisions()
+inline void BouncingBalls::handleBallsCollisions()
 {
 	for (auto it1 = _balls.begin(); it1 != _balls.end(); it1++)
 	for (auto it2 = it1 + 1; it2 != _balls.end(); it2++)
 		it1->ballCollision(*it2);
 }
 
-inline void Model::moveBalls()
+inline void BouncingBalls::moveBalls()
 {
 	for (auto it = _balls.begin(); it != _balls.end(); it++){
 
@@ -234,13 +234,13 @@ inline void Model::moveBalls()
 
 }
 
-inline void Model::handleWallsCollisions()
+inline void BouncingBalls::handleWallsCollisions()
 {
 	for (auto it = _balls.begin(); it != _balls.end(); it++)
 		it->wallCollison();
 }
 
-inline void Model::drawBalls()
+inline void BouncingBalls::drawBalls()
 {
 	float lightPoint[2];
 	float distFromLight;

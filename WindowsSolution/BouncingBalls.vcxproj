@@ -124,7 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\BouncingBalls\Ball.h" />
-    <ClInclude Include="..\BouncingBalls\Model.h" />
+    <ClInclude Include="..\BouncingBalls\bouncingBalls.h" />
     <ClInclude Include="..\BouncingBalls\ShaderIO.h" />
   </ItemGroup>
   <ItemGroup>

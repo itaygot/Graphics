@@ -21,10 +21,10 @@
     <ClInclude Include="..\BouncingBalls\ShaderIO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BouncingBalls\Model.h">
+    <ClInclude Include="..\BouncingBalls\Ball.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BouncingBalls\Ball.h">
+    <ClInclude Include="..\BouncingBalls\bouncingBalls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
