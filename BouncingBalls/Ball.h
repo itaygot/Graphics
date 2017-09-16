@@ -7,7 +7,8 @@ struct Ball
 {
 	glm::vec2 _pos, _velo;
 	const float* _color;
-	float _def_radius, _cur_radius;
+	//float _def_radius, _cur_radius;
+	float _radius;
 	float _bounciness;
 
 	Ball(float x = 0.f, float y = 0.f);

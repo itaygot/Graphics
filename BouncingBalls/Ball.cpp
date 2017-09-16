@@ -1,7 +1,7 @@
 #include "Ball.h"
 #include "glm/geometric.hpp"	// normalize(); length(); dot();
 
-#define GRAVITY_PER_FRAME  (1.0f / (16 * 32))		// delete later !!!
+
 
 Ball::Ball(float x, float y) {
 	_pos.x = x;
@@ -10,17 +10,17 @@ Ball::Ball(float x, float y) {
 }
 
 bool Ball::insideFloor() {
-	return _pos.y - _cur_radius <= -1;
+	return _pos.y - _radius <= -1;
 }
 
 bool Ball::onRightWall() {
-	//return _x + _cur_radius >= 1;
-	return _pos.x + _cur_radius >= 1;
+	//return _x + _radius >= 1;
+	return _pos.x + _radius >= 1;
 }
 
 bool Ball::onLeftWall() {
-	//return _x - _cur_radius <= -1;;
-	return _pos.x - _cur_radius <= -1;
+	//return _x - _radius <= -1;;
+	return _pos.x - _radius <= -1;
 }
 
 void  Ball::wallCollison()
@@ -36,7 +36,7 @@ void  Ball::wallCollison()
 	//		//_velo.y *= -FLOOR_COLLISION_DECELERATION;
 	//		_velo.y *= -_bounciness;
 	//	else if (_velo.y < GRAVITY_PER_FRAME) {
-	//		_pos.y = _cur_radius - 1;
+	//		_pos.y = _radius - 1;
 	//		_velo.y = 0;
 	//	}
 	//}
@@ -53,13 +53,13 @@ void Ball::ballCollision(Ball& other)
 	float dist, axis_speed;
 
 	// first, filter far away balls
-	if ((_pos.x - _cur_radius <= other._pos.x + other._cur_radius) &&
-		(_pos.x + _cur_radius >= other._pos.x - other._cur_radius) &&
-		(_pos.y - _cur_radius <= other._pos.y + other._cur_radius) &&
-		(_pos.y + _cur_radius >= other._pos.y - other._cur_radius))
+	if ((_pos.x - _radius <= other._pos.x + other._radius) &&
+		(_pos.x + _radius >= other._pos.x - other._radius) &&
+		(_pos.y - _radius <= other._pos.y + other._radius) &&
+		(_pos.y + _radius >= other._pos.y - other._radius))
 	{
 		dist = glm::length(other._pos - _pos);
-		if (dist <= _cur_radius + other._cur_radius && dist > 0.f){		// balls touching
+		if (dist <= _radius + other._radius && dist > 0.f){		// balls touching
 			axis = glm::normalize((other._pos - _pos));
 			axis_speed = glm::dot(_velo, axis) - glm::dot(other._velo, axis);
 			//other_axis_speed = glm::dot(other._velo, axis);
