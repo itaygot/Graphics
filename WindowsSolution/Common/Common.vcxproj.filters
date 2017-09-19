@@ -13,41 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{2289b5b0-5ff6-4261-8b64-6a0f8fba035a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\BouncingBalls\ShaderIO.h">
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\ogldev_callbacks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BouncingBalls\Ball.h">
+    <ClInclude Include="..\..\Include\ogldev_glut_backend.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BouncingBalls\bouncingBalls.h">
+    <ClInclude Include="..\..\Include\ogldev_keys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ogldev_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ogldev_util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\BouncingBalls\main.cpp">
+    <ClCompile Include="..\..\Common\ogldev_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BouncingBalls\ShaderIO.cpp">
+    <ClCompile Include="..\..\Common\glut_backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BouncingBalls\Ball.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BouncingBalls\bouncingBalls.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\BouncingBalls\SimpleShader.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\BouncingBalls\SimpleShader.vert">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

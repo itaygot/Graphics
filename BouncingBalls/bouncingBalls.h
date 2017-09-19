@@ -4,9 +4,10 @@
 #include <GL/glew.h>		// typedef GLuint;
 #include "Ball.h"			// Ball;
 #include <vector>			// holding the balls
+#include <ogldev_callbacks.h>
 
 
-class BouncingBalls {
+class BouncingBalls : public ICallbacks {
 
 public:
 
@@ -23,23 +24,29 @@ public:
 	
 	void addBall(float x = 0, float y = 0);
 
+	// ICallbacks
+	virtual void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState);
 
 private:
+
+	// Vector storing the balls
+	std::vector<Ball> _balls;
+
+	// Window sizes:
+	float _width, _height, _offsetX, _offsetY;
+
+	// Light source uniform locations
+	GLfloat _lightSource[2];
+
 	GLuint _vbo;
 	GLint _posAttrib;
 	GLuint _fillColorUV;
 	GLuint _centerUV;		// Uniform handle for center variable
 	GLuint _radiusUV;		// Uniform handle for radius of the ball
 	GLuint _lightUV;		// Uniform handle for light on the ball; 
+	bool _animate;
 
-	// View port frame:
-	float _width, _height, _offsetX, _offsetY;
-
-	// Vector storing the balls
-	std::vector<Ball> _balls;
-
-	// Light source location
-	GLfloat _lightSource[2];
+	
 
 
 	inline void handleBallsCollisions();
@@ -49,6 +56,7 @@ private:
 	inline void handleWallsCollisions();
 
 	inline void drawBalls();
+
 
 };
 

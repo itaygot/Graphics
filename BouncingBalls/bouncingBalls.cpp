@@ -2,10 +2,11 @@
 //  BouncingBalls.cpp
 //  cg-projects
 //
-//  Created by HUJI Computer Graphics course staff, 2013.
+//  Based on exercise given at HUJI Computer Graphics course, 2013.
 //
 
 #include "bouncingBalls.h"
+#include "ogldev_glut_backend.h"		// calling glut functions 
 #include "ShaderIO.h"
 
 
@@ -79,7 +80,7 @@ BouncingBalls::~BouncingBalls()
 
 void BouncingBalls::init()
 {
-	// Create the program
+	// Create the shader program
 	GLuint program = programManager::sharedInstance().createProgram
 					("default",
 					VERTEX_SHADER_PATH,
@@ -92,6 +93,8 @@ void BouncingBalls::init()
 	_radiusUV = glGetUniformLocation(program, "radius");
 	_lightUV = glGetUniformLocation(program, "light");
 
+	// Regular variables
+	_animate = true;
 
 	/*** Create the general circle's vertices ***/
 		
@@ -187,6 +190,20 @@ void BouncingBalls::addBall(float x, float y)
 	_balls.push_back(ball);
 }
 
+void BouncingBalls::KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
+
+	switch (OgldevKey) {
+
+	case OGLDEV_KEY_q:
+		GLUTBackendLeaveMainLoop();
+		break;
+
+	case OGLDEV_KEY_k:
+		_animate = !_animate;
+		break;
+	
+	}
+}
 
 inline void BouncingBalls::handleBallsCollisions()
 {
