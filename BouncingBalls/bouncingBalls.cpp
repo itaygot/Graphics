@@ -86,7 +86,7 @@ BouncingBalls::~BouncingBalls()
 bool BouncingBalls::Init()
 {
 
-	// Use glut Timer over Idle
+	// Use glut Timer func instead of the Idle func
 	GLUTBackendUseTimer(true, FRAME_RATE_MILIS);
 
 	// Create the shader program
@@ -112,8 +112,9 @@ bool BouncingBalls::Init()
 	int vertex = 0;
 	float angle = 0;
 	for (vertex = 0; vertex < CIRCLE_EDGES_AMOUNT; vertex++, angle += 2.f * PI / CIRCLE_EDGES_AMOUNT){
-		vertices[SCALARS_PER_VERTEX * vertex] = std::cos(angle);		// x coordinate
-		vertices[SCALARS_PER_VERTEX * vertex + 1] = std::sin(angle);	// y coordinate	
+		vertices[SCALARS_PER_VERTEX * vertex] = std::cos(-angle);		// x coordinate
+		vertices[SCALARS_PER_VERTEX * vertex + 1] = std::sin(-angle);	// y coordinate
+		/* Note: The negative angle is so we have clock-wise vertices */
 	}
 
 	
@@ -310,15 +311,15 @@ void BouncingBalls::RenderSceneCB() {
 
 }
 
-void BouncingBalls::IdleCB() {
-	if (_animate)
-		RenderSceneCB();
-}
+//void BouncingBalls::IdleCB() {
+//	if (_animate)
+//		RenderSceneCB();
+//}
 
 
 void BouncingBalls::TimerCB(int value) {
 	if (_animate)
 		glutPostRedisplay();
 
-	//glutTimerFunc(FRAME_RATE_MILIS, TimerCB, value);
+	
 }
