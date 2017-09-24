@@ -1,10 +1,14 @@
 #ifndef BOUNCING_BALLS_H
 #define BOUNCING_BALLS_H
 
-#include <GL/glew.h>		// typedef GLuint;
-#include "Ball.h"			// Ball;
-#include <vector>			// holding the balls
-#include <ogldev_callbacks.h>
+
+#include "Ball.h"				// struct Ball;
+#include <ogldev_callbacks.h>	// ICallbacks;
+
+
+#include <GL/glew.h>			// typedef GLuint;
+#include <glm/vec2.hpp>			// glm::vec2;
+#include <vector>				// holding the balls
 
 
 class BouncingBalls : public ICallbacks {
@@ -19,18 +23,14 @@ public:
 
 	void Run();
 
-	//void draw();
+	
 
-	void resize(int width, int height);
-
-	void addBall(float x = 0, float y = 0);
-
-	// ICallbacks
+	// ICallbacks overriding
 	virtual void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState);
 	virtual void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y);
 	virtual void RenderSceneCB();
 	virtual void TimerCB(int value);
-	//virtual void IdleCB();
+	
 
 
 private:
@@ -41,8 +41,7 @@ private:
 	// Window sizes:
 	float _width, _height, _offsetX, _offsetY;
 
-	// Light source uniform locations
-	GLfloat _lightSource[2];
+	glm::vec2 _lightPos;
 
 	GLuint _vbo;
 	GLint _posAttrib;
@@ -53,15 +52,15 @@ private:
 	bool _animate;
 
 	
+	void addBall(float x = 0, float y = 0);
 
+	void handleBallsCollisions();
 
-	inline void handleBallsCollisions();
+	void moveBalls();
 
-	inline void moveBalls();
+	void handleWallsCollisions();
 
-	inline void handleWallsCollisions();
-
-	inline void drawBalls();
+	void drawBalls();
 
 
 };
