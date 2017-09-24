@@ -311,10 +311,6 @@ void BouncingBalls::RenderSceneCB() {
 
 }
 
-//void BouncingBalls::IdleCB() {
-//	if (_animate)
-//		RenderSceneCB();
-//}
 
 
 void BouncingBalls::TimerCB(int value) {
