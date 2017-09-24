@@ -15,17 +15,23 @@ public:
 
 	virtual ~BouncingBalls();
 
-	void init();
+	bool Init();
 
-	void draw();
+	void Run();
+
+	//void draw();
 
 	void resize(int width, int height);
 
-	
 	void addBall(float x = 0, float y = 0);
 
 	// ICallbacks
 	virtual void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState);
+	virtual void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y);
+	virtual void RenderSceneCB();
+	//virtual void TimerCB(int value);
+	virtual void IdleCB();
+
 
 private:
 

@@ -146,7 +146,7 @@ static void RenderSceneCB()
 
 static void IdleCB()
 {
-    s_pCallbacks->RenderSceneCB();
+    s_pCallbacks->IdleCB();
 }
 
 
@@ -209,7 +209,7 @@ bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, bool isFul
         glutInitWindowSize(Width, Height);
         glutCreateWindow(pTitle);
     }
-
+	
     // Must be done after glut is initialized!
     GLenum res = glewInit();
     if (res != GLEW_OK) {

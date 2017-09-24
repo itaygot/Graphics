@@ -6,20 +6,18 @@
 //
 
 #include <GL/glew.h>
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
 #include <GL/freeglut.h>
-#endif
 
 
-#include <iostream>
 #include "bouncingBalls.h"
-#include "ShaderIO.h"
+#include <ogldev_glut_backend.h>
+#include <iostream>
 
 /** Internal Definitions */
 
 #define	WINDOW_SIZE         (600) // initial size of the window               //
+#define WINDOW_WIDTH		600
+#define WINDOW_HEIGHT		600
 #define	WINDOW_POS_X        (100) // initial X position of the window         //
 #define	WINDOW_POS_Y        (100) // initial Y position of the window         //
 
@@ -48,17 +46,11 @@
 /** display callback */
 void display(void);
 
-/** window reshape callback  */
-void windowResize(int width, int height);
-
 /** keyboard callback  */
 void keyboard(unsigned char key, int x, int y);
 
 /** mouse click callback */
 void mouse(int button, int state, int x, int y) ;
-
-/** mouse dragging callback  */
-void motion(int x, int y) ;
 
 /** timer callback */
 void timer(int value) ;
@@ -70,81 +62,67 @@ BouncingBalls g_model;
 bool g_animate = true;
 
 /** main function */
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
-	std::cout << "Starting Bouncing Balls 23:38 9/16..." << std::endl;
+	std::cout << "Starting Bouncing Balls 02:00 9/20..." << std::endl;
+	
+	// Initialize GLUT 
+	GLUTBackendInit(argc, argv, false, false);
+
+	// Create window & init glew
+	if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "Bouncing Balls"))
+		return 1;
 	
 
+
 	// Initialize GLUT
-    glutInit(&argc, argv) ;
-#ifdef __APPLE__
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_3_2_CORE_PROFILE) ;
-#else
+    /*glutInit(&argc, argv) ;
 	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-#endif
     glutInitWindowSize(WINDOW_SIZE, WINDOW_SIZE);
     glutInitWindowPosition(WINDOW_POS_X, WINDOW_POS_Y);
-    glutCreateWindow("Bouncing Balls");
+    glutCreateWindow("Bouncing Balls");*/
 	
 	// Initialize GLEW
-    glewExperimental = GL_TRUE;
+    /*glewExperimental = GL_TRUE;
     int glewStatus = glewInit();
     if (glewStatus != GLEW_OK) {
         std::cerr << "Unable to initialize GLEW ... exiting" << std::endl;
         exit(1);
-    }
+    }*/
 	
-#ifdef __APPLE__
-    GLint sync = 1;
-    CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &sync);
-#endif
-		
+
 	// Set callback functions:
-    glutDisplayFunc(display) ;
-    glutReshapeFunc(windowResize) ;
+    /*glutDisplayFunc(display) ;
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouse);
-    glutMotionFunc(motion);
-    glutTimerFunc(100, timer, 0);   // uint millis int value
+    glutTimerFunc(100, timer, 0);*/   // uint millis int value
 	
 	// Init the Model object
-	g_model.init();
+	BouncingBalls app;
+	if (!app.Init())
+		return 1;
+	/*g_model.Init();*/
 
 	// Set clear color to black:
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	/*glClearColor(0.0, 0.0, 0.0, 0.0);*/
 		
 	// Start events/drawing loop
-	glutMainLoop();
+	/*glutMainLoop();*/
+	app.Run();
+
+
 	
 	return 0;
 }
 
 void display(void)
 {
-	// Clear the screen buffer
-    glClear(GL_COLOR_BUFFER_BIT);
-	
 	// Let the model to draw itself...
-	g_model.draw();
-	
-	// Swap those buffers so someone will actually see the results... //
-    glutSwapBuffers();
+	g_model.RenderSceneCB();	
 }
 
-// This method is called when the window is resized
-void windowResize(int w, int h)
-{
-    // Update model to fit the new resolution
-	g_model.resize(w, h);
-    
-    // set the new viewport //
-    glViewport(0, 0, w, h);
-    
-    // Refresh the display //
-    glutPostRedisplay();
-}
 
 /********************************************************************
  * Function  :	keyboard
@@ -193,6 +171,7 @@ void keyboard(unsigned char key, int x, int y)
     return;
 }
 
+
 /********************************************************************
  * Function  :   mouse
  * Arguments :   button  : the button that was engaged in some action
@@ -217,22 +196,6 @@ void mouse(int button, int state, int x, int y)
         
     }
     
-    return;
-}
-
-
-/********************************************************************
- * Function  :   motion
- * Arguments :   x   : x value of the current mouse location
- *               y   : y value of the current mouse location
- * Returns   :   n/a
- * Throws    :   n/a
- *
- * Purpose   :   This function handles mouse dragging events.
- *
- \******************************************************************/
-void motion(int x, int y)
-{
     return;
 }
 

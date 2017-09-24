@@ -5,9 +5,12 @@
 //  Based on exercise given at HUJI Computer Graphics course, 2013.
 //
 
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+
 #include "bouncingBalls.h"
-#include "ogldev_glut_backend.h"		// calling glut functions 
-#include "ShaderIO.h"
+#include "ogldev_glut_backend.h"		// glut calls
+#include "ShaderIO.h"					// handling shaders
 
 
 #include <cmath>				// std::sin(); std::cos(); std::rand();
@@ -26,6 +29,8 @@
 #define CIRCLE_EDGES_AMOUNT 30
 #define SCALARS_PER_VERTEX 2
 #define DFLT_RADIUS 0.1f
+
+#define FRAME_RATE_MILIS 25
 
 #define LIGHT_SOURCE_X 0.0
 #define LIGHT_SOURCE_Y -1.0
@@ -78,7 +83,7 @@ BouncingBalls::~BouncingBalls()
 		glDeleteBuffers(1, &_vbo);
 }
 
-void BouncingBalls::init()
+bool BouncingBalls::Init()
 {
 	// Create the shader program
 	GLuint program = programManager::sharedInstance().createProgram
@@ -131,27 +136,14 @@ void BouncingBalls::init()
 	_lightSource[0] = LIGHT_SOURCE_X;
 	_lightSource[1] = LIGHT_SOURCE_Y;
 
+
+	return true;
 }
 
-void BouncingBalls::draw()
-{
-	//GLenum polygonMode = GL_POINT;   // Also try using GL_FILL and GL_POINT
-	GLenum polygonMode = GL_FILL;   // Also try using GL_FILL and GL_POINT
-	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
-
-	
-	// Bind buffer
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-
-	// Execute balls actions for this round
-	moveBalls();
-	handleWallsCollisions();
-	handleBallsCollisions();
-	drawBalls();
-	
-	
-	// Cleanup, not strictly necessary
+void BouncingBalls::Run() {
+	GLUTBackendRun(this);
 }
+
 
 void BouncingBalls::resize(int width, int height)
 {
@@ -188,21 +180,6 @@ void BouncingBalls::addBall(float x, float y)
 
 	// add to balls list
 	_balls.push_back(ball);
-}
-
-void BouncingBalls::KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
-
-	switch (OgldevKey) {
-
-	case OGLDEV_KEY_q:
-		GLUTBackendLeaveMainLoop();
-		break;
-
-	case OGLDEV_KEY_k:
-		_animate = !_animate;
-		break;
-	
-	}
 }
 
 inline void BouncingBalls::handleBallsCollisions()
@@ -283,3 +260,61 @@ inline void BouncingBalls::drawBalls()
 	}
 }
 
+void BouncingBalls::KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
+
+	switch (OgldevKey) {
+
+	case OGLDEV_KEY_q:
+		GLUTBackendLeaveMainLoop();
+		break;
+
+	case OGLDEV_KEY_k:
+		_animate = !_animate;
+		break;
+
+	}
+}
+
+void BouncingBalls::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
+
+	if (Button == OGLDEV_MOUSE_BUTTON_LEFT && State == OGLDEV_KEY_STATE_PRESS)
+		addBall((float)x * 2 / glutGet(GLUT_WINDOW_WIDTH) - 1,
+			1 - (float)y * 2 / glutGet(GLUT_WINDOW_WIDTH));
+
+}
+
+void BouncingBalls::RenderSceneCB() {
+
+	// Clear the screen buffer
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	//GLenum polygonMode = GL_POINT;   // Also try using GL_FILL and GL_POINT
+	GLenum polygonMode = GL_FILL;   // Also try using GL_FILL and GL_POINT
+	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
+
+
+	// Bind buffer
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+
+	// Move and Draw balls
+	moveBalls();
+	handleWallsCollisions();
+	handleBallsCollisions();
+	drawBalls();
+
+	GLUTBackendSwapBuffers();
+
+}
+
+void BouncingBalls::IdleCB() {
+	if (_animate)
+		RenderSceneCB();
+}
+
+
+//void BouncingBalls::TimerCB(int value) {
+//	if (_animate)
+//		glutPostRedisplay();
+//
+//	//glutTimerFunc(FRAME_RATE_MILIS, TimerCB, value);
+//}
