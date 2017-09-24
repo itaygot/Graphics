@@ -29,7 +29,7 @@ public:
 	virtual void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState);
 	virtual void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y);
 	virtual void RenderSceneCB();
-	//virtual void TimerCB(int value);
+	virtual void TimerCB(int value);
 	virtual void IdleCB();
 
 

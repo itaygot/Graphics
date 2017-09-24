@@ -30,6 +30,8 @@
 /* GLUTBackendRun(). All events are forwarded to this object. */
 static ICallbacks* s_pCallbacks = NULL;
 
+static uint sFrameMilis;				// Hold the timer interval in miliseconds
+static bool sUseTimer = false;			// Tell if to use Timer or Idle callbcks
 static bool sWithDepth = false;
 static bool sWithStencil = false;
 
@@ -159,14 +161,23 @@ static void MouseCB(int Button, int State, int x, int y)
 }
 
 
+static void TimerCB(int value) {
+	s_pCallbacks->TimerCB(value);
+	glutTimerFunc(sFrameMilis, TimerCB, (++value));
+}
+
+
 static void InitCallbacks()
 {
     glutDisplayFunc(RenderSceneCB);
-    glutIdleFunc(IdleCB);
     glutSpecialFunc(SpecialKeyboardCB);
     glutPassiveMotionFunc(PassiveMouseCB);
     glutKeyboardFunc(KeyboardCB);
     glutMouseFunc(MouseCB);
+	if(sUseTimer)
+		glutTimerFunc(100, TimerCB, 0);
+	else
+		glutIdleFunc(IdleCB);
 }
 
 
@@ -196,7 +207,7 @@ void GLUTBackendInit(int argc, char** argv, bool WithDepth, bool WithStencil)
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 }
 
-bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, bool isFullScreen, const char* pTitle)
+bool GLUTBackendCreateWindow(uint Width, uint Height, bool isFullScreen, const char* pTitle)
 {
     if (isFullScreen) {
         char ModeString[64] = { 0 };
@@ -251,4 +262,16 @@ void GLUTBackendSwapBuffers()
 void GLUTBackendLeaveMainLoop()
 {
     glutLeaveMainLoop();
+}
+
+void GLUTBackendUseTimer(bool useTimer, uint milis) {
+	if (useTimer) {
+		glutIdleFunc(NULL);
+		sUseTimer = true;
+		sFrameMilis = milis;
+	}
+	else {
+		sUseTimer = false;
+		glutIdleFunc(IdleCB);
+	}
 }

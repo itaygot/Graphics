@@ -85,6 +85,10 @@ BouncingBalls::~BouncingBalls()
 
 bool BouncingBalls::Init()
 {
+
+	// Use glut Timer over Idle
+	GLUTBackendUseTimer(true, FRAME_RATE_MILIS);
+
 	// Create the shader program
 	GLuint program = programManager::sharedInstance().createProgram
 					("default",
@@ -312,9 +316,9 @@ void BouncingBalls::IdleCB() {
 }
 
 
-//void BouncingBalls::TimerCB(int value) {
-//	if (_animate)
-//		glutPostRedisplay();
-//
-//	//glutTimerFunc(FRAME_RATE_MILIS, TimerCB, value);
-//}
+void BouncingBalls::TimerCB(int value) {
+	if (_animate)
+		glutPostRedisplay();
+
+	//glutTimerFunc(FRAME_RATE_MILIS, TimerCB, value);
+}

@@ -40,7 +40,7 @@ public:
 
 	virtual void IdleCB() {};
 
-	//virtual void TimerCB(int value) {};
+	virtual void TimerCB(int value) {};
 };
 
 
