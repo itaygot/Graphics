@@ -29,14 +29,17 @@
 #define CIRCLE_EDGES_AMOUNT 30
 #define SCALARS_PER_VERTEX 2
 #define DFLT_RADIUS 0.1f
+#define BOUNCINESS 0.85f
 
 #define FRAME_RATE_MILIS 20
 
-#define LIGHT_POS_X 0.0
-#define LIGHT_POS_Y -1.0
+#define LIGHT_POS_X 1.5f
+#define LIGHT_POS_Y -2.0f
 
 
-static float BOUNCINESS = 0.85f;
+
+
+
 
 
 /************************************************************/
@@ -169,7 +172,7 @@ void BouncingBalls::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, 
 
 	if (Button == OGLDEV_MOUSE_BUTTON_LEFT && State == OGLDEV_KEY_STATE_PRESS)
 		addBall((float)x * 2 / glutGet(GLUT_WINDOW_WIDTH) - 1,
-			1 - (float)y * 2 / glutGet(GLUT_WINDOW_WIDTH));
+			1 - (float)y * 2 / glutGet(GLUT_WINDOW_HEIGHT));
 
 }
 
@@ -207,12 +210,11 @@ void BouncingBalls::TimerCB(int value) {
 
 void BouncingBalls::addBall(float x, float y)
 {
-	
 	Ball ball = Ball(x, y);
 
 	ball._bounciness = 0.85f;
 
-	// Draw a color
+	// Pick a color
 	ball._color = pickAColor();
 
 	// Draw a velocity
@@ -243,12 +245,10 @@ inline void BouncingBalls::handleBallsCollisions()
 
 inline void BouncingBalls::moveBalls()
 {
-	static float GRAVITY_PER_FRAME = FRAME_RATE_MILIS * 1.0f / (128 * 64);
+	static float GRAVITY_PER_FRAME = FRAME_RATE_MILIS * 1.0f / (128 * 64 * 1.25);
 
 
 	for (auto it = _balls.begin(); it != _balls.end(); it++){
-
-
 		// move
 		it->_pos.x += it->_velo.x;
 		it->_pos.y += it->_velo.y;
@@ -256,30 +256,31 @@ inline void BouncingBalls::moveBalls()
 		// Apply Gravity:
 		/*if(!it->onFloor())
 			it->_velo.y -= GRAVITY_PER_FRAME;	*/
-		
 		if (it->insideFloor()) { // "touching" floor, several cases:
 
 			// if tangent to floor and no vertical movement: keep it still, don't apply gravity
-			if (it->_velo.y == 0.f && it->_pos.y == -1 + it->_radius);
+			if (it->_velo.y == 0.f && it->_pos.y == -1 + it->_radius)
+				continue;
 
 
-			else if(it->_velo.y >= 0.f)	// going up from within floor, couple case:
+			else if (it->_velo.y >= 0.f)	// going up from within floor, couple case:
 
-				if (it->_velo.y < GRAVITY_PER_FRAME) {	// too slow up, make the ball "rest" on floor (vertically)
+				if (it->_velo.y < GRAVITY_PER_FRAME) {	// too slow up, make the ball "rest" vertically
 					it->_pos.y = it->_radius - 1;
 					it->_velo.y = 0.f;
 				}
 				else	// not too slow up, apply gravity
 					it->_velo.y -= GRAVITY_PER_FRAME;
-			
-			else;	// touching floor and going down: don't apply gravity
+
+			else	// touching floor and going down: don't apply gravity
+				continue;
 		}
 
 		else 	// not touching floor - apply gravity
 			it->_velo.y -= GRAVITY_PER_FRAME;
-			
+	
 
-	}
+	}	// done traversing balls
 
 }
 
