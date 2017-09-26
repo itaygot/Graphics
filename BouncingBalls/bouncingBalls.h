@@ -17,7 +17,7 @@ public:
 	
 	static BouncingBalls & getInstance();
 
-	bool Init();
+	bool Init(int argc, char ** argv);
 
 	void Run();
 

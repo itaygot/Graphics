@@ -2,7 +2,7 @@
 #include <GL/freeglut.h>
 
 #include "bouncingBalls.h"
-#include "ogldev_glut_backend.h"		// glut calls
+#include "ogldev_glut_backend.h"		// glut backend calls
 #include "ShaderIO.h"					// handling shaders
 
 
@@ -20,6 +20,8 @@
 //				 STATIC IMPLEMENTATION SECTION				//
 /************************************************************/
 
+#define WINDOW_WIDTH		600
+#define WINDOW_HEIGHT		600
 
 #define CIRCLE_EDGES_AMOUNT 30
 #define SCALARS_PER_VERTEX 2
@@ -81,8 +83,16 @@ BouncingBalls & BouncingBalls::getInstance() {
 	return s_instance;
 }
 
-bool BouncingBalls::Init()
+bool BouncingBalls::Init(int argc, char ** argv)
 {
+	// Initialize GLUT 
+	GLUTBackendInit(argc, argv, false, false);
+
+	// Create window & init glew
+	if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "Bouncing Balls"))
+		return false;
+
+
 	// Use glut Timer func instead of the Idle func
 	GLUTBackendUseTimer(true, FRAME_RATE_MILIS);
 
