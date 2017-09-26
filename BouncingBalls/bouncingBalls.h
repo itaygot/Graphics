@@ -14,15 +14,16 @@
 class BouncingBalls : public ICallbacks {
 
 public:
-
-	BouncingBalls();
-
-	virtual ~BouncingBalls();
+	
+	static BouncingBalls & getInstance();
 
 	bool Init();
 
 	void Run();
 
+	// Delete copy c'tor and assignment operator (singleton class)
+	BouncingBalls(const BouncingBalls &) = delete;
+	BouncingBalls operator=(const BouncingBalls &) = delete;
 	
 
 	// ICallbacks overriding
@@ -35,12 +36,19 @@ public:
 
 private:
 
+	// Private c'tor (singleton class)
+	BouncingBalls();
+
+	virtual ~BouncingBalls();
+
+
+	// Singleton instance
+	static BouncingBalls s_instance;
+
 	// Vector storing the balls
 	std::vector<Ball> _balls;
 
-	// Window sizes:
-	float _width, _height, _offsetX, _offsetY;
-
+	// Light position
 	glm::vec2 _lightPos;
 
 	GLuint _vbo;

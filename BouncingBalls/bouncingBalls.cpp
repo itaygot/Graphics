@@ -26,6 +26,8 @@
 /************************************************************/
 //				 STATIC IMPLEMENTATION SECTION				//
 /************************************************************/
+
+
 #define CIRCLE_EDGES_AMOUNT 30
 #define SCALARS_PER_VERTEX 2
 #define DFLT_RADIUS 0.1f
@@ -75,7 +77,8 @@ static const float* pickAColor()
 //				BOUNCING BALLS IMPLEMENTATION				//
 /************************************************************/
 
-
+// Definition of singleton object
+BouncingBalls BouncingBalls::s_instance;
 
 BouncingBalls::BouncingBalls(){}
 
@@ -83,6 +86,10 @@ BouncingBalls::~BouncingBalls()
 {
 	if (_vbo != 0)
 		glDeleteBuffers(1, &_vbo);
+}
+
+BouncingBalls & BouncingBalls::getInstance() {
+	return s_instance;
 }
 
 bool BouncingBalls::Init()

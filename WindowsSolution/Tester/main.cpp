@@ -1,21 +1,25 @@
 #include <stdio.h>
 
-struct A {
-	virtual void foo() { printf("A\n"); }
+struct singletone {
+	
+	static singletone& getInstance() {		
+		return s_instance;
+	}
+
+	singletone(const singletone &) = delete;
+	singletone operator=(const singletone &) = delete;
+
+private:
+	singletone() {}
+	
+	static singletone s_instance;
 };
 
-struct B : public A {
-	virtual void foo() { printf("B\n"); };
-};
+singletone singletone::s_instance;
 
 int main() {
-	B b = B();
-	A * b2 = &b;
-	//A & a = b;
-	
 	
 
-	b2->foo();
 }
 
 

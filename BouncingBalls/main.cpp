@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	
 	
 	// Init the Model object
-	BouncingBalls app;
+	BouncingBalls & app = BouncingBalls::getInstance();
 	if (!app.Init())
 		return 1;
 	app.Run();
