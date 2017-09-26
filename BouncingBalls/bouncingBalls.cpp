@@ -1,10 +1,3 @@
-//
-//  BouncingBalls.cpp
-//  cg-projects
-//
-//  Based on exercise given at HUJI Computer Graphics course, 2013.
-//
-
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
@@ -37,10 +30,6 @@
 
 #define LIGHT_POS_X 1.5f
 #define LIGHT_POS_Y -2.0f
-
-
-
-
 
 
 
@@ -303,11 +292,12 @@ inline void BouncingBalls::drawBalls()
 	float distFromLight;
 	for (auto it = _balls.begin(); it != _balls.end(); ++it)
 	{
+		// center, radius and color:
 		glUniform2f(_centerUV, it->_pos.x, it->_pos.y);
 		glUniform1f(_radiusUV, it->_radius);
 		glUniform4f(_fillColorUV, it->_color[0], it->_color[1], it->_color[2], it->_color[3]);
 
-		// Deal with lighting... extract the light point on the ball
+		// lighting, extract the light hit pos on the ball
 		distFromLight = std::sqrt(std::pow(it->_pos.x - _lightPos[0], 2) +
 								  std::pow(it->_pos.y - _lightPos[1], 2));
 		lightPoint[0] = it->_pos.x + 0.33f * (_lightPos[0] - it->_pos.x) * it->_radius / distFromLight;
@@ -317,8 +307,6 @@ inline void BouncingBalls::drawBalls()
 			it->_pos.y + 0.33f * (_lightPos[1] - it->_pos.y) * it->_radius / distFromLight);
 
 		glDrawArrays(GL_TRIANGLE_FAN, 0, CIRCLE_EDGES_AMOUNT + 2);
-		//glDrawArrays(GL_TRIANGLES, 0, CIRCLE_EDGES_AMOUNT + 2);
-		//glDrawArrays(GL_LINES, 0, CIRCLE_EDGES_AMOUNT + 2);
 		
 	}
 }
