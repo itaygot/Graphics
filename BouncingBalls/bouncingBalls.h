@@ -56,7 +56,7 @@ private:
 	GLuint _fillColorUV;
 	GLuint _centerUV;		// Uniform handle for center variable
 	GLuint _radiusUV;		// Uniform handle for radius of the ball
-	GLuint _lightUV;		// Uniform handle for light on the ball; 
+	GLuint _lightUV;		// Uniform handle for light on the ball;
 	bool _animate;
 
 	

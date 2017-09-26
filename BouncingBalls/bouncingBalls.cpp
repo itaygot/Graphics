@@ -20,9 +20,6 @@
 //				 STATIC IMPLEMENTATION SECTION				//
 /************************************************************/
 
-#define WINDOW_WIDTH		600
-#define WINDOW_HEIGHT		600
-
 #define CIRCLE_EDGES_AMOUNT 30
 #define SCALARS_PER_VERTEX 2
 #define DFLT_RADIUS 0.1f
@@ -33,7 +30,8 @@
 #define LIGHT_POS_X 1.5f
 #define LIGHT_POS_Y -2.0f
 
-
+uint sWINDOW_WIDTH = 600;
+uint sWINDOW_HEIGHT = 600;
 
 /************************************************************/
 //					HELPER FUNCTIONS						//
@@ -89,7 +87,7 @@ bool BouncingBalls::Init(int argc, char ** argv)
 	GLUTBackendInit(argc, argv, false, false);
 
 	// Create window & init glew
-	if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "Bouncing Balls"))
+	if (!GLUTBackendCreateWindow(sWINDOW_WIDTH, sWINDOW_HEIGHT, false, "Bouncing Balls"))
 		return false;
 
 
