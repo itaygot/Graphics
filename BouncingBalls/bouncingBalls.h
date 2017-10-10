@@ -8,14 +8,15 @@
 
 #include <GL/glew.h>			// typedef GLuint;
 #include <glm/vec2.hpp>			// glm::vec2;
-#include <vector>				// holding the balls
+//#include <vector>				// holding the balls
+#include <list>				// holding the balls
 
 
 class BouncingBalls : public ICallbacks {
 
 public:
-	
-	static BouncingBalls & getInstance();
+	typedef std::list<Ball>::iterator BallIter;
+	static BouncingBalls & instance();
 
 	bool Init(int argc, char ** argv);
 
@@ -30,46 +31,35 @@ public:
 	virtual void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState);
 	virtual void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y);
 	virtual void RenderSceneCB();
-	virtual void TimerCB(int value);
-	
+	virtual void IdleCB();
+	virtual void MouseActiveMotionCB(int x, int y);
 
 
 private:
 
-	// Private c'tor (singleton class)
-	BouncingBalls();
-
-	virtual ~BouncingBalls();
-
-
-	// Singleton instance
-	static BouncingBalls s_instance;
-
-	// Vector storing the balls
-	std::vector<Ball> _balls;
-
-	// Light position
-	glm::vec2 _lightPos;
-
-	GLuint _vbo;
-	GLint _posAttrib;
-	GLuint _fillColorUV;
-	GLuint _centerUV;		// Uniform handle for center variable
-	GLuint _radiusUV;		// Uniform handle for radius of the ball
-	GLuint _lightUV;		// Uniform handle for light on the ball;
-	bool _animate;
+	
+	std::list<Ball> _balls;		// List holding the balls
+	BallIter	it_heldBall;		// Held ball
+	glm::vec2	_lightPos;		// Light positions
+	GLuint		_vbo;
+	GLint		_posAttrib;
+	GLuint		_fillColorUV;
+	GLuint		_centerUV;		// Uniform handle for center variable
+	GLuint		_radiusUV;		// Uniform handle for radius of the ball
+	GLuint		_lightUV;		// Uniform handle for light on the ball;
+	int			_windowWidth;
+	int			_windowHeight;
+	bool		_animate;
 
 	
-	void addBall(float x = 0, float y = 0);
+	BouncingBalls();			// Private C'tor (singleton class)
+	virtual ~BouncingBalls();	// Private D'tor (not sure if must be private for singleton)
 
+	BallIter addBall(float x, float y);
 	void handleBallsCollisions();
-
 	void moveBalls();
-
-	void handleWallsCollisions();
-
 	void drawBalls();
-
+	BallIter checkForBall(float x, float y, float radius);
 
 };
 

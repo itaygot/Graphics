@@ -31,7 +31,6 @@
 static ICallbacks* s_pCallbacks = NULL;
 
 static uint sFrameMilis;				// Hold the timer interval in miliseconds
-static bool sUseTimer = false;			// Tell if to use Timer or Idle callbcks
 static bool sWithDepth = false;
 static bool sWithStencil = false;
 
@@ -160,12 +159,9 @@ static void MouseCB(int Button, int State, int x, int y)
     s_pCallbacks->MouseCB(OgldevMouse, OgldevKeyState, x, y);
 }
 
-
-static void TimerCB(int value) {
-	s_pCallbacks->TimerCB(value);
-	glutTimerFunc(sFrameMilis, TimerCB, (++value));
+void MouseActiveMotionCB(int x, int y) {
+	s_pCallbacks->MouseActiveMotionCB(x, y);
 }
-
 
 static void InitCallbacks()
 {
@@ -174,10 +170,8 @@ static void InitCallbacks()
     glutPassiveMotionFunc(PassiveMouseCB);
     glutKeyboardFunc(KeyboardCB);
     glutMouseFunc(MouseCB);
-	if(sUseTimer)
-		glutTimerFunc(100, TimerCB, 0);
-	else
-		glutIdleFunc(IdleCB);
+	glutMotionFunc(MouseActiveMotionCB);
+	glutIdleFunc(IdleCB);
 }
 
 
@@ -264,14 +258,6 @@ void GLUTBackendLeaveMainLoop()
     glutLeaveMainLoop();
 }
 
-void GLUTBackendUseTimer(bool useTimer, uint milis) {
-	if (useTimer) {
-		glutIdleFunc(NULL);
-		sUseTimer = true;
-		sFrameMilis = milis;
-	}
-	else {
-		sUseTimer = false;
-		glutIdleFunc(IdleCB);
-	}
+void GLUTBeckendPostRedisplay() {
+	glutPostRedisplay();
 }
