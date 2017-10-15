@@ -130,12 +130,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ogldev_callbacks.h" />
+    <ClInclude Include="..\..\Include\ogldev_glew_backend.h" />
     <ClInclude Include="..\..\Include\ogldev_glut_backend.h" />
     <ClInclude Include="..\..\Include\ogldev_keys.h" />
     <ClInclude Include="..\..\Include\ogldev_types.h" />
     <ClInclude Include="..\..\Include\ogldev_util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Common\glew_backend.cpp" />
     <ClCompile Include="..\..\Common\glut_backend.cpp" />
     <ClCompile Include="..\..\Common\ogldev_util.cpp" />
   </ItemGroup>

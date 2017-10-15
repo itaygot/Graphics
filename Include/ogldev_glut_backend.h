@@ -19,9 +19,12 @@
 #ifndef GLUT_BACKEND_H
 #define	GLUT_BACKEND_H
 
-#include "ogldev_types.h"
-#include "ogldev_callbacks.h"
 
+
+#include "ogldev_types.h"
+#include "ogldev_keys.h"
+
+class ICallbacks;
 
 void GLUTBackendInit(int argc, char** argv, bool WithDepth, bool WithStencil);
 
@@ -34,6 +37,7 @@ void GLUTBackendSwapBuffers();
 void GLUTBackendLeaveMainLoop();
 
 void GLUTBeckendPostRedisplay();
+
 
 OGLDEV_KEY GLUTKeyToOGLDEVKey(uint Key);
 

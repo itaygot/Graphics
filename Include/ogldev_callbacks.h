@@ -25,6 +25,8 @@
 #define OGLDEV_CALLBACKS_H
 
 #include "ogldev_keys.h"
+#include "ogldev_glew_backend.h"
+
 
 class ICallbacks
 {
@@ -43,6 +45,13 @@ public:
 	virtual void TimerCB(int value) {};
 
 	virtual void MouseActiveMotionCB(int x, int y) {};
+
+	/*
+	*	Default reshape behaviour, i.e. the same as glut's default
+	*/
+	virtual void ReshapeCB(int width, int height) {
+		GLEWBackendViewport(0, 0, width, height);
+	}
 };
 
 

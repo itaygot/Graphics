@@ -33,6 +33,7 @@ public:
 	virtual void RenderSceneCB();
 	virtual void IdleCB();
 	virtual void MouseActiveMotionCB(int x, int y);
+	virtual void ReshapeCB(int width, int height);
 
 
 private:
@@ -60,6 +61,16 @@ private:
 	void moveBalls();
 	void drawBalls();
 	BallIter checkForBall(float x, float y, float radius);
+
+	inline glm::vec2 screenToWorldCords(int x, int y) {
+		return glm::vec2(
+			(float)x * 2 / _windowWidth - 1, 1 - (float)y * 2 / _windowHeight);
+	}
+
+	inline glm::vec2 screenToWorldDelta(int x, int y) {
+		return glm::vec2(
+			(float)x * 2 / _windowWidth, -(float)y * 2 / _windowHeight);
+	}
 
 };
 

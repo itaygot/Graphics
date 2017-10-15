@@ -33,12 +33,18 @@
     <ClInclude Include="..\..\Include\ogldev_util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\ogldev_glew_backend.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\ogldev_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\glut_backend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\glew_backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

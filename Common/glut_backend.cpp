@@ -25,6 +25,7 @@
 
 #include "ogldev_util.h"
 #include "ogldev_glut_backend.h"
+#include "ogldev_callbacks.h"
 
 /* Points to the object implementing the ICallbacks interface which was delivered to */
 /* GLUTBackendRun(). All events are forwarded to this object. */
@@ -89,7 +90,6 @@ OGLDEV_KEY GLUTKeyToOGLDEVKey(uint Key)
     return OGLDEV_KEY_UNDEFINED;
 }
 
-
 static OGLDEV_MOUSE GLUTMouseToOGLDEVMouse(uint Button)
 {
     switch (Button) {
@@ -113,7 +113,6 @@ static void SpecialKeyboardCB(int Key, int x, int y)
     s_pCallbacks->KeyboardCB(OgldevKey);
 }
 
-
 static void KeyboardCB(unsigned char Key, int x, int y)
 {
     
@@ -132,24 +131,20 @@ static void KeyboardCB(unsigned char Key, int x, int y)
 
 }
 
-
 static void PassiveMouseCB(int x, int y)
 {
     s_pCallbacks->PassiveMouseCB(x, y);
 }
-
 
 static void RenderSceneCB()
 {
     s_pCallbacks->RenderSceneCB();
 }
 
-
 static void IdleCB()
 {
     s_pCallbacks->IdleCB();
 }
-
 
 static void MouseCB(int Button, int State, int x, int y)
 {
@@ -159,8 +154,12 @@ static void MouseCB(int Button, int State, int x, int y)
     s_pCallbacks->MouseCB(OgldevMouse, OgldevKeyState, x, y);
 }
 
-void MouseActiveMotionCB(int x, int y) {
+static void MouseActiveMotionCB(int x, int y) {
 	s_pCallbacks->MouseActiveMotionCB(x, y);
+}
+
+static void ReshapeCB(int width, int height) {
+	s_pCallbacks->ReshapeCB(width, height);
 }
 
 static void InitCallbacks()
@@ -172,6 +171,7 @@ static void InitCallbacks()
     glutMouseFunc(MouseCB);
 	glutMotionFunc(MouseActiveMotionCB);
 	glutIdleFunc(IdleCB);
+	glutReshapeFunc(ReshapeCB);
 }
 
 
@@ -261,3 +261,4 @@ void GLUTBackendLeaveMainLoop()
 void GLUTBeckendPostRedisplay() {
 	glutPostRedisplay();
 }
+

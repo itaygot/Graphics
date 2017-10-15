@@ -73,15 +73,6 @@ static const float* pickAColor()
 
 }
 
-static inline glm::vec2 screenToWorldCoords(int x, int y) {
-	return glm::vec2((float)x * 2 / glutGet(GLUT_WINDOW_WIDTH) - 1,
-		1 - (float)y * 2 / glutGet(GLUT_WINDOW_HEIGHT));
-}
-
-static inline glm::vec2 screenToWorldDelta(int x, int y) {
-	return glm::vec2((float)x * 2 / glutGet(GLUT_WINDOW_WIDTH),
-		-(float)y * 2 / glutGet(GLUT_WINDOW_HEIGHT));
-}
 
 /************************************************************/
 //				BOUNCING BALLS IMPLEMENTATION				//
@@ -118,12 +109,14 @@ BBs & BouncingBalls::instance() {
 bool BBs::Init(int argc, char ** argv)
 {
 	
-	// Initialize GLUT 
+	// Initialize GLUT Backend
 	GLUTBackendInit(argc, argv, false, false);
 
 	// Create window & init glew
 	if (!GLUTBackendCreateWindow(INITIAL_WINDOW_HEIGHT, INITIAL_WINDOW_WIDTH, false, "Bouncing Balls"))
 		return false;
+
+
 
 	// Create the shader program
 	GLuint program = programManager::sharedInstance().createProgram
@@ -180,6 +173,149 @@ void BBs::Run() {
 	GLUTBackendRun(this);
 }
 
+BBs::BallIter BBs::checkForBall(float x, float y, float radius) {
+	Ball ball(x, y, radius);
+	BallIter it;
+
+	for (it = _balls.begin(); it != _balls.end(); ++it)
+		if (ball.touchingBall(*it) >= 0) {
+			return it;
+		}
+	return _balls.end();
+}
+
+BBs::BallIter BouncingBalls::addBall(float x, float y)
+{
+	Ball ball = Ball(x, y, DFLT_RADIUS);
+	ball._bounciness = BOUNCINESS;
+
+	// Pick color
+	ball._color = pickAColor();
+
+	// Draw a velocity
+	ball._velo.x = rand_float(3) * 0.1f / 32;
+	ball._velo.y = rand_float(3) * 0.1f / 32;
+	/*ball._velo.x  = 0;
+	ball._velo.y = 0;*/
+
+	ball.fitToScreen();
+
+
+	return _balls.insert(_balls.end(), ball);
+}
+
+inline void BBs::handleBallsCollisions()
+{
+	std::list<Ball>::iterator tmp;
+	for (auto it1 = _balls.begin(); it1 != _balls.end(); it1++) {
+		tmp = it1;
+		for (auto it2 = tmp++; it2 != _balls.end(); it2++)
+			it1->ballCollision(*it2);
+	}
+
+}
+
+void BBs::moveBalls()
+{
+
+	float BOUNCE_THRESHOLD = gDeltaTime * GRAVITY_POWER;
+	//float BOUNCE_THRESHOLD = GRAVITY_POWER;	
+	float tmp;
+
+
+	// move each ball
+	for (auto it = _balls.begin(); it != _balls.end(); it++) {
+
+		if (it == it_heldBall)
+			continue;
+
+		// Horizintal movement + Walls collision
+		it->_pos.x += gDeltaTime * (tmp = it->_velo.x);
+		if ((it->touchingLeftWall() && tmp < 0) ||
+			(it->touchingRightWall() && tmp > 0))
+			it->_velo.x *= -it->_bounciness;
+
+
+
+		// Vertical movement 
+		it->_pos.y += gDeltaTime * it->_velo.y;
+
+
+		// GRAVITY & FLOOR COLLISION :
+
+		// "touching" floor, several cases:
+		if (it->touchingFloor()) {
+
+			// resting ball (vertically) stays resting :
+			if (it->_velo.y == 0.f)
+				it->_pos.y = -1.f + it->_radius;
+
+
+			// too slow - "rest" the ball
+			else if (it->_velo.y < BOUNCE_THRESHOLD && it->_velo.y > -BOUNCE_THRESHOLD) {
+				it->_pos.y = it->_radius - 1;
+				it->_velo.y = 0.f;
+				//printf("static\n");
+			}
+
+			// not too slow up - apply gravity
+			else if (it->_velo.y > 0) {
+				/*printf("floor up\n");
+				printf("%f\n", it->_velo.y / (gDeltaTime * GRAVITY_POWER));*/
+				it->_velo.y -= gDeltaTime * GRAVITY_POWER;
+			}
+
+			// going down inside floor -  don't apply gravity, bounce back off floor
+			else {
+				/*printf("floor down\n");
+				printf("%f\n", it->_velo.y / (gDeltaTime * GRAVITY_POWER));*/
+				it->_velo.y *= -it->_bounciness;
+			}
+		}
+
+		// not touching floor - apply gravity
+		else
+			it->_velo.y -= gDeltaTime * GRAVITY_POWER;
+
+
+	}	// Gravity and Floor
+
+}
+
+void BBs::drawBalls()
+{
+	float lightPoint[2];
+	float distFromLight;
+	for (auto it = _balls.begin(); it != _balls.end(); ++it)
+	{
+		// center, radius and color:
+		glUniform2f(_centerUV, it->_pos.x, it->_pos.y);
+		glUniform1f(_radiusUV, it->_radius);
+		glUniform4f(_fillColorUV, it->_color[0], it->_color[1], it->_color[2], it->_color[3]);
+
+		// lighting, extract the light hit pos on the ball
+		distFromLight = std::sqrt(std::pow(it->_pos.x - _lightPos[0], 2) +
+			std::pow(it->_pos.y - _lightPos[1], 2));
+		lightPoint[0] = it->_pos.x + 0.33f * (_lightPos[0] - it->_pos.x) * it->_radius / distFromLight;
+		lightPoint[0] = it->_pos.y + 0.33f * (_lightPos[1] - it->_pos.y) * it->_radius / distFromLight;
+
+		glUniform2f(_lightUV, it->_pos.x + 0.33f * (_lightPos[0] - it->_pos.x) * it->_radius / distFromLight,
+			it->_pos.y + 0.33f * (_lightPos[1] - it->_pos.y) * it->_radius / distFromLight);
+
+		glDrawArrays(GL_TRIANGLE_FAN, 0, CIRCLE_EDGES_AMOUNT + 2);
+
+	}
+}
+
+void BBs::ReshapeCB(int width, int height) {
+	_windowWidth = width;
+	_windowHeight = height;
+
+	
+
+	glViewport(0, 0, width, height);
+}
+
 void BBs::KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
 
 	switch (OgldevKey) {
@@ -207,7 +343,8 @@ void BBs::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 		assert(it_heldBall == _balls.end());
 
 		// Check if clicked on ball
-		glm::vec2 worldPos = screenToWorldCoords(x, y);
+		//glm::vec2 worldPos = screenToWorldCoords(x, y);
+		glm::vec2 worldPos = screenToWorldCords(x, y);
 		BallIter it = checkForBall(worldPos.x, worldPos.y, DFLT_RADIUS);
 
 		if (it != _balls.end())
@@ -316,159 +453,25 @@ void BBs::MouseActiveMotionCB(int x, int y) {
 	it_heldBall->_pos += delta;
 	
 	// Set speed
-	it_heldBall->_velo = delta / (2.f * gDeltaTime);
+	it_heldBall->_velo = delta / (gDeltaTime);
 
-	// If hitting walls - drop the ball and set its new speed
-	if(!it_heldBall->fitToScreen()){
+	// If mouse out of screen - drop the ball 
+	if(!it_heldBall->fitToScreen() && (x < 0 || x > _windowWidth || y > _windowHeight)){
 		
-
-		if()
-
+		it_heldBall->_static = false;
+		it_heldBall = _balls.end();
+		
+		
+	}
+	else if (y < 0) {
 		it_heldBall->_static = false;
 		it_heldBall = _balls.end();
 	}
-
+	
 	// Update mouse pos
 	gMousePos = glm::ivec2(x, y);
 
 }
 
-BBs::BallIter BBs::checkForBall(float x, float y, float radius) {
-	Ball ball(x, y, radius);
-	BallIter it;
-
-	for (it = _balls.begin(); it != _balls.end(); ++it)
-		if (ball.touchingBall(*it) >= 0) {
-			return it;
-		}
-	return _balls.end();
-}
-
-BBs::BallIter BouncingBalls::addBall(float x, float y)
-{
-	Ball ball = Ball(x, y, DFLT_RADIUS);
-	ball._bounciness = BOUNCINESS;
-
-	// Pick color
-	ball._color = pickAColor();
-
-	// Draw a velocity
-	ball._velo.x = rand_float(3) * 0.1f / 32;
-	ball._velo.y = rand_float(3) * 0.1f / 32;
-	/*ball._velo.x  = 0;
-	ball._velo.y = 0;*/
-
-	ball.fitToScreen();
-
-	
-	return _balls.insert(_balls.end(), ball);
-}
-
-inline void BBs::handleBallsCollisions()
-{
-	std::list<Ball>::iterator tmp;
-	for (auto it1 = _balls.begin(); it1 != _balls.end(); it1++) {
-		tmp = it1;
-		for (auto it2 = tmp++; it2 != _balls.end(); it2++)
-			it1->ballCollision(*it2);
-	}
-
-}
 
 
-
-void BBs::moveBalls()
-{
-
-	float BOUNCE_THRESHOLD = gDeltaTime * GRAVITY_POWER;
-	//float BOUNCE_THRESHOLD = GRAVITY_POWER;	
-	float tmp;
-	
-
-	// move each ball
-	for (auto it = _balls.begin(); it != _balls.end(); it++) {
-
-		if (it == it_heldBall)
-			continue;
-
-		// Horizintal movement + Walls collision
-		it->_pos.x += gDeltaTime * (tmp = it->_velo.x);
-		if ((it->touchingLeftWall() && tmp < 0) ||
-			(it->touchingRightWall() && tmp > 0))
-			it->_velo.x *= -it->_bounciness;
-
-
-
-		// Vertical movement 
-		it->_pos.y += gDeltaTime * it->_velo.y;
-
-
-		// GRAVITY & FLOOR COLLISION :
-
-		// "touching" floor, several cases:
-		if (it->touchingFloor()) {
-
-			// resting ball (vertically) stays resting :
-			if (it->_velo.y == 0.f)
-				it->_pos.y = -1.f + it->_radius;
-
-			
-			// too slow - "rest" the ball
-			else if (it->_velo.y < BOUNCE_THRESHOLD && it->_velo.y > -BOUNCE_THRESHOLD) {
-				it->_pos.y = it->_radius - 1;
-				it->_velo.y = 0.f;
-				//printf("static\n");
-			}
-
-			// not too slow up - apply gravity
-			else if (it->_velo.y > 0) {
-				/*printf("floor up\n");
-				printf("%f\n", it->_velo.y / (gDeltaTime * GRAVITY_POWER));*/
-				it->_velo.y -= gDeltaTime * GRAVITY_POWER;
-			}
-
-			// going down inside floor -  don't apply gravity, bounce back off floor
-			else {
-				/*printf("floor down\n");
-				printf("%f\n", it->_velo.y / (gDeltaTime * GRAVITY_POWER));*/
-				it->_velo.y *= -it->_bounciness;
-			}
-		}
-
-		// not touching floor - apply gravity
-		else 
-			it->_velo.y -= gDeltaTime * GRAVITY_POWER;
-
-
-	}	// Gravity and Floor
-
-}
-
-
-void BBs::drawBalls()
-{
-	float lightPoint[2];
-	float distFromLight;
-	for (auto it = _balls.begin(); it != _balls.end(); ++it)
-	{
-		// center, radius and color:
-		glUniform2f(_centerUV, it->_pos.x, it->_pos.y);
-		glUniform1f(_radiusUV, it->_radius);
-		glUniform4f(_fillColorUV, it->_color[0], it->_color[1], it->_color[2], it->_color[3]);
-
-		// lighting, extract the light hit pos on the ball
-		distFromLight = std::sqrt(std::pow(it->_pos.x - _lightPos[0], 2) +
-								  std::pow(it->_pos.y - _lightPos[1], 2));
-		lightPoint[0] = it->_pos.x + 0.33f * (_lightPos[0] - it->_pos.x) * it->_radius / distFromLight;
-		lightPoint[0] = it->_pos.y + 0.33f * (_lightPos[1] - it->_pos.y) * it->_radius / distFromLight;
-		
-		glUniform2f(_lightUV, it->_pos.x + 0.33f * (_lightPos[0] - it->_pos.x) * it->_radius / distFromLight,
-			it->_pos.y + 0.33f * (_lightPos[1] - it->_pos.y) * it->_radius / distFromLight);
-
-		glDrawArrays(GL_TRIANGLE_FAN, 0, CIRCLE_EDGES_AMOUNT + 2);
-		
-	}
-}
-
-
-add  reshape function;
