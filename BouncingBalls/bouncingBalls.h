@@ -5,10 +5,9 @@
 #include "Ball.h"				// struct Ball;
 #include <ogldev_callbacks.h>	// ICallbacks;
 
-
 #include <GL/glew.h>			// typedef GLuint;
 #include <glm/vec2.hpp>			// glm::vec2;
-//#include <vector>				// holding the balls
+
 #include <list>				// holding the balls
 
 
