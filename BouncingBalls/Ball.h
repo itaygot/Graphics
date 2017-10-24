@@ -15,37 +15,49 @@ struct Ball
 
 	Ball(float x, float y, float radius);
 
-	inline bool touchingLeftWall() {
+	/*inline bool touchingLeftWall() {
 		return _pos.x - _radius <= -1;
+	}*/
+
+	inline bool touchingLeftWall(float leftWallPos) {
+		return _pos.x - _radius <= leftWallPos;
 	}
 
-	inline bool touchingRightWall() {
+	/*inline bool touchingRightWall() {
 		return _pos.x + _radius >= 1;
+	}*/
+
+	inline bool touchingRightWall(float rightWallPos) {
+		return _pos.x + _radius >= rightWallPos;
 	}
 
-	inline bool touchingFloor() {
+	/*inline bool touchingFloor() {
 		return _pos.y - _radius <= -1.f;
-	}
+	}*/
 
-	float touchingBall(const Ball & other);
+	inline bool touchingFloor(float floorPos) {
+		return _pos.y - _radius <= floorPos;
+	}
 
 	void ballCollision(Ball& other);
+	
+	bool containsPoint(float x, float y);
 
-	inline bool fitToScreen() {
+	bool fitToScreen(float wallPos, float ceilingPos) {
 		bool inBounds = true;
 
-		if (touchingLeftWall()) {
-			_pos.x = -1.f + _radius;
+		if (touchingLeftWall(-wallPos)) {
+			_pos.x = -wallPos + _radius;
 			inBounds = false;
 		}
 
-		else if (touchingRightWall()) {
-			_pos.x = 1.f - _radius;
+		else if (touchingRightWall(wallPos)) {
+			_pos.x = wallPos - _radius;
 			inBounds = false;
 		}
 
-		if (touchingFloor()) {
-			_pos.y = -1.f + _radius;
+		if (touchingFloor(-ceilingPos)) {
+			_pos.y = -ceilingPos + _radius;
 			inBounds  = false;
 		}
 
@@ -54,9 +66,7 @@ struct Ball
 
 	}
 
-
-
-
+	float touchingBallDistance(const Ball & other);
 };
 
 

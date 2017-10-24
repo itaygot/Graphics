@@ -39,38 +39,62 @@ public:
 private:
 
 	
-	std::list<Ball> _balls;		// List holding the balls
-	BallIter	it_heldBall;		// Held ball
-	glm::vec2	_lightPos;		// Light positions
-	GLuint		_vbo;
-	GLint		_posAttrib;
-	GLuint		_fillColorUV;
-	GLuint		_centerUV;		// Uniform handle for center variable
-	GLuint		_radiusUV;		// Uniform handle for radius of the ball
-	GLuint		_lightUV;		// Uniform handle for light on the ball;
-	int			_windowWidth;
-	int			_windowHeight;
+	std::list<Ball> _balls;				// List holding the balls
+	BallIter	it_heldBall;			// Held ball
+	glm::vec2	_lightPos;				// Light positions
+	GLuint		_vboUVLoc;
+	GLuint		_ballCenterUVLoc;	// Location of the Uniform variable in the shader program
+	GLuint		_ballRadiusUVLoc;	// Location of the Uniform variable
+	GLuint		_ballColorUVLoc;	// Location of the Uniform variable in the shader program
+	GLuint		_lightHitUVLoc;		// Location of the Uniform variable
 	bool		_animate;
+	
+
+	//float		_wallPos;					// EXPLENATION NEEDED !!!
+	//float		_ceilingPos;				// EXPLENATION NEEDED !!!
+	float		_ratioWorldToScreen;
+	//GLuint		_wallPosUVLoc;				// EXPLENATION NEEDED !!!
+	//GLuint		_ceilingPosUVLoc;
+
+
+	float		_worldXRadius;					// EXPLENATION NEEDED !!!
+	float		_worldYRadius;					// EXPLENATION NEEDED !!!
+	GLuint		_worldXRadiusUVLoc;
+	GLuint		_worldYRadiusUVLoc;
+
+
+
+
+	/*float		_leftWallPos;
+	float		_rightWallPos;
+	float		_floorPos;
+	float		_ceilingPos2;
+	GLuint		_frameCenterUVLocation;
+	GLuint		_frameDimsUVLocation;
+*/
 
 	
 	BouncingBalls();			// Private C'tor (singleton class)
 	virtual ~BouncingBalls();	// Private D'tor (not sure if must be private for singleton)
 
-	BallIter addBall(float x, float y);
+	//BallIter addBall(float x, float y);
+	BallIter addBall(Ball & newBall);
 	void handleBallsCollisions();
 	void moveBalls();
 	void drawBalls();
-	BallIter checkForBall(float x, float y, float radius);
+	
+	
 
 	inline glm::vec2 screenToWorldCords(int x, int y) {
 		return glm::vec2(
-			(float)x * 2 / _windowWidth - 1, 1 - (float)y * 2 / _windowHeight);
+			-_worldXRadius + x * _ratioWorldToScreen, 
+			_worldYRadius - y * _ratioWorldToScreen);
 	}
 
 	inline glm::vec2 screenToWorldDelta(int x, int y) {
-		return glm::vec2(
-			(float)x * 2 / _windowWidth, -(float)y * 2 / _windowHeight);
+		return glm::vec2(x * _ratioWorldToScreen, -y * _ratioWorldToScreen);
 	}
+
 
 };
 

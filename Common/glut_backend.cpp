@@ -31,7 +31,7 @@
 /* GLUTBackendRun(). All events are forwarded to this object. */
 static ICallbacks* s_pCallbacks = NULL;
 
-static uint sFrameMilis;				// Hold the timer interval in miliseconds
+
 static bool sWithDepth = false;
 static bool sWithStencil = false;
 

@@ -5,6 +5,7 @@
 // Lib includes
 #include "bouncingBalls.h"
 #include "ogldev_glut_backend.h"		// glut backend calls
+#include "ogldev_util.h"				// #define INVALID_UNIFORM_LOCATION;
 #include "ShaderIO.h"					// handling shaders
 
 // math includes
@@ -23,8 +24,7 @@
 //				 STATIC IMPLEMENTATION SECTION				//
 /************************************************************/
 
-#define INITIAL_WINDOW_WIDTH 600
-#define INITIAL_WINDOW_HEIGHT 600
+#define BASE_WINDOW_SIZE 768
 
 #define CIRCLE_EDGES_AMOUNT 30
 #define SCALARS_PER_VERTEX 2
@@ -42,8 +42,10 @@
 //							GLOBALS							//
 /************************************************************/
 
-static float gDeltaTime;
-static glm::ivec2 gMousePos;
+static glm::ivec2 gMousePos;		// For mouse's active motion
+static int gDeltaTime;			// For balls' movements
+static int gScreenWidth;			// For mouse's active motion (drop)
+static int gScreenHeight;
 typedef BouncingBalls BBs;
 
 /************************************************************/
@@ -67,7 +69,8 @@ static const float* pickAColor()
 	const static float LAWN_GREEN[4] = { 124.f / 252, 252.f / 255, 0.f, 1.f };
 
 
-	const static float* COLORS_ARRAY[] = { RED, BLUE, YELLOW, GREEN, LAWN_GREEN, NAVY };
+	//const static float* COLORS_ARRAY[] = { RED, BLUE, YELLOW, GREEN,  NAVY };
+	const static float* COLORS_ARRAY[] = { RED, BLUE, YELLOW, GREEN};
 
 	return COLORS_ARRAY[std::rand() % (sizeof(COLORS_ARRAY) / sizeof(float *))];
 
@@ -81,8 +84,17 @@ static const float* pickAColor()
 BBs::BouncingBalls(){
 	
 	// Screen dimensions
-	_windowWidth = INITIAL_WINDOW_WIDTH;
-	_windowHeight = INITIAL_WINDOW_HEIGHT;
+	
+	/*_wallPos = 1.f;
+	_ceilingPos = 1.f;*/
+	_ratioWorldToScreen = 2.f / BASE_WINDOW_SIZE;
+	gScreenWidth = BASE_WINDOW_SIZE;
+	gScreenHeight = BASE_WINDOW_SIZE;
+
+	////////////////////////
+	_worldXRadius = 1.f;
+	_worldYRadius = 1.f;
+	////////////////////////
 
 	// Animation on
 	_animate = true;
@@ -97,8 +109,8 @@ BBs::BouncingBalls(){
 
 BBs::~BouncingBalls()
 {
-	if (_vbo != 0)
-		glDeleteBuffers(1, &_vbo);
+	if (_vboUVLoc != 0)
+		glDeleteBuffers(1, &_vboUVLoc);
 }
 
 BBs & BouncingBalls::instance() {
@@ -113,7 +125,7 @@ bool BBs::Init(int argc, char ** argv)
 	GLUTBackendInit(argc, argv, false, false);
 
 	// Create window & init glew
-	if (!GLUTBackendCreateWindow(INITIAL_WINDOW_HEIGHT, INITIAL_WINDOW_WIDTH, false, "Bouncing Balls"))
+	if (!GLUTBackendCreateWindow(BASE_WINDOW_SIZE, BASE_WINDOW_SIZE, false, "Bouncing Balls"))
 		return false;
 
 
@@ -125,12 +137,32 @@ bool BBs::Init(int argc, char ** argv)
 					FRAGMENT_SHADER_PATH);
 	glUseProgram(program);
 
-	// Uniform Variables
-	_fillColorUV  = glGetUniformLocation(program, "fillColor");
-	_centerUV = glGetUniformLocation(program, "center");
-	_radiusUV = glGetUniformLocation(program, "radius");
-	_lightUV = glGetUniformLocation(program, "light");
+	// Uniform Variables' locations
+	_ballCenterUVLoc = glGetUniformLocation(program, "ballCenter");
+	_ballRadiusUVLoc = glGetUniformLocation(program, "ballRadius");
+	_ballColorUVLoc  = glGetUniformLocation(program, "ballColor");
+	_lightHitUVLoc = glGetUniformLocation(program, "lightHit");
+	/*_wallPosUVLoc = glGetUniformLocation(program, "wallPos");
+	_ceilingPosUVLoc = glGetUniformLocation(program, "ceilingPos");*/
+	
+	////////////////////////
+	_worldXRadiusUVLoc = glGetUniformLocation(program, "worldXRadius");
+	_worldYRadiusUVLoc = glGetUniformLocation(program, "worldYRadius");
+	////////////////////////
 
+	// Check valid locations
+	/*if (_ballCenterUVLoc == INVALID_UNIFORM_LOCATION ||
+		_ballRadiusUVLoc == INVALID_UNIFORM_LOCATION ||
+		_ballColorUVLoc == INVALID_UNIFORM_LOCATION ||
+		_lightLoc == INVALID_UNIFORM_LOCATION ||
+		_relativeWidthLoc == INVALID_UNIFORM_LOCATION ||
+		_relativeHeightLoc == INVALID_UNIFORM_LOCATION || 
+		_wallPosLoc == INVALID_UNIFORM_LOCATION || 
+		_ceilingPosLoc == INVALID_UNIFORM_LOCATION) {
+		fprintf(stderr, "Unable to get the location of one of the uniform vars\n");
+		return false;
+	}*/
+	
 	
 	/*** Create the vertices of the prototype ball ***/
 		
@@ -146,16 +178,15 @@ bool BBs::Init(int argc, char ** argv)
 
 	
 	// Create and load Vertex Buffer Object:
-	glGenBuffers(1, &_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glGenBuffers(1, &_vboUVLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, _vboUVLoc);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		
 		
 
 	// set array interpretation
-	_posAttrib = glGetAttribLocation(program, "position");
-	glEnableVertexAttribArray(_posAttrib);
-	glVertexAttribPointer(_posAttrib,			// attribute handle
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0,			// pos attribute handle
 							SCALARS_PER_VERTEX,	// number of scalars per vertex
 							GL_FLOAT,				// scalar type
 							GL_FALSE,
@@ -173,35 +204,23 @@ void BBs::Run() {
 	GLUTBackendRun(this);
 }
 
-BBs::BallIter BBs::checkForBall(float x, float y, float radius) {
-	Ball ball(x, y, radius);
-	BallIter it;
-
-	for (it = _balls.begin(); it != _balls.end(); ++it)
-		if (ball.touchingBall(*it) >= 0) {
-			return it;
-		}
-	return _balls.end();
-}
-
-BBs::BallIter BouncingBalls::addBall(float x, float y)
+BBs::BallIter BouncingBalls::addBall(Ball & newBall)
 {
-	Ball ball = Ball(x, y, DFLT_RADIUS);
-	ball._bounciness = BOUNCINESS;
+	//Ball ball = Ball(x, y, DFLT_RADIUS);
+	newBall._bounciness = BOUNCINESS;
 
 	// Pick color
-	ball._color = pickAColor();
+	newBall._color = pickAColor();
 
-	// Draw a velocity
-	ball._velo.x = rand_float(3) * 0.1f / 32;
-	ball._velo.y = rand_float(3) * 0.1f / 32;
-	/*ball._velo.x  = 0;
-	ball._velo.y = 0;*/
+	
+	
+	//newBall.fitToScreen(_wallPos, _ceilingPos);
+	newBall.fitToScreen(_worldXRadius, _worldYRadius);		// make 'fitToScreen' not a Ball method
 
-	ball.fitToScreen();
+	
 
 
-	return _balls.insert(_balls.end(), ball);
+	return _balls.insert(_balls.end(), newBall);
 }
 
 inline void BBs::handleBallsCollisions()
@@ -217,9 +236,7 @@ inline void BBs::handleBallsCollisions()
 
 void BBs::moveBalls()
 {
-
 	float BOUNCE_THRESHOLD = gDeltaTime * GRAVITY_POWER;
-	//float BOUNCE_THRESHOLD = GRAVITY_POWER;	
 	float tmp;
 
 
@@ -230,12 +247,10 @@ void BBs::moveBalls()
 			continue;
 
 		// Horizintal movement + Walls collision
-		it->_pos.x += gDeltaTime * (tmp = it->_velo.x);
-		if ((it->touchingLeftWall() && tmp < 0) ||
-			(it->touchingRightWall() && tmp > 0))
+		it->_pos.x += gDeltaTime * (tmp = it->_velo.x);		
+		if ((it->touchingLeftWall(-_worldXRadius) && tmp < 0) ||
+			(it->touchingRightWall(_worldXRadius) && tmp > 0))
 			it->_velo.x *= -it->_bounciness;
-
-
 
 		// Vertical movement 
 		it->_pos.y += gDeltaTime * it->_velo.y;
@@ -244,31 +259,28 @@ void BBs::moveBalls()
 		// GRAVITY & FLOOR COLLISION :
 
 		// "touching" floor, several cases:
-		if (it->touchingFloor()) {
+		if (it->touchingFloor(-_worldYRadius)) {
 
 			// resting ball (vertically) stays resting :
 			if (it->_velo.y == 0.f)
-				it->_pos.y = -1.f + it->_radius;
+				//it->_pos.y = -_ceilingPos + it->_radius;
+				it->_pos.y = -_worldYRadius + it->_radius;
 
 
 			// too slow - "rest" the ball
 			else if (it->_velo.y < BOUNCE_THRESHOLD && it->_velo.y > -BOUNCE_THRESHOLD) {
-				it->_pos.y = it->_radius - 1;
+				//it->_pos.y = -_ceilingPos + it->_radius;
+				it->_pos.y = -_worldYRadius + it->_radius;
 				it->_velo.y = 0.f;
-				//printf("static\n");
 			}
 
 			// not too slow up - apply gravity
 			else if (it->_velo.y > 0) {
-				/*printf("floor up\n");
-				printf("%f\n", it->_velo.y / (gDeltaTime * GRAVITY_POWER));*/
 				it->_velo.y -= gDeltaTime * GRAVITY_POWER;
 			}
 
 			// going down inside floor -  don't apply gravity, bounce back off floor
 			else {
-				/*printf("floor down\n");
-				printf("%f\n", it->_velo.y / (gDeltaTime * GRAVITY_POWER));*/
 				it->_velo.y *= -it->_bounciness;
 			}
 		}
@@ -284,36 +296,46 @@ void BBs::moveBalls()
 
 void BBs::drawBalls()
 {
-	float lightPoint[2];
+	glm::vec2 lightHit;
 	float distFromLight;
-	for (auto it = _balls.begin(); it != _balls.end(); ++it)
-	{
-		// center, radius and color:
-		glUniform2f(_centerUV, it->_pos.x, it->_pos.y);
-		glUniform1f(_radiusUV, it->_radius);
-		glUniform4f(_fillColorUV, it->_color[0], it->_color[1], it->_color[2], it->_color[3]);
+	for (auto it = _balls.begin(); it != _balls.end(); ++it){
 
 		// lighting, extract the light hit pos on the ball
-		distFromLight = std::sqrt(std::pow(it->_pos.x - _lightPos[0], 2) +
-			std::pow(it->_pos.y - _lightPos[1], 2));
-		lightPoint[0] = it->_pos.x + 0.33f * (_lightPos[0] - it->_pos.x) * it->_radius / distFromLight;
-		lightPoint[0] = it->_pos.y + 0.33f * (_lightPos[1] - it->_pos.y) * it->_radius / distFromLight;
-
-		glUniform2f(_lightUV, it->_pos.x + 0.33f * (_lightPos[0] - it->_pos.x) * it->_radius / distFromLight,
-			it->_pos.y + 0.33f * (_lightPos[1] - it->_pos.y) * it->_radius / distFromLight);
-
+		distFromLight = glm::length(it->_pos - _lightPos);
+		lightHit = it->_pos + 0.33f * (_lightPos - it->_pos) * (it->_radius / distFromLight);
+		
+		// Unifor Variables of Current Ball
+		glUniform2f(_ballCenterUVLoc, it->_pos.x, it->_pos.y);
+		glUniform1f(_ballRadiusUVLoc, it->_radius);
+		glUniform4fv(_ballColorUVLoc, 1, it->_color);
+		glUniform1f(_worldXRadiusUVLoc, _worldXRadius);
+		glUniform1f(_worldYRadiusUVLoc, _worldYRadius);
+		glUniform2fv(_lightHitUVLoc, 1, (GLfloat *)&lightHit);
+		
+		// Draw ball
 		glDrawArrays(GL_TRIANGLE_FAN, 0, CIRCLE_EDGES_AMOUNT + 2);
 
 	}
 }
 
 void BBs::ReshapeCB(int width, int height) {
-	_windowWidth = width;
-	_windowHeight = height;
+	int t1 = glutGet(GLUT_ELAPSED_TIME);
+	
+	gScreenWidth = width;
+	gScreenHeight = height;
 
+	/*_wallPos = (float)(width) / BASE_WINDOW_SIZE;
+	_ceilingPos = (float)(height) / BASE_WINDOW_SIZE;*/
+
+	
+	_worldXRadius = (float)(width) / BASE_WINDOW_SIZE;
+	_worldYRadius = (float)(height) / BASE_WINDOW_SIZE;
 	
 
 	glViewport(0, 0, width, height);
+
+	
+
 }
 
 void BBs::KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
@@ -332,7 +354,7 @@ void BBs::KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
 }
 
 void BBs::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
-
+	
 	// Only left clicks
 	if (Button == OGLDEV_MOUSE_BUTTON_RIGHT)
 		return;
@@ -342,15 +364,23 @@ void BBs::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 
 		assert(it_heldBall == _balls.end());
 
-		// Check if clicked on ball
-		//glm::vec2 worldPos = screenToWorldCoords(x, y);
 		glm::vec2 worldPos = screenToWorldCords(x, y);
-		BallIter it = checkForBall(worldPos.x, worldPos.y, DFLT_RADIUS);
+		Ball newBall;
+		BallIter it;
+
+		
+
+		// Check if clicked on existing ball
+		for (it = _balls.begin(); it != _balls.end(); ++it)
+			if (it->containsPoint(worldPos.x, worldPos.y))
+				break;
 
 		if (it != _balls.end())
 			it_heldBall = it;
-		else
-			it_heldBall = addBall(worldPos.x, worldPos.y);
+		else {
+			newBall = Ball(worldPos.x, worldPos.y, DFLT_RADIUS);
+			it_heldBall = addBall(newBall);
+		}
 
 		it_heldBall->_static = true;
 
@@ -374,6 +404,7 @@ void BBs::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 
 void BBs::RenderSceneCB() {
 
+	
 	// Clear the screen buffer
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -383,7 +414,7 @@ void BBs::RenderSceneCB() {
 
 
 	// Bind buffer
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, _vboUVLoc);
 
 	// Move and Draw balls
 	moveBalls();
@@ -395,46 +426,11 @@ void BBs::RenderSceneCB() {
 
 void BBs::IdleCB() {
 
-	static int lastTime = glutGet(GLUT_ELAPSED_TIME);
-	int timeNow = glutGet(GLUT_ELAPSED_TIME);
-
-	gDeltaTime = (float)(timeNow - lastTime);
-	lastTime = timeNow;
 	
-
-//	// variables (and their initializations)
-//	float dt;
-//#ifdef _WIN32
-//	static DWORD last_time;
-//	DWORD time_now = GetTickCount();
-//#else
-//	struct timeval time_now;
-//	gettimeofday(&time_now, NULL);
-//	static struct timeval last_time;
-//#endif
-//	static bool inited = false;
-//
-//
-//	// only at first call
-//	if (!inited) {
-//		gIdleElapsedMilis = INITIAL_FRAME_RATE_MILIS;
-//		inited = true;
-//	}
-//
-//	else {
-//#ifdef _WIN32
-//		gIdleElapsedMilis = (float)(time_now - last_time);
-//		
-//#else
-//		gettimeofday(&time_now, NULL);
-//		gIdleElapsedMilis = 1.0e+3 * (float)(time_now.tv_sev - last_time.tv_sec) +
-//			1.0e-3* (float)(time_now.tv_usec - last_time.tv_usec);
-//#endif
-//
-//	}
-//
-//	last_time = time_now;
-
+	static int lastTime = glutGet(GLUT_ELAPSED_TIME);
+	gDeltaTime = glutGet(GLUT_ELAPSED_TIME) - lastTime;
+	lastTime += gDeltaTime;
+	
 
 	if (_animate)
 		GLUTBeckendPostRedisplay();
@@ -442,7 +438,7 @@ void BBs::IdleCB() {
 }
 
 void BBs::MouseActiveMotionCB(int x, int y) {
-
+	
 	// if not holding ball, return.
 	if (it_heldBall == _balls.end())
 		return;
@@ -453,19 +449,15 @@ void BBs::MouseActiveMotionCB(int x, int y) {
 	it_heldBall->_pos += delta;
 	
 	// Set speed
-	it_heldBall->_velo = delta / (gDeltaTime);
+	it_heldBall->_velo = delta / (float)(gDeltaTime);
 
-	// If mouse out of screen - drop the ball 
-	if(!it_heldBall->fitToScreen() && (x < 0 || x > _windowWidth || y > _windowHeight)){
+	// If mouse out of screen - drop the ball
+	if (!it_heldBall->fitToScreen(_worldXRadius, _worldYRadius)
+		&& (x < 0 || x > gScreenWidth || y < 0 || y > gScreenHeight)) {
 		
 		it_heldBall->_static = false;
 		it_heldBall = _balls.end();
 		
-		
-	}
-	else if (y < 0) {
-		it_heldBall->_static = false;
-		it_heldBall = _balls.end();
 	}
 	
 	// Update mouse pos
@@ -474,4 +466,4 @@ void BBs::MouseActiveMotionCB(int x, int y) {
 }
 
 
-
+//change behaviour; change times;

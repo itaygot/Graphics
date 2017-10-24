@@ -11,44 +11,70 @@ Ball::Ball(float x, float y) : _pos(x, y), _bounciness(1.f),
 void Ball::ballCollision(Ball& other)
 {
 	glm::vec2 axis;
-	float dist, hit_axis_speed;
+	float dist, hitAxisSpeed;
+	using glm::dot;
 
-	if ((dist = touchingBall(other)) > 0.f) {	// Collision
-		axis = (other._pos - _pos) / dist;
-		hit_axis_speed = glm::dot(_velo, axis) - glm::dot(other._velo, axis);
 
-		if (hit_axis_speed > 0) {	// going at eachother
-			if (!_static && !other._static) {		// static-static collision
-				_velo -= axis * hit_axis_speed * _bounciness;
-				other._velo += axis * hit_axis_speed * other._bounciness;
-			}
-			else if (!_static == other._static) {	// static-non static collision
-				if(!_static)
-					_velo -= 2.f * axis * hit_axis_speed * _bounciness;
-				else
-					other._velo += 2.f * axis * hit_axis_speed * other._bounciness;
-			}
-		}
+	// Check if touching and collision axis
+	if ((dist = touchingBallDistance(other)) <= 0.f)		// balls not touching
+		return;
 
+	// Hit axis
+	axis = (other._pos - _pos) / dist;
+	hitAxisSpeed = dot(_velo, axis) - dot(other._velo, axis);
+
+	// Check that going at eachother along the axis
+	if (hitAxisSpeed <= 0)
+		return;
+
+	// Static vs. Non-Static collision
+	if (!_static && !other._static) {
+		_velo -= axis * hitAxisSpeed * _bounciness;
+		other._velo += axis * hitAxisSpeed * other._bounciness;
 	}
 
+	else if (!_static == other._static) {
+		if (!_static)
+			_velo -= 2.f * axis * hitAxisSpeed * _bounciness;
+		else
+			other._velo += 2.f * axis * hitAxisSpeed * other._bounciness;
+	}
 	
 }
 
-float Ball::touchingBall(const Ball & other) {
+bool Ball::containsPoint(float x, float y) {
+	
+	using glm::vec2;
+
+	// Filter far points
+	if (x + _radius < _pos.x ||
+		x - _radius > _pos.x ||
+		y + _radius < _pos.y ||
+		y - _radius > _pos.y)
+		return false;
+
+	// Check (square) distance
+	if (dot(_pos - vec2(x, y), _pos - vec2(x, y)) <= _radius * _radius)
+		return true;
+	else
+		return false;
+
+}
+
+float Ball::touchingBallDistance(const Ball & other) {
 	float dist;
 
 	// first, filter far away balls
-	if ((_pos.x - _radius <= other._pos.x + other._radius) &&
-		(_pos.x + _radius >= other._pos.x - other._radius) &&
-		(_pos.y - _radius <= other._pos.y + other._radius) &&
-		(_pos.y + _radius >= other._pos.y - other._radius))
-	{
-		dist = glm::length(other._pos - _pos);
-		if (dist <= _radius + other._radius)		// balls touching
-			return dist;
-	}
+	if ((_pos.x - _radius > other._pos.x + other._radius) |
+		(_pos.x + _radius < other._pos.x - other._radius) ||
+		(_pos.y - _radius > other._pos.y + other._radius) ||
+		(_pos.y + _radius < other._pos.y - other._radius))
+		return -1.f;
 
-	return -1.f;
+	dist = glm::length(other._pos - _pos);
+	if (dist <= _radius + other._radius)		// balls touching
+		return dist;
+	else
+		return -1.f;
 
 }
