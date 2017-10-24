@@ -3,14 +3,30 @@ Bouncing Balls Project
 Author: Itay Gothelf 
 Contact: itaygot@gmail.com
 
+
+
 Description:
-	Mouse click on the screen to create new bouncing balls.
+	Simple game, simulating movement and collision of balls governed by a simplified 
+	gravity and the user's ball/mouse drags.
+
+	The program uses the OpenGL and FreeGlut libraries, and demonstrates basic
+	usage of these libraries.
+
+	The program also includes parts of helper library ('Common'), taken from Etay Meiri's
+	tutorial - "http://ogldev.atspace.co.uk/", that serves a back-end for the OpenGL
+	library.
+
 	Based on homework assignment at Hebrew University Computer Graphics course, 2013. 
-	Using OpenGL library.
+	
+
+
+Game Instructions:
+	Mouse click on the screen to create new bouncing balls.
+	Drag existing balls.
 
 	
 	
-Running Instructions:
+Build-Run Instructions:
 
 	Linux:
 		Using the Makefile: 'make build'
@@ -18,8 +34,6 @@ Running Instructions:
 	Windows: 
 		Open the WindowsSolution.sln solution file - that's in the
 		WindowsSolution folder - with visual studio.
-		Switch to the current project.
+		Switch to the BouncingBalls project.
 		Build and Run.
-		Note: you might need to change the 'platform toolset' settings 
-		to your installed version
 		
