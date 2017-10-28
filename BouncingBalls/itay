@@ -1,16 +1,16 @@
 
 INCLUDE_PATH = -I ../Include
-LIB_PATH = -lGLEW -lglut -lGL
-INCLUDE_FILES = Model.h ShaderIO.h
+LIBS = -lGLEW -lglut -lGL
+INCLUDE_FILES = bouncingBalls.h ShaderIO.h
 
 build: main
 
-main: main.cpp $(INCLUDE_FILES) ShaderIO.o bouncingBallsModel.o
-	g++ -std=c++11 main.cpp ShaderIO.o bouncingBalls.o $(INCLUDE_PATH) $(LIB_PATH) \
+main: main.cpp $(INCLUDE_FILES) ShaderIO.o bouncingBalls.o
+	g++ -std=c++11 main.cpp ShaderIO.o bouncingBalls.o $(INCLUDE_PATH) $(LIBS) \
 	-o main
 
-bouncingBallsModel.o: Model.h bouncingBallsModel.cpp
-	g++ -c -std=c++11 bouncingBallsModel.cpp $(INCLUDE_PATH) -o bouncingBalls.o
+bouncingBalls.o: bouncingBalls.h bouncingBalls.cpp
+	g++ -c -std=c++11 bouncingBalls.cpp $(INCLUDE_PATH) -o bouncingBalls.o
 
 ShaderIO.o: ShaderIO.h ShaderIO.cpp
 	g++ -c -std=c++11 ShaderIO.cpp $(INCLUDE_PATH) -o ShaderIO.o

@@ -3,6 +3,7 @@
 
 #include <glm/vec2.hpp>		// glm::vec2 (pos and velo)
 
+
 struct Ball
 {
 	glm::vec2 _pos, _velo;

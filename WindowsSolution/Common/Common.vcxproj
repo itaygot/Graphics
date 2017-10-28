@@ -126,9 +126,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\Include\ogldev_callbacks.h" />
     <ClInclude Include="..\..\Include\ogldev_glew_backend.h" />
     <ClInclude Include="..\..\Include\ogldev_glut_backend.h" />
