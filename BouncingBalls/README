@@ -29,11 +29,12 @@ Game Instructions:
 Build-Run Instructions:
 
 	Linux:
-		Using the Makefile: 'make build'
+		Build using the 'make' command: 'make build'.
+		Then run the file that is in the 'dist' folder.
 
 	Windows: 
 		Open the WindowsSolution.sln solution file - that's in the
 		WindowsSolution folder - with visual studio.
-		Switch to the BouncingBalls project.
-		Build and Run.
+		First, Build the 'Common' project (compiles the 'Common' library).
+		Then, switch to the BouncingBalls project, build and run.
 		
