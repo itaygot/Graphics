@@ -109,8 +109,8 @@ BBs::BouncingBalls(){
 
 BBs::~BouncingBalls()
 {
-	if (_vboUVLoc != 0)
-		glDeleteBuffers(1, &_vboUVLoc);
+	if (_vbo != 0)
+		glDeleteBuffers(1, &_vbo);
 }
 
 BBs & BouncingBalls::instance() {
@@ -178,8 +178,8 @@ bool BBs::Init(int argc, char ** argv)
 
 	
 	// Create and load Vertex Buffer Object:
-	glGenBuffers(1, &_vboUVLoc);
-	glBindBuffer(GL_ARRAY_BUFFER, _vboUVLoc);
+	glGenBuffers(1, &_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		
 		
@@ -404,7 +404,6 @@ void BBs::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 
 void BBs::RenderSceneCB() {
 
-	
 	// Clear the screen buffer
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -414,7 +413,7 @@ void BBs::RenderSceneCB() {
 
 
 	// Bind buffer
-	glBindBuffer(GL_ARRAY_BUFFER, _vboUVLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
 	// Move and Draw balls
 	moveBalls();

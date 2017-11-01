@@ -41,7 +41,7 @@ private:
 	std::list<Ball> _balls;				// List holding the balls
 	BallIter	it_heldBall;			// Held ball
 	glm::vec2	_lightPos;				// Light positions
-	GLuint		_vboUVLoc;
+	GLuint		_vbo;
 	GLuint		_ballCenterUVLoc;	// Location of the Uniform variable in the shader program
 	GLuint		_ballRadiusUVLoc;	// Location of the Uniform variable
 	GLuint		_ballColorUVLoc;	// Location of the Uniform variable in the shader program

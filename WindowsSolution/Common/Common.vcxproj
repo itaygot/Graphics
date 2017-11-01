@@ -78,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Include;C:\Program Files\ImageMagick-7.0.7-Q16\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -130,6 +130,7 @@
     <ClInclude Include="..\..\Include\ogldev_glew_backend.h" />
     <ClInclude Include="..\..\Include\ogldev_glut_backend.h" />
     <ClInclude Include="..\..\Include\ogldev_keys.h" />
+    <ClInclude Include="..\..\Include\ogldev_math_3d.h" />
     <ClInclude Include="..\..\Include\ogldev_types.h" />
     <ClInclude Include="..\..\Include\ogldev_util.h" />
   </ItemGroup>
