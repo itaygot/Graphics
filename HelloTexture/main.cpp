@@ -33,6 +33,7 @@ const char * pFSFileName = "shader.fs";
 
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
+#define TEXTURE_FILENAME "Textures/test.png"
 
 
 struct App : ICallbacks {
@@ -42,10 +43,14 @@ struct App : ICallbacks {
 	}*/
 
 	App() {}
+	//App() : _texture(GL_TEXTURE_2D, TEXTURE_FILENAME){}
 
 	~App() {
 		if (_vbo != 0)
 			glDeleteBuffers(1, &_vbo);
+
+		if (_textureObject != 0)
+			glDeleteTextures(1, &_textureObject);
 	}
 
 	bool Init() {
@@ -68,7 +73,7 @@ struct App : ICallbacks {
 			return false;*/
 
 		// Load texture
-		_textureObject = SOIL_load_OGL_texture("Textures/test.png",
+		_textureObject = SOIL_load_OGL_texture(TEXTURE_FILENAME,
 												SOIL_LOAD_AUTO,
 												SOIL_CREATE_NEW_ID,
 												0);
@@ -113,9 +118,15 @@ struct App : ICallbacks {
 		GLUTBackendRun(this);
 	}
 
+	void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
+
+		if (OgldevKey == OGLDEV_KEY_q)
+			GLUTBackendLeaveMainLoop();
+
+	}
 
 private:
-	//Texture _texture;
+	/*Texture _texture;*/
 	GLuint _vbo;
 	GLuint _textureObject;
 	GLuint _textureUnitLocation;

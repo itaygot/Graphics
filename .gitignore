@@ -45,3 +45,5 @@
 ##########################################################
 # General Section
 fix.txt
+/HelloTexture/build/
+/HelloTexture/dist/
