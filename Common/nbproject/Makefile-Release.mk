@@ -37,7 +37,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/glew_backend.o \
 	${OBJECTDIR}/glut_backend.o \
-	${OBJECTDIR}/ogldev_util.o
+	${OBJECTDIR}/math_3d.o \
+	${OBJECTDIR}/ogldev_util.o \
+	${OBJECTDIR}/soil_texture.o
 
 
 # C Compiler Flags
@@ -66,20 +68,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a: ${OBJECTFILES}
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a
 
-${OBJECTDIR}/glew_backend.o: glew_backend.cpp 
+${OBJECTDIR}/glew_backend.o: glew_backend.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glew_backend.o glew_backend.cpp
 
-${OBJECTDIR}/glut_backend.o: glut_backend.cpp 
+${OBJECTDIR}/glut_backend.o: glut_backend.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glut_backend.o glut_backend.cpp
 
-${OBJECTDIR}/ogldev_util.o: ogldev_util.cpp 
+${OBJECTDIR}/math_3d.o: math_3d.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/math_3d.o math_3d.cpp
+
+${OBJECTDIR}/ogldev_util.o: ogldev_util.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_util.o ogldev_util.cpp
+
+${OBJECTDIR}/soil_texture.o: soil_texture.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/soil_texture.o soil_texture.cpp
 
 # Subprojects
 .build-subprojects:
@@ -87,7 +99,6 @@ ${OBJECTDIR}/ogldev_util.o: ogldev_util.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a
 
 # Subprojects
 .clean-subprojects:

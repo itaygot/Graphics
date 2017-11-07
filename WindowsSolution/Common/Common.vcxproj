@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Common\glew_backend.cpp" />
     <ClCompile Include="..\..\Common\glut_backend.cpp" />
+    <ClCompile Include="..\..\Common\math_3d.cpp" />
     <ClCompile Include="..\..\Common\ogldev_util.cpp" />
     <ClCompile Include="..\..\Common\soil_texture.cpp" />
   </ItemGroup>

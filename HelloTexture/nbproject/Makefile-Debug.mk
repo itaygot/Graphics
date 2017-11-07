@@ -52,7 +52,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../Lib ../Common/dist/Debug/GNU-Linux/libcommon.a -lSOIL -lglut -lGLEW -lGL
+LDLIBSOPTIONS=-L../Lib ../Common/dist/Debug/GNU-Linux/libcommon.a -lsoil -lglut -lGLEW -lGL
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
