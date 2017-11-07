@@ -4,8 +4,7 @@
 // Lib includes
 #include <ogldev_callbacks.h>			// ICallbacks;
 #include <ogldev_glut_backend.h>		// glut backend calls
-//#include <ogldev_texture.h>				// Texture; (Texture-handling object
-#include <SOIL.h>
+#include <soil_texture.h>
 #include <ogldev_math_3d.h>				// Vector3f;
 #include <ogldev_util.h>				// ReadFile(); #define INVALID_UNIFORM_LOCATION;
 
@@ -42,15 +41,15 @@ struct App : ICallbacks {
 
 	}*/
 
-	App() {}
-	//App() : _texture(GL_TEXTURE_2D, TEXTURE_FILENAME){}
+	//App() {}
+	App() : _texture(GL_TEXTURE_2D, TEXTURE_FILENAME){}
 
 	~App() {
 		if (_vbo != 0)
 			glDeleteBuffers(1, &_vbo);
 
-		if (_textureObject != 0)
-			glDeleteTextures(1, &_textureObject);
+		/*if (_textureObject != 0)
+			glDeleteTextures(1, &_textureObject);*/
 	}
 
 	bool Init() {
@@ -69,18 +68,18 @@ struct App : ICallbacks {
 		glUniform1i(_textureUnitLocation, 0);		// Should correspond to the target the texture is bound to
 
 		// Init the texture object
-		/*if (!_texture.Load())
-			return false;*/
+		if (!_texture.Load())
+			return false;
 
 		// Load texture
-		_textureObject = SOIL_load_OGL_texture(TEXTURE_FILENAME,
+		/*_textureObject = SOIL_load_OGL_texture(TEXTURE_FILENAME,
 												SOIL_LOAD_AUTO,
 												SOIL_CREATE_NEW_ID,
 												0);
 		if (_textureObject == 0) {
 			printf("SOIL loading error: '%s'\n", SOIL_last_result());
 			return false;
-		}
+		}*/
 
 		// Create vertex buffer
 		createVertexBuffer();
@@ -94,9 +93,9 @@ struct App : ICallbacks {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Bind texture object
-		/*_texture.Bind(GL_TEXTURE0);*/
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, _textureObject);
+		_texture.Bind(GL_TEXTURE0);
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, _textureObject);*/
 		
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -126,9 +125,9 @@ struct App : ICallbacks {
 	}
 
 private:
-	/*Texture _texture;*/
+	Texture _texture;
 	GLuint _vbo;
-	GLuint _textureObject;
+	/*GLuint _textureObject;*/
 	GLuint _textureUnitLocation;
 
 

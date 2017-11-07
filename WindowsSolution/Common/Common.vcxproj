@@ -78,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Include;$(SolutionDir)..\Include\assimp;$(SolutionDir)..\Include\ImageMagick-6</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Include;$(SolutionDir)..\Include\assimp;$(SolutionDir)..\Include\ImageMagick-6;$(SolutionDir)..\Include\soil</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,11 +133,13 @@
     <ClInclude Include="..\..\Include\ogldev_math_3d.h" />
     <ClInclude Include="..\..\Include\ogldev_types.h" />
     <ClInclude Include="..\..\Include\ogldev_util.h" />
+    <ClInclude Include="..\..\Include\soil_texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\glew_backend.cpp" />
     <ClCompile Include="..\..\Common\glut_backend.cpp" />
     <ClCompile Include="..\..\Common\ogldev_util.cpp" />
+    <ClCompile Include="..\..\Common\soil_texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
