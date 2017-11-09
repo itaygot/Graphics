@@ -40,7 +40,7 @@
           <incDir>
             <pElem>../Include</pElem>
             <pElem>../Include/assimp</pElem>
-            <pElem>../Include/soil</pElem>
+            <pElem>../Include/ImageMagick-6</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -60,7 +60,6 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a">
               </makeArtifact>
             </linkerLibProjectItem>
-            <linkerOptionItem>-lsoil</linkerOptionItem>
             <linkerOptionItem>-lglut -lGLEW -lGL</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
@@ -69,6 +68,12 @@
         <packType>Tar</packType>
         <verbose>false</verbose>
         <packFileList>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
+                            from="${OUTPUT_PATH}"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
           <packFileListElem type="File"
                             to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
                             from="${OUTPUT_PATH}"

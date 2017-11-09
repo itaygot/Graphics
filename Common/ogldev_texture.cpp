@@ -19,18 +19,12 @@
 #include <iostream>
 #include "ogldev_texture.h"
 
-Texture::Texture() {}
-
 Texture::Texture(GLenum TextureTarget, const std::string& FileName)
 {
     m_textureTarget = TextureTarget;
     m_fileName      = FileName;
 }
 
-void Texture::SetParameters(GLenum TextureTarget, const std::string & FileName) {
-	m_textureTarget = TextureTarget;
-	m_fileName = FileName;
-}
 
 bool Texture::Load()
 {

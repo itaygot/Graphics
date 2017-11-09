@@ -22,17 +22,14 @@
 #include <string>
 
 #include <GL/glew.h>
+//#include <ImageMagick-6/Magick++.h>
 #include <Magick++.h>
 
 class Texture
 {
 public:
-	Texture();
-
     Texture(GLenum TextureTarget, const std::string& FileName);
 
-	void SetParameters(GLenum TextureTarget, const std::string & Filename);
-	
     bool Load();
 
     void Bind(GLenum TextureUnit);	// Should correspond to the value passed to the shader e.g. 'unit GL_TEXTURE_0 <=> shader sampler's UV is 0'
@@ -40,7 +37,7 @@ public:
 private:
     std::string m_fileName;
     GLenum m_textureTarget;			// e.g. 'GL_TEXTURE_2D' 'GL_TEXTURE_1D' etc'
-    GLuint m_textureObj;			// Handle to the OGL object (similar to _vbo;)
+    GLuint m_textureObj;			// Handle to the OGL object (similar to '_vbo;)
     Magick::Image m_image;			// Magick::Image object; Extracting texture files.
     Magick::Blob m_blob;			// Binary Large Object - holding texture data
 };
