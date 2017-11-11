@@ -42,8 +42,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=`pkg-config --cflags assimp ImageMagick++`	 
+CXXFLAGS=`pkg-config --cflags assimp ImageMagick++`	 
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -52,7 +52,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../Lib ../Common/dist/Debug/GNU-Linux/libcommon.a -lglut -lGLEW -lGL
+LDLIBSOPTIONS=../Common/dist/Debug/GNU-Linux/libcommon.a -lglut
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -62,12 +62,12 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/hellotexture: ../Common/dist/Debug/GN
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/hellotexture: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/hellotexture ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/hellotexture ${OBJECTFILES} ${LDLIBSOPTIONS} `pkg-config --libs assimp ImageMagick++ glew gl`
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I../Include/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

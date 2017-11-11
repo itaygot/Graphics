@@ -46,8 +46,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=`pkg-config --cflags ImageMagick++ assimp` 
+CXXFLAGS=`pkg-config --cflags ImageMagick++ assimp` 
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -71,27 +71,27 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a: ${OBJECTFILES}
 ${OBJECTDIR}/glew_backend.o: glew_backend.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I../Include/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glew_backend.o glew_backend.cpp
+	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glew_backend.o glew_backend.cpp
 
 ${OBJECTDIR}/glut_backend.o: glut_backend.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I../Include/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glut_backend.o glut_backend.cpp
+	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glut_backend.o glut_backend.cpp
 
 ${OBJECTDIR}/math_3d.o: math_3d.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I../Include/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/math_3d.o math_3d.cpp
+	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/math_3d.o math_3d.cpp
 
 ${OBJECTDIR}/ogldev_texture.o: ogldev_texture.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I../Include/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_texture.o ogldev_texture.cpp
+	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_texture.o ogldev_texture.cpp
 
 ${OBJECTDIR}/ogldev_util.o: ogldev_util.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I../Include/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_util.o ogldev_util.cpp
+	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_util.o ogldev_util.cpp
 
 # Subprojects
 .build-subprojects:

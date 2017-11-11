@@ -52,8 +52,10 @@
           <incDir>
             <pElem>../Include</pElem>
             <pElem>../Include/assimp</pElem>
-            <pElem>../Include/ImageMagick-6</pElem>
+            <pElem>/usr/include/ImageMagick-6</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/ImageMagick-6</pElem>
           </incDir>
+          <commandLine>`pkg-config --cflags ImageMagick++ assimp`</commandLine>
         </ccTool>
         <archiverTool>
         </archiverTool>

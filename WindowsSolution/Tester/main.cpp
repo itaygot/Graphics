@@ -1,8 +1,13 @@
 #include <stdio.h>
-#include <SOIL.h>
+typedef int itay;
 
-int main(int argc, char ** argv) {
+typedef long ssize_t;
+#define nearbyint(x)  ((ssize_t) ((x)+0.5))
+
+
+int main() {
 	
+	nearbyint(4);
 }
 
 

@@ -39,14 +39,13 @@
           <standard>8</standard>
           <incDir>
             <pElem>../Include</pElem>
-            <pElem>../Include/assimp</pElem>
-            <pElem>../Include/ImageMagick-6</pElem>
           </incDir>
+          <commandLine>`pkg-config --cflags assimp ImageMagick++`	</commandLine>
         </ccTool>
+        <asmTool>
+          <commandlineTool>as</commandlineTool>
+        </asmTool>
         <linkerTool>
-          <linkerAddLib>
-            <pElem>../Lib</pElem>
-          </linkerAddLib>
           <linkerLibItems>
             <linkerLibProjectItem>
               <makeArtifact PL="../Common"
@@ -60,14 +59,39 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a">
               </makeArtifact>
             </linkerLibProjectItem>
-            <linkerOptionItem>-lglut -lGLEW -lGL</linkerOptionItem>
+            <linkerOptionItem>-lglut </linkerOptionItem>
           </linkerLibItems>
+          <commandLine>`pkg-config --libs assimp ImageMagick++ glew gl`</commandLine>
         </linkerTool>
       </compileType>
       <packaging>
         <packType>Tar</packType>
         <verbose>false</verbose>
         <packFileList>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
+                            from="${OUTPUT_PATH}"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
+                            from="${OUTPUT_PATH}"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
+                            from="${OUTPUT_PATH}"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
+                            from="${OUTPUT_PATH}"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
           <packFileListElem type="File"
                             to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
                             from="${OUTPUT_PATH}"
