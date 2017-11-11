@@ -127,6 +127,8 @@ static void KeyboardCB(unsigned char Key, int x, int y)
 	else {
         printf("%d\n", Key);        
 		OGLDEV_ERROR0("Unimplemented GLUT key");
+		printf("Itay?\n");
+		GLUTBackendLeaveMainLoop();
 	}
 
 }

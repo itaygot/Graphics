@@ -13,6 +13,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tester", "Tester\Tester.vcxproj", "{579C1A0A-AB02-4A65-B438-9E0003CBD851}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloTexture", "HelloTexture\HelloTexture.vcxproj", "{D1341018-C6A2-4F1A-A510-D9A32A7E1F1D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{97EB90BC-3132-428D-AD1C-42B2AFE31BD6} = {97EB90BC-3132-428D-AD1C-42B2AFE31BD6}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloMesh", "HelloMesh\HelloMesh.vcxproj", "{FD700726-3916-46F9-9D9D-84A6B9A22856}"
 	ProjectSection(ProjectDependencies) = postProject

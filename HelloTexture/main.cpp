@@ -4,7 +4,6 @@
 // Lib includes
 #include <ogldev_callbacks.h>			// ICallbacks;
 #include <ogldev_glut_backend.h>		// glut backend calls
-//#include <soil_texture.h>
 #include <ogldev_texture.h>
 #include <ogldev_math_3d.h>				// Vector3f;
 #include <ogldev_util.h>				// ReadFile(); #define INVALID_UNIFORM_LOCATION;
