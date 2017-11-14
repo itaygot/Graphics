@@ -58,6 +58,33 @@ struct Vector2f
         x = _x;
         y = _y;
     }
+
+	Vector2f& operator+=(const Vector2f& r)
+	{
+		x += r.x;
+		y += r.y;
+		
+		return *this;
+	}
+
+	Vector2f& operator-=(const Vector2f& r)
+	{
+		x -= r.x;
+		y -= r.y;
+
+		return *this;
+	}
+
+	Vector2f& operator*=(float f)
+	{
+		x *= f;
+		y *= f;
+
+		return *this;
+	}
+
+	Vector2f Normalize();
+
 };
 
 
@@ -119,7 +146,6 @@ struct Vector3f
     {
         return &(x);
     }
-    
    
     Vector3f Cross(const Vector3f& v) const;
 
@@ -198,6 +224,39 @@ inline Vector3f operator*(const Vector3f& l, float f)
     return Ret;
 }
 
+inline float Dot(const Vector3f & lhs, const Vector3f & rhs) {
+	return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+}
+
+float Length(const Vector3f & v);
+
+float Length(const Vector2f & v);
+
+inline float Dot(const Vector2f & lhs, const Vector2f & rhs) {
+	return lhs.x * rhs.x + lhs.y * rhs.y;
+}
+
+inline Vector2f operator+(const Vector2f& l, const Vector2f& r)
+{
+	return Vector2f(l.x + r.x, l.y + r.y);
+
+	
+}
+
+inline Vector2f operator-(const Vector2f& l, const Vector2f& r)
+{
+	return Vector2f(l.x - r.x, l.y - r.y);
+}
+
+inline Vector2f operator*(const Vector2f& l, float f)
+{
+	return Vector2f(l.x * f, l.y * f);
+}
+
+inline Vector2f operator/(const Vector2f& l, float f)
+{
+	return Vector2f(l.x / f, l.y / f);
+}
 
 inline Vector4f operator/(const Vector4f& l, float f)
 {

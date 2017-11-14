@@ -6,7 +6,7 @@
 #include <ogldev_callbacks.h>	// ICallbacks;
 
 #include <GL/glew.h>			// typedef GLuint;
-#include <glm/vec2.hpp>			// glm::vec2;
+#include <glm/vec2.hpp>		// glm::vec2;
 
 #include <list>				// holding the balls
 

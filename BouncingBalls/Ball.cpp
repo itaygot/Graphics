@@ -12,7 +12,7 @@ void Ball::ballCollision(Ball& other)
 {
 	glm::vec2 axis;
 	float dist, hitAxisSpeed;
-	using glm::dot;
+	//using glm::dot;
 
 
 	// Check if touching and collision axis
@@ -35,9 +35,9 @@ void Ball::ballCollision(Ball& other)
 
 	else if (!_static == other._static) {
 		if (!_static)
-			_velo -= 2.f * axis * hitAxisSpeed * _bounciness;
+			_velo -= axis * 2.f * hitAxisSpeed * _bounciness;
 		else
-			other._velo += 2.f * axis * hitAxisSpeed * other._bounciness;
+			other._velo += axis * 2.f * hitAxisSpeed * other._bounciness;
 	}
 	
 }
@@ -45,6 +45,7 @@ void Ball::ballCollision(Ball& other)
 bool Ball::containsPoint(float x, float y) {
 	
 	using glm::vec2;
+	using glm::dot;
 
 	// Filter far points
 	if (x + _radius < _pos.x ||

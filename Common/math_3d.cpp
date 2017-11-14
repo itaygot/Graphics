@@ -22,6 +22,34 @@
 #include "ogldev_util.h"
 #include "ogldev_math_3d.h"
 
+float Length(const Vector2f & v) {
+	return sqrtf(v.x * v.x + v.y * v.y);
+}
+
+float Length(const Vector3f & v) {
+	return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+}
+
+Vector2f Vector2f::Normalize() {
+	const float length = Length(*this);
+
+	x /= length;
+	y /= length;
+
+	return *this;
+}
+
+Vector3f& Vector3f::Normalize()
+{
+	const float length = Length(*this);
+
+	x /= length;
+	y /= length;
+	z /= length;
+
+	return *this;
+}
+
 Vector3f Vector3f::Cross(const Vector3f& v) const
 {
     const float _x = y * v.z - z * v.y;
@@ -31,16 +59,6 @@ Vector3f Vector3f::Cross(const Vector3f& v) const
     return Vector3f(_x, _y, _z);
 }
 
-Vector3f& Vector3f::Normalize()
-{
-    const float Length = sqrtf(x * x + y * y + z * z);
-
-    x /= Length;
-    y /= Length;
-    z /= Length;
-
-    return *this;
-}
 
 void Vector3f::Rotate(float Angle, const Vector3f& Axe)
 {

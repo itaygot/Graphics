@@ -100,8 +100,8 @@ BBs::BouncingBalls(){
 	_animate = true;
 
 	// Light positions
-	_lightPos[0] = LIGHT_POS_X;
-	_lightPos[1] = LIGHT_POS_Y;
+	_lightPos.x = LIGHT_POS_X;
+	_lightPos.y = LIGHT_POS_Y;
 
 	// Held Ball
 	it_heldBall = _balls.end();
@@ -302,7 +302,7 @@ void BBs::drawBalls()
 
 		// lighting, extract the light hit pos on the ball
 		distFromLight = glm::length(it->_pos - _lightPos);
-		lightHit = it->_pos + 0.33f * (_lightPos - it->_pos) * (it->_radius / distFromLight);
+		lightHit = it->_pos + (_lightPos - it->_pos) * (it->_radius / distFromLight) * 0.33f;
 		
 		// Unifor Variables of Current Ball
 		glUniform2f(_ballCenterUVLoc, it->_pos.x, it->_pos.y);

@@ -21,7 +21,8 @@ const char * pFSFileName = "shader.fs";
 
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
-#define MESH_FILENAME "Content\\boblampclean.md5mesh"
+//#define MESH_FILENAME "..\\Content\\boblampclean.md5mesh"
+#define MESH_FILENAME "../Content/boblampclean.md5mesh"
 
 
 
