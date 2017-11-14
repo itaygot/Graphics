@@ -3,6 +3,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)..\$(ProjectName)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerEnvironment>PATH=%PATH%;$(OutDir)ImageMagickRT</LocalDebuggerEnvironment>
+    <LocalDebuggerEnvironment>PATH=%PATH%;$(SolutionDir)DLLs\;$(SolutionDir)DLLs\ImageMagickDLLs;</LocalDebuggerEnvironment>
   </PropertyGroup>
 </Project>

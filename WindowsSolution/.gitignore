@@ -15,7 +15,7 @@
 *.userprefs
 
 # Build results
-#[Dd]ebug/
+[Dd]ebug/
 [Dd]ebug/*
 [Dd]ebugPublic/
 [Rr]elease/
@@ -27,9 +27,6 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-# but do track glew32.dll and freeglut.dll
-![Dd]ebug/glew32.dll
-![Dd]ebug/freeglut.dll
 
 # Visual Studio 2015 cache/options directory
 .vs/
