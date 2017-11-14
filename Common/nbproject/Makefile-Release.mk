@@ -38,8 +38,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/glew_backend.o \
 	${OBJECTDIR}/glut_backend.o \
 	${OBJECTDIR}/math_3d.o \
+	${OBJECTDIR}/ogldev_mesh.o \
 	${OBJECTDIR}/ogldev_texture.o \
-	${OBJECTDIR}/ogldev_util.o
+	${OBJECTDIR}/ogldev_util.o \
+	${OBJECTDIR}/pipeline.o
 
 
 # C Compiler Flags
@@ -83,6 +85,11 @@ ${OBJECTDIR}/math_3d.o: math_3d.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/math_3d.o math_3d.cpp
 
+${OBJECTDIR}/ogldev_mesh.o: ogldev_mesh.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_mesh.o ogldev_mesh.cpp
+
 ${OBJECTDIR}/ogldev_texture.o: ogldev_texture.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -92,6 +99,11 @@ ${OBJECTDIR}/ogldev_util.o: ogldev_util.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_util.o ogldev_util.cpp
+
+${OBJECTDIR}/pipeline.o: pipeline.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pipeline.o pipeline.cpp
 
 # Subprojects
 .build-subprojects:

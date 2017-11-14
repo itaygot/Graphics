@@ -9,6 +9,7 @@
       <itemPath>../Include/ogldev_glut_backend.h</itemPath>
       <itemPath>../Include/ogldev_keys.h</itemPath>
       <itemPath>../Include/ogldev_math_3d.h</itemPath>
+      <itemPath>../Include/ogldev_mesh.h</itemPath>
       <itemPath>../Include/ogldev_texture.h</itemPath>
       <itemPath>../Include/ogldev_types.h</itemPath>
       <itemPath>../Include/ogldev_util.h</itemPath>
@@ -23,8 +24,10 @@
       <itemPath>glew_backend.cpp</itemPath>
       <itemPath>glut_backend.cpp</itemPath>
       <itemPath>math_3d.cpp</itemPath>
+      <itemPath>ogldev_mesh.cpp</itemPath>
       <itemPath>ogldev_texture.cpp</itemPath>
       <itemPath>ogldev_util.cpp</itemPath>
+      <itemPath>pipeline.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -70,6 +73,8 @@
       </item>
       <item path="../Include/ogldev_math_3d.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../Include/ogldev_mesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../Include/ogldev_texture.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Include/ogldev_types.h" ex="false" tool="3" flavor2="0">
@@ -82,9 +87,13 @@
       </item>
       <item path="math_3d.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="ogldev_mesh.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="ogldev_texture.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ogldev_util.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pipeline.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="3">
@@ -119,6 +128,8 @@
       </item>
       <item path="../Include/ogldev_math_3d.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../Include/ogldev_mesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../Include/ogldev_texture.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Include/ogldev_types.h" ex="false" tool="3" flavor2="0">
@@ -131,9 +142,13 @@
       </item>
       <item path="math_3d.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="ogldev_mesh.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="ogldev_texture.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ogldev_util.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pipeline.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>
