@@ -6,6 +6,7 @@
 #include <ogldev_callbacks.h>			// ICallbacks;
 #include <ogldev_glut_backend.h>		// glut backend calls
 #include <ogldev_pipeline.h>
+#include <ogldev_camera.h>
 #include <ogldev_mesh.h>
 
 // General includes
@@ -21,8 +22,8 @@ const char * pFSFileName = "shader.fs";
 
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
-//#define MESH_FILENAME "..\\Content\\boblampclean.md5mesh"
-#define MESH_FILENAME "../Content/boblampclean.md5mesh"
+//#define MESH_FILENAME "../Content/BobLampClean/boblampclean.md5mesh"
+#define MESH_FILENAME "../Content/lowpolycat/cat.obj"
 
 
 
@@ -56,6 +57,8 @@ struct App : ICallbacks {
 		_projection.zNear = 1.0f;
 		_projection.zFar = 400.0f;
 
+		// Init Camera
+		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 
 		// Load mesh
@@ -66,13 +69,17 @@ struct App : ICallbacks {
 	}
 
 	void RenderSceneCB() {
-
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		_camera.OnRender();
 
 		Pipeline P;
 		P.WorldPos(0.f, 0.f, 40.f);
+		P.Scale(Vector3f(0.1f, 0.1f, 0.1f));
 		P.SetPerspectiveProj(_projection);
-		P.SetCamera({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
+		//P.SetCamera({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
+		P.SetCamera(_camera);
 		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, P.GetWVPTrans());
 
 		_mesh.Render();
@@ -84,17 +91,32 @@ struct App : ICallbacks {
 		GLUTBackendRun(this);
 	}
 	
-	void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE OgldevKeyState) {
 
-		if (OgldevKey == OGLDEV_KEY_q)
+	void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE State)
+	{
+		switch (OgldevKey) {
+		case OGLDEV_KEY_ESCAPE:
+		case OGLDEV_KEY_q:
 			GLUTBackendLeaveMainLoop();
+			break;
+		default:
+			if (_camera.OnKeyboard(OgldevKey))
+				GLUTBeckendPostRedisplay();
+		}
+	}
 
+
+
+	void PassiveMouseCB(int x, int y) {
+		_camera.OnMouse(x, y);
+		GLUTBeckendPostRedisplay();
 	}
 
 private:
 	
 	Mesh _mesh;
 	PersProjInfo _projection;
+	Camera _camera;
 	GLuint _textureUnitLocation;
 	GLuint _wvpLocation;
 

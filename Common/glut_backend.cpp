@@ -146,6 +146,7 @@ static void RenderSceneCB()
 static void IdleCB()
 {
     s_pCallbacks->IdleCB();
+	//s_pCallbacks->RenderSceneCB();
 }
 
 static void MouseCB(int Button, int State, int x, int y)
