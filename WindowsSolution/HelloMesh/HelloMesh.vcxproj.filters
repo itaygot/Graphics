@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\HelloMesh\helloMesh.cpp">
+    <ClCompile Include="..\..\Projects\HelloMesh\helloMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

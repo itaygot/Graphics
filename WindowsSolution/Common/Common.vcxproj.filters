@@ -50,28 +50,28 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\ogldev_util.cpp">
+    <ClCompile Include="..\..\Projects\Common\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\glut_backend.cpp">
+    <ClCompile Include="..\..\Projects\Common\glew_backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\glew_backend.cpp">
+    <ClCompile Include="..\..\Projects\Common\glut_backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\math_3d.cpp">
+    <ClCompile Include="..\..\Projects\Common\math_3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\pipeline.cpp">
+    <ClCompile Include="..\..\Projects\Common\ogldev_mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\camera.cpp">
+    <ClCompile Include="..\..\Projects\Common\ogldev_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\ogldev_mesh.cpp">
+    <ClCompile Include="..\..\Projects\Common\ogldev_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\ogldev_texture.cpp">
+    <ClCompile Include="..\..\Projects\Common\pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

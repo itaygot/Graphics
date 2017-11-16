@@ -139,14 +139,14 @@
     <ClInclude Include="..\..\Include\ogldev_util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\camera.cpp" />
-    <ClCompile Include="..\..\Common\glew_backend.cpp" />
-    <ClCompile Include="..\..\Common\glut_backend.cpp" />
-    <ClCompile Include="..\..\Common\math_3d.cpp" />
-    <ClCompile Include="..\..\Common\ogldev_mesh.cpp" />
-    <ClCompile Include="..\..\Common\ogldev_texture.cpp" />
-    <ClCompile Include="..\..\Common\ogldev_util.cpp" />
-    <ClCompile Include="..\..\Common\pipeline.cpp" />
+    <ClCompile Include="..\..\Projects\Common\camera.cpp" />
+    <ClCompile Include="..\..\Projects\Common\glew_backend.cpp" />
+    <ClCompile Include="..\..\Projects\Common\glut_backend.cpp" />
+    <ClCompile Include="..\..\Projects\Common\math_3d.cpp" />
+    <ClCompile Include="..\..\Projects\Common\ogldev_mesh.cpp" />
+    <ClCompile Include="..\..\Projects\Common\ogldev_texture.cpp" />
+    <ClCompile Include="..\..\Projects\Common\ogldev_util.cpp" />
+    <ClCompile Include="..\..\Projects\Common\pipeline.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -128,19 +128,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\BouncingBalls\Ball.cpp" />
-    <ClCompile Include="..\..\BouncingBalls\bouncingBalls.cpp" />
-    <ClCompile Include="..\..\BouncingBalls\main.cpp" />
-    <ClCompile Include="..\..\BouncingBalls\ShaderIO.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\BouncingBalls\Ball.h" />
-    <ClInclude Include="..\..\BouncingBalls\bouncingBalls.h" />
-    <ClInclude Include="..\..\BouncingBalls\ShaderIO.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\BouncingBalls\SimpleShader.frag" />
     <None Include="..\..\BouncingBalls\SimpleShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Projects\BouncingBalls\Ball.h" />
+    <ClInclude Include="..\..\Projects\BouncingBalls\bouncingBalls.h" />
+    <ClInclude Include="..\..\Projects\BouncingBalls\ShaderIO.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Projects\BouncingBalls\Ball.cpp" />
+    <ClCompile Include="..\..\Projects\BouncingBalls\bouncingBalls.cpp" />
+    <ClCompile Include="..\..\Projects\BouncingBalls\main.cpp" />
+    <ClCompile Include="..\..\Projects\BouncingBalls\ShaderIO.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

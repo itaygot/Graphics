@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\HelloTexture\main.cpp">
+    <ClCompile Include="..\..\Projects\HelloTexture\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
