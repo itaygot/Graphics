@@ -127,7 +127,6 @@ struct App : ICallbacks {
 private:
 	Texture _texture;
 	GLuint _vbo;
-	/*GLuint _textureObject;*/
 	GLuint _textureUnitLocation;
 
 
