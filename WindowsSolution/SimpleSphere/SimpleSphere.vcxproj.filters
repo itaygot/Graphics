@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Projects\Sphere\main.cpp">
+    <ClCompile Include="..\..\Projects\SimpleSphere\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

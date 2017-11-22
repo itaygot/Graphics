@@ -24,7 +24,7 @@ const char * pFSFileName = "shader.fs";
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
 
-#define SPHERE_SEGMENTS	6
+#define SPHERE_SEGMENTS	8
 #define NUM_OF_VERTICES (2 + 4 * SPHERE_SEGMENTS * (2 * SPHERE_SEGMENTS - 1))
 #define NUM_OF_INDICES (3 * 4 * SPHERE_SEGMENTS * (2 + 2 * (2 * SPHERE_SEGMENTS - 2)))
 
