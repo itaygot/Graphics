@@ -18,7 +18,8 @@
 
 #include "ogldev_camera.h"
 
-const static float STEP_SCALE = 1.0f;
+//const static float STEP_SCALE = 1.0f;
+const static float STEP_SCALE = 0.5f;
 const static float EDGE_STEP = 0.5f;
 const static int MARGIN = 10;
 
@@ -195,7 +196,7 @@ void Camera::OnMouse(int x, int y)
 }
 
 
-void Camera::OnRender()
+bool Camera::OnRender()
 {
     bool ShouldUpdate = false;
 
@@ -224,6 +225,8 @@ void Camera::OnRender()
     if (ShouldUpdate) {
         Update();
     }
+
+	return ShouldUpdate;
 }
 
 void Camera::Update()

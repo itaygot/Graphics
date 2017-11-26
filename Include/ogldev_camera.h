@@ -37,7 +37,8 @@ public:
 
     void OnMouse(int x, int y);
 
-    void OnRender();
+    //void OnRender();
+	bool OnRender();
 
     const Vector3f& GetPos() const
     {

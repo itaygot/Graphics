@@ -85,6 +85,10 @@ struct Vector2f
 
 	Vector2f Normalize();
 
+	void Print() const
+	{
+		printf("(%.02f, %.02f)\n", x, y);
+	}
 };
 
 

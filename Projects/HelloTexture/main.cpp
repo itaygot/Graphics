@@ -55,7 +55,7 @@ struct App : ICallbacks {
 	bool Init() {
 
 		// Initialize GLUT Backend
-		GLUTBackendInit(0, nullptr, false, false);
+		GLUTBackendInit(0, nullptr, true, false);
 
 		// Create window & init glew
 		if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "Texture Test"))
@@ -90,12 +90,11 @@ struct App : ICallbacks {
 	void RenderSceneCB() {
 
 		// Clear the screen buffer
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Bind texture object
 		_texture.Bind(GL_TEXTURE0);
-		/*glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, _textureObject);*/
+		
 		
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -131,9 +130,9 @@ private:
 
 
 	void createVertexBuffer() {
-		Vertex vertices[] = { Vertex(Vector3f(-1.0f, -1.0f, 1.0f), Vector2f(0.f, 0.f)),
-							Vertex(Vector3f(0.f, 1.f, 1.f), Vector2f(0.5f, 1.0f)),
-							Vertex(Vector3f(1.0f, -1.0f, 1.0f), Vector2f(1.0f, 0.0f)) };
+		Vertex vertices[] = { Vertex(Vector3f(-1.0f, -1.0f, 0.99f), Vector2f(0.f, 0.f)),
+							Vertex(Vector3f(0.f, 1.f, 0.99f), Vector2f(0.5f, 1.0f)),
+							Vertex(Vector3f(1.0f, -1.0f, 0.99f), Vector2f(1.0f, 0.0f)) };
 
 		glGenBuffers(1, &_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
