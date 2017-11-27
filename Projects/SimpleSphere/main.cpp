@@ -31,11 +31,10 @@ int POLYGON_MODE = GL_LINE;
 #define TEXTURE_FILENAME "Textures/test.png"
 //#define TEXTURE_FILENAME "Textures/checkers.gif"
 
-#define SPHERE_SEGMENTS	12
-//#define NUM_OF_VERTICES (2 + 4 * SPHERE_SEGMENTS * (2 * SPHERE_SEGMENTS - 1))
-#define NUM_OF_VERTICES (4 * SPHERE_SEGMENTS * (2 * SPHERE_SEGMENTS + 1))
+#define SPHERE_SEGMENTS	10
+//#define NUM_OF_VERTICES (4 * SPHERE_SEGMENTS * (2 * SPHERE_SEGMENTS + 1))
+#define NUM_OF_VERTICES ((4 * SPHERE_SEGMENTS + 1) * (2 * SPHERE_SEGMENTS + 1))
 #define NUM_OF_INDICES (3 * 4 * SPHERE_SEGMENTS * (2 + 2 * (2 * SPHERE_SEGMENTS - 2)))
-
 
 struct Vertex {
 	Vector3f _pos;
@@ -47,7 +46,6 @@ struct Vertex {
 		_tex.Print();
 	}
 };
-
 
 struct App : ICallbacks {
 
@@ -130,9 +128,13 @@ struct App : ICallbacks {
 		_projection.zFar = 400.0f;
 		
 		// Init Camera
-		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, 
+		/*_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, 
 						{ 0.0f, 0.0f, -4.0f },
 						{ 0.0f, 0.0f, 1.0f },
+						{ 0.0f, 1.0f, 0.0f });*/
+		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT,
+						{ 0.0f, 0.0f, 4.0f },
+						{ 0.0f, 0.0f, -1.0f },
 						{ 0.0f, 1.0f, 0.0f });
 		
 	
@@ -141,8 +143,7 @@ struct App : ICallbacks {
 		createVertexBuffer();
 		createIndexBuffer();
 
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		
 		glPolygonMode(GL_FRONT_AND_BACK, POLYGON_MODE);
 
 		// Animate at start
@@ -151,19 +152,7 @@ struct App : ICallbacks {
 		// Render at start
 		_render = true;
 
-		/*int n = SPHERE_SEGMENTS;
-		_vertices[_indices[3 * 4 * n * (4 * n - 3) + 3 * d]].print();
-		printf("from vertex number %d  ", _indices[3 * 4 * n * (4 * n - 3) + 3 * d]);
-		printf("index number %d\n", 3 * 4 * n * (4 * n - 3) + 3 * d);
-		_vertices[_indices[3 * 4 * n * (4 * n - 3) + 3 * d + 1]].print();
-		printf("from vertex number %d  ", _indices[3 * 4 * n * (4 * n - 3) + 3 * d + 1]);
-		printf("index number %d\n", 3 * 4 * n * (4 * n - 3) + 3 * d + 1);
-		_vertices[_indices[3 * 4 * n * (4 * n - 3) + 3 * d + 2]].print();
-		printf("from vertex number %d  ", _indices[3 * 4 * n * (4 * n - 3) + 3 * d + 2]);
-		printf("index number %d\n", 3 * 4 * n * (4 * n - 3) + 3 * d + 2);*/
-
-
-
+		
 		return true;
 	}
 
@@ -178,6 +167,7 @@ struct App : ICallbacks {
 			scale += 0.5f;
 
 		Pipeline P;
+		P.Scale(2.f, 2.f, 2.f);
 		P.Rotate(0.0f, scale, 0.0f);
 		P.SetPerspectiveProj(_projection);
 		P.SetCamera(_camera);
@@ -193,7 +183,7 @@ struct App : ICallbacks {
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 		glDrawElements(GL_TRIANGLES, NUM_OF_INDICES, GL_UNSIGNED_INT, 0);
-		//glDrawElements(GL_TRIANGLES, 33, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
 		/*int n = SPHERE_SEGMENTS;
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (const GLvoid*)((3 * 4 * n * (4*n - 3) + 3 * d) * sizeof(int)));*/
 		
@@ -210,7 +200,7 @@ struct App : ICallbacks {
 	}
 
 private:
-	
+
 	void createVertexBuffer() {
 
 		const int n = SPHERE_SEGMENTS;
@@ -225,22 +215,19 @@ private:
 			sina = std::sin((float)a * delta);
 			cosa = std::cos((float)a * delta);
 
-			for (b = 0; b < 4 * n; b++, i++) {
+			for (b = 0; b < 4 * n + 1; b++, i++) {
 				cosb = std::cos((float)b * delta);
 				sinb = std::sin((float)b * delta);
-				
-				if (a == 0 || a == 2 * n) 
+
+				if (a == 0 || a == 2 * n)
 					vertices[i]._pos = Vector3f(0.f, 0.f, cosa);
-				else 
+				else
 					vertices[i]._pos = Vector3f(cosb * sina, sinb * sina, cosa);
 
-				
+
 				vertices[i]._tex = Vector2f((float)b / (4 * n), (float)a / (2 * n));
 			}
-
 		}
-
-
 
 		glGenBuffers(1, &_vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -248,38 +235,36 @@ private:
 	}
 
 	void createIndexBuffer() {
-		
+
 		const int n = SPHERE_SEGMENTS;
-		int a, b, nextb, i = 0;
+		int a, b, i = 0;
 		GLuint indices[NUM_OF_INDICES];
-
-
+		
 		for (a = 0; a < 2 * n; a++)
 			for (b = 0; b < 4 * n; b++) {
-				nextb = (b + 1 < 4 * n) ? b + 1 : 0;
 
 				if (a == 0) {
-					indices[i] = a * 4 * n + b;
-					indices[i + 1] = (1 + a) * 4 * n + b;
-					indices[i + 2] = (1 + a) * 4 * n + nextb;
+					indices[i] = a * (4 * n + 1) + b;
+					indices[i + 1] = (1 + a) * (4 * n + 1) + b;
+					indices[i + 2] = (1 + a) * (4 * n + 1) + b + 1;
 					i += 3;
 				}
-
+				
 				else if (a == 2 * n - 1) {
-					indices[i] = (1 + a) * 4 * n + b;
-					indices[i + 1] = a * 4 * n + nextb;
-					indices[i + 2] = a * 4 * n + b;
+					indices[i] = (1 + a) * (4 * n + 1) + b;
+					indices[i + 1] = a * (4 * n + 1) + b + 1;
+					indices[i + 2] = a * (4 * n + 1) + b;
 					i += 3;
 				}
 
 				else {
-					indices[i] = a * 4 * n + b;
-					indices[i + 1] = (1 + a) * 4 * n + b;
-					indices[i + 2] = (1 + a) * 4 * n + nextb;
+					indices[i] = a * (4 * n + 1) + b;
+					indices[i + 1] = (1 + a) * (4 * n + 1) + b;
+					indices[i + 2] = (1 + a) * (4 * n + 1) + b + 1;
 
-					indices[i + 3] = a * 4 * n + b;
-					indices[i + 4] = (1 + a) * 4 * n + nextb;
-					indices[i + 5] = a * 4 * n + nextb;
+					indices[i + 3] = a * (4 * n + 1) + b;
+					indices[i + 4] = (1 + a) * (4 * n + 1) + b + 1;
+					indices[i + 5] = a * (4 * n + 1) + b + 1;
 					i += 6;
 				}
 
@@ -292,7 +277,7 @@ private:
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	}
-
+	
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 	{
 		GLuint ShaderObj = glCreateShader(ShaderType);
