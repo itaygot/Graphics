@@ -32,7 +32,6 @@ int POLYGON_MODE = GL_LINE;
 //#define TEXTURE_FILENAME "Textures/checkers.gif"
 
 #define SPHERE_SEGMENTS	10
-//#define NUM_OF_VERTICES (4 * SPHERE_SEGMENTS * (2 * SPHERE_SEGMENTS + 1))
 #define NUM_OF_VERTICES ((4 * SPHERE_SEGMENTS + 1) * (2 * SPHERE_SEGMENTS + 1))
 #define NUM_OF_INDICES (3 * 4 * SPHERE_SEGMENTS * (2 + 2 * (2 * SPHERE_SEGMENTS - 2)))
 
@@ -167,7 +166,6 @@ struct App : ICallbacks {
 			scale += 0.5f;
 
 		Pipeline P;
-		P.Scale(2.f, 2.f, 2.f);
 		P.Rotate(0.0f, scale, 0.0f);
 		P.SetPerspectiveProj(_projection);
 		P.SetCamera(_camera);
@@ -184,9 +182,6 @@ struct App : ICallbacks {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 		glDrawElements(GL_TRIANGLES, NUM_OF_INDICES, GL_UNSIGNED_INT, 0);
 		//glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
-		/*int n = SPHERE_SEGMENTS;
-		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (const GLvoid*)((3 * 4 * n * (4*n - 3) + 3 * d) * sizeof(int)));*/
-		
 		
 
 		glDisableVertexAttribArray(0);
@@ -242,7 +237,7 @@ private:
 		
 		for (a = 0; a < 2 * n; a++)
 			for (b = 0; b < 4 * n; b++) {
-
+				
 				if (a == 0) {
 					indices[i] = a * (4 * n + 1) + b;
 					indices[i + 1] = (1 + a) * (4 * n + 1) + b;
@@ -367,6 +362,7 @@ private:
 
 
 int main(int argc, char ** argv) {
+	printf("%d  %d\n", NUM_OF_VERTICES, NUM_OF_INDICES);
 	App app;
 	if (!app.Init())
 		return 1;
