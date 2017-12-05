@@ -17,19 +17,23 @@
 
 #define DEBUG
 
-// Globals
+enum ROTATE_AXIS {ROTATE_AXIS_X, ROTATE_AXIS_Y, ROTATE_AXIS_Z};
+
+// GLOBALS 
+//int gPOLYGON_MODE = GL_LINE;
+int gPOLYGON_MODE = GL_FILL;
+ROTATE_AXIS gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
+
 const char * pVSFileName = "shader.vs";
 const char * pFSFileName = "shader.fs";
 
-int d = 0;
-
-int POLYGON_MODE = GL_LINE;
+#define TEXTURE_FILENAME "Textures/test.png"
+//#define TEXTURE_FILENAME "Textures/checkers.gif"
 
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
 
-#define TEXTURE_FILENAME "Textures/test.png"
-//#define TEXTURE_FILENAME "Textures/checkers.gif"
+
 
 #define SPHERE_SEGMENTS	10
 #define NUM_OF_VERTICES ((4 * SPHERE_SEGMENTS + 1) * (2 * SPHERE_SEGMENTS + 1))
@@ -76,9 +80,18 @@ struct App : ICallbacks {
 			_animate = !_animate;
 			break;
 		case OGLDEV_KEY_m:
-			POLYGON_MODE = (POLYGON_MODE == GL_LINE) ? GL_FILL : GL_LINE;
-			glPolygonMode(GL_FRONT_AND_BACK, POLYGON_MODE);
+			gPOLYGON_MODE = (gPOLYGON_MODE == GL_LINE) ? GL_FILL : GL_LINE;
+			glPolygonMode(GL_FRONT_AND_BACK, gPOLYGON_MODE);
 			_render = true;
+			break;
+		case OGLDEV_KEY_x:
+			gCURR_ROTATE_AXIS = ROTATE_AXIS_X;
+			break;
+		case OGLDEV_KEY_y:
+			gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
+			break;
+		case OGLDEV_KEY_z:
+			gCURR_ROTATE_AXIS = ROTATE_AXIS_Z;
 			break;
 		default:
 			if (_camera.OnKeyboard(OgldevKey))
@@ -143,10 +156,10 @@ struct App : ICallbacks {
 		createIndexBuffer();
 
 		
-		glPolygonMode(GL_FRONT_AND_BACK, POLYGON_MODE);
+		glPolygonMode(GL_FRONT_AND_BACK, gPOLYGON_MODE);
 
 		// Animate at start
-		_animate = false;
+		_animate = true;
 
 		// Render at start
 		_render = true;
@@ -161,12 +174,22 @@ struct App : ICallbacks {
 
 		_camera.OnRender();
 
-		static float scale = 0.0f;
-		if (_animate)
-			scale += 0.5f;
+		static Vector3f scale(0.0f, 0.0f, 0.0f);
+		if(_animate)
+			switch (gCURR_ROTATE_AXIS) {
+			case ROTATE_AXIS_X:
+				scale.x += 0.5f;
+				break;
+			case ROTATE_AXIS_Y:
+				scale.y += 0.5f;
+				break;
+			default:
+				scale.z += 0.5f;
+				break;
+			}
 
 		Pipeline P;
-		P.Rotate(0.0f, scale, 0.0f);
+		P.Rotate(scale);
 		P.SetPerspectiveProj(_projection);
 		P.SetCamera(_camera);
 		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, P.GetWVPTrans());
@@ -347,7 +370,7 @@ private:
 		assert(_wvpLocation != INVALID_UNIFORM_LOCATION);
 
 		_textureUnitLocation = glGetUniformLocation(ShaderProgram, "gTextureUnit");
-		//assert(_textureUnitLocation != INVALID_UNIFORM_LOCATION);
+		assert(_textureUnitLocation != INVALID_UNIFORM_LOCATION);
 	}
 
 	PersProjInfo _projection;
