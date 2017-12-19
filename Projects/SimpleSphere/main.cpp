@@ -20,7 +20,6 @@
 enum ROTATE_AXIS {ROTATE_AXIS_X, ROTATE_AXIS_Y, ROTATE_AXIS_Z};
 
 // GLOBALS 
-//int gPOLYGON_MODE = GL_LINE;
 int gPOLYGON_MODE = GL_FILL;
 ROTATE_AXIS gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
 
@@ -28,7 +27,6 @@ const char * pVSFileName = "shader.vs";
 const char * pFSFileName = "shader.fs";
 
 #define TEXTURE_FILENAME "Textures/test.png"
-//#define TEXTURE_FILENAME "Textures/checkers.gif"
 
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
@@ -85,13 +83,13 @@ struct App : ICallbacks {
 			_render = true;
 			break;
 		case OGLDEV_KEY_x:
-			gCURR_ROTATE_AXIS = ROTATE_AXIS_X;
+			ChangeRotationAxis(ROTATE_AXIS_X);
 			break;
 		case OGLDEV_KEY_y:
-			gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
+			ChangeRotationAxis(ROTATE_AXIS_Y);
 			break;
 		case OGLDEV_KEY_z:
-			gCURR_ROTATE_AXIS = ROTATE_AXIS_Z;
+			ChangeRotationAxis(ROTATE_AXIS_Z);
 			break;
 		default:
 			if (_camera.OnKeyboard(OgldevKey))
@@ -123,6 +121,9 @@ struct App : ICallbacks {
 		// Compile shaders
 		CompileShaders();
 
+		// Init Rotation matrices
+		_theta = 0.f;
+		_accumRotation.InitIdentity();
 		
 		// Init Texture
 		if (!_texture.Load())
@@ -140,14 +141,14 @@ struct App : ICallbacks {
 		_projection.zFar = 400.0f;
 		
 		// Init Camera
-		/*_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, 
+		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, 
 						{ 0.0f, 0.0f, -4.0f },
 						{ 0.0f, 0.0f, 1.0f },
-						{ 0.0f, 1.0f, 0.0f });*/
-		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT,
+						{ 0.0f, 1.0f, 0.0f });
+		/*_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT,
 						{ 0.0f, 0.0f, 4.0f },
 						{ 0.0f, 0.0f, -1.0f },
-						{ 0.0f, 1.0f, 0.0f });
+						{ 0.0f, 1.0f, 0.0f });*/
 		
 	
 		
@@ -169,12 +170,16 @@ struct App : ICallbacks {
 	}
 
 	void RenderSceneCB() {
-		
+
+		Pipeline P;
+
+		// Clear Color and Depth buffers
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Camera movement from mouse on screen's edges
 		_camera.OnRender();
 
-		static Vector3f scale(0.0f, 0.0f, 0.0f);
+		/*static Vector3f scale(0.0f, 0.0f, 0.0f);
 		if(_animate)
 			switch (gCURR_ROTATE_AXIS) {
 			case ROTATE_AXIS_X:
@@ -192,9 +197,33 @@ struct App : ICallbacks {
 		P.Rotate(scale);
 		P.SetPerspectiveProj(_projection);
 		P.SetCamera(_camera);
-		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, P.GetWVPTrans());
+		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, P.GetWVPTrans());*/
+
+		
+		// Animate
+		if (_animate)
+			_theta += 0.5f;
+			switch (gCURR_ROTATE_AXIS) {
+			case ROTATE_AXIS_X:
+				P.Rotate(_theta, 0, 0);
+				break;
+			case ROTATE_AXIS_Y:
+				P.Rotate(0, _theta, 0);
+				break;
+			default:
+				P.Rotate(0, 0, _theta);
+				break;
+			}
+
+		
+		// Set Uniform Transformation
+		P.SetPerspectiveProj(_projection);
+		P.SetCamera(_camera);
+		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, 
+			P.GetVPTrans() * _accumRotation * P.GetWorldTrans());
 		
 
+		// Draw the Scene
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 
@@ -204,15 +233,15 @@ struct App : ICallbacks {
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 		glDrawElements(GL_TRIANGLES, NUM_OF_INDICES, GL_UNSIGNED_INT, 0);
-		//glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
 		
-
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 
 		GLUTBackendSwapBuffers();
 
-		// Reset '_render'
+
+
+		// Reset '_render' var
 		_render = _animate;
 		
 	}
@@ -373,6 +402,30 @@ private:
 		assert(_textureUnitLocation != INVALID_UNIFORM_LOCATION);
 	}
 
+	void ChangeRotationAxis(ROTATE_AXIS axis) {
+		if (axis == gCURR_ROTATE_AXIS)
+			return;
+
+		Pipeline P;
+		switch (gCURR_ROTATE_AXIS) {
+		case ROTATE_AXIS_X:
+			P.Rotate(_theta, 0, 0);
+			break;
+		case ROTATE_AXIS_Y:
+			P.Rotate(0, _theta, 0);
+			break;
+		default:
+			P.Rotate(0, 0, _theta);
+			break;
+		}
+
+		gCURR_ROTATE_AXIS = axis;
+		_theta = 0.f;
+		_accumRotation = _accumRotation * P.GetWorldTrans();
+		
+	}
+
+
 	PersProjInfo _projection;
 	Camera _camera;
 	Texture _texture;
@@ -380,6 +433,9 @@ private:
 	GLuint _wvpLocation, _textureUnitLocation;
 	bool _render;
 	bool _animate;
+	// rotaion stuff:
+	Matrix4f _accumRotation;
+	float _theta;
 
 };
 
