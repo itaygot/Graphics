@@ -17,25 +17,38 @@
 
 #define DEBUG
 
-enum ROTATE_AXIS {ROTATE_AXIS_X, ROTATE_AXIS_Y, ROTATE_AXIS_Z};
+//enum ROTATE_AXIS {ROTATE_AXIS_X, ROTATE_AXIS_Y, ROTATE_AXIS_Z};
+enum ROTATE_AXIS { ROTATE_AXIS_X, ROTATE_AXIS_X_OPP, ROTATE_AXIS_Y, ROTATE_AXIS_Y_OPP,
+	ROTATE_AXIS_Z, ROTATE_AXIS_Z_OPP};
 
-// GLOBALS 
+
+// ----------------- GLOBAL BEHAVIOR SETTINGS -----------------------
+
+float gRotationSpeed = 0.25f;
 int gPOLYGON_MODE = GL_FILL;
 ROTATE_AXIS gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
 
 const char * pVSFileName = "shader.vs";
 const char * pFSFileName = "shader.fs";
 
-#define TEXTURE_FILENAME "Textures/test.png"
+//#define TEXTURE_FILENAME "Textures/test.png"
+#define TEXTURE_FILENAME "Textures/earth.jpg"
+//#define TEXTURE_FILENAME "Textures/gradient.jpg"
 
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
 
+#define SPHERE_SEGMENTS	12
+
+// ------------------------------------------------------------------
 
 
-#define SPHERE_SEGMENTS	10
+
+
+// DO-NOT CHANGE!
 #define NUM_OF_VERTICES ((4 * SPHERE_SEGMENTS + 1) * (2 * SPHERE_SEGMENTS + 1))
 #define NUM_OF_INDICES (3 * 4 * SPHERE_SEGMENTS * (2 + 2 * (2 * SPHERE_SEGMENTS - 2)))
+
 
 struct Vertex {
 	Vector3f _pos;
@@ -69,6 +82,8 @@ struct App : ICallbacks {
 
 	void KeyboardCB(OGLDEV_KEY OgldevKey, OGLDEV_KEY_STATE State)
 	{
+		ROTATE_AXIS axis;
+
 		switch (OgldevKey) {
 		case OGLDEV_KEY_ESCAPE:
 		case OGLDEV_KEY_q:
@@ -83,13 +98,22 @@ struct App : ICallbacks {
 			_render = true;
 			break;
 		case OGLDEV_KEY_x:
-			ChangeRotationAxis(ROTATE_AXIS_X);
+			if(gCURR_ROTATE_AXIS == ROTATE_AXIS_X)
+				ChangeRotationAxis(ROTATE_AXIS_X_OPP);
+			else
+				ChangeRotationAxis(ROTATE_AXIS_X);
 			break;
 		case OGLDEV_KEY_y:
-			ChangeRotationAxis(ROTATE_AXIS_Y);
+			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_Y)
+				ChangeRotationAxis(ROTATE_AXIS_Y_OPP);
+			else
+				ChangeRotationAxis(ROTATE_AXIS_Y);
 			break;
 		case OGLDEV_KEY_z:
-			ChangeRotationAxis(ROTATE_AXIS_Z);
+			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_Z)
+				ChangeRotationAxis(ROTATE_AXIS_Z_OPP);
+			else
+				ChangeRotationAxis(ROTATE_AXIS_Z);
 			break;
 		default:
 			if (_camera.OnKeyboard(OgldevKey))
@@ -123,7 +147,10 @@ struct App : ICallbacks {
 
 		// Init Rotation matrices
 		_theta = 0.f;
-		_accumRotation.InitIdentity();
+		Pipeline P;
+		P.Rotate(90.f, 0.f, 0.f);
+		_accumRotation = P.GetWorldTrans();
+		
 		
 		// Init Texture
 		if (!_texture.Load())
@@ -145,13 +172,9 @@ struct App : ICallbacks {
 						{ 0.0f, 0.0f, -4.0f },
 						{ 0.0f, 0.0f, 1.0f },
 						{ 0.0f, 1.0f, 0.0f });
-		/*_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT,
-						{ 0.0f, 0.0f, 4.0f },
-						{ 0.0f, 0.0f, -1.0f },
-						{ 0.0f, 1.0f, 0.0f });*/
+
 		
-	
-		
+			
 		// Create vertex and index buffer
 		createVertexBuffer();
 		createIndexBuffer();
@@ -178,40 +201,28 @@ struct App : ICallbacks {
 
 		// Camera movement from mouse on screen's edges
 		_camera.OnRender();
-
-		/*static Vector3f scale(0.0f, 0.0f, 0.0f);
-		if(_animate)
-			switch (gCURR_ROTATE_AXIS) {
-			case ROTATE_AXIS_X:
-				scale.x += 0.5f;
-				break;
-			case ROTATE_AXIS_Y:
-				scale.y += 0.5f;
-				break;
-			default:
-				scale.z += 0.5f;
-				break;
-			}
-
-		Pipeline P;
-		P.Rotate(scale);
-		P.SetPerspectiveProj(_projection);
-		P.SetCamera(_camera);
-		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, P.GetWVPTrans());*/
-
-		
-		// Animate
+	
+		// Animate Sphere
 		if (_animate)
-			_theta += 0.5f;
+			_theta += gRotationSpeed;
 			switch (gCURR_ROTATE_AXIS) {
 			case ROTATE_AXIS_X:
 				P.Rotate(_theta, 0, 0);
 				break;
+			case ROTATE_AXIS_X_OPP:
+				P.Rotate(-_theta, 0, 0);
+				break;
 			case ROTATE_AXIS_Y:
 				P.Rotate(0, _theta, 0);
 				break;
-			default:
+			case ROTATE_AXIS_Y_OPP:
+				P.Rotate(0, -_theta, 0);
+				break;
+			case ROTATE_AXIS_Z:
 				P.Rotate(0, 0, _theta);
+				break;
+			default:
+				P.Rotate(0, 0, -_theta);		// ROTATE_AXIS_Z_OPP
 				break;
 			}
 
@@ -219,8 +230,8 @@ struct App : ICallbacks {
 		// Set Uniform Transformation
 		P.SetPerspectiveProj(_projection);
 		P.SetCamera(_camera);
-		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, 
-			P.GetVPTrans() * _accumRotation * P.GetWorldTrans());
+		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE,
+			P.GetVPTrans() * P.GetWorldTrans() * _accumRotation);
 		
 
 		// Draw the Scene
@@ -272,7 +283,7 @@ private:
 					vertices[i]._pos = Vector3f(cosb * sina, sinb * sina, cosa);
 
 
-				vertices[i]._tex = Vector2f((float)b / (4 * n), (float)a / (2 * n));
+				vertices[i]._tex = Vector2f((float)b / (4 * n), 1.f - (float)a / (2 * n));
 			}
 		}
 
@@ -403,28 +414,37 @@ private:
 	}
 
 	void ChangeRotationAxis(ROTATE_AXIS axis) {
-		if (axis == gCURR_ROTATE_AXIS)
-			return;
+		/*if (axis == gCURR_ROTATE_AXIS)
+			return;*/
 
 		Pipeline P;
 		switch (gCURR_ROTATE_AXIS) {
 		case ROTATE_AXIS_X:
 			P.Rotate(_theta, 0, 0);
 			break;
+		case ROTATE_AXIS_X_OPP:
+			P.Rotate(-_theta, 0, 0);
+			break;
 		case ROTATE_AXIS_Y:
 			P.Rotate(0, _theta, 0);
 			break;
-		default:
+		case ROTATE_AXIS_Y_OPP:
+			P.Rotate(0, -_theta, 0);
+			break;
+		case ROTATE_AXIS_Z:
 			P.Rotate(0, 0, _theta);
+			break;
+		default:			// (ROTATE_AXIS_Z_OPP)
+			P.Rotate(0, 0, -_theta);
 			break;
 		}
 
 		gCURR_ROTATE_AXIS = axis;
 		_theta = 0.f;
-		_accumRotation = _accumRotation * P.GetWorldTrans();
+		_accumRotation = P.GetWorldTrans() * _accumRotation;
 		
 	}
-
+	
 
 	PersProjInfo _projection;
 	Camera _camera;
