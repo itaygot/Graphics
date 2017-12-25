@@ -33,6 +33,7 @@ const char * pFSFileName = "shader.fs";
 
 //#define TEXTURE_FILENAME "../../Content/Textures/test.png"
 #define TEXTURE_FILENAME "../../Content/Textures/earth.jpg"
+//#define TEXTURE_FILENAME "../../Content/Textures/city.jpg"
 //#define TEXTURE_FILENAME "../../Content/Textures/yard.jpg"
 
 
@@ -173,7 +174,7 @@ struct App : ICallbacks {
 						{ 0.0f, 0.0f, -4.0f },
 						{ 0.0f, 0.0f, 1.0f },
 						{ 0.0f, 1.0f, 0.0f });
-
+		
 		
 			
 		// Create vertex and index buffer
