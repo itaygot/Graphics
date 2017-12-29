@@ -18,6 +18,8 @@
 
 #include <iostream>
 #include "ogldev_texture.h"
+//#include <ImageMagick-6/Magick++.h>
+#include <Magick++.h>		// Loading textures' blobs from image files
 
 Texture::Texture(GLenum TextureTarget, const std::string& FileName)
 {
@@ -28,7 +30,28 @@ Texture::Texture(GLenum TextureTarget, const std::string& FileName)
 
 bool Texture::Load()
 {
-    try {
+	Magick::Image image;
+	Magick::Blob blob;
+	try {
+		image.read(m_fileName);
+		image.write(&blob, "RGBA");
+	}
+	catch (Magick::Error& Error) {
+		std::cout << "Error loading texture '" << m_fileName << "': " << Error.what() << std::endl;
+		return false;
+	}
+
+	glGenTextures(1, &m_textureObj);
+	glBindTexture(m_textureTarget, m_textureObj);
+	glTexImage2D(m_textureTarget, 0, GL_RGBA, image.columns(), image.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+	glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(m_textureTarget, 0);
+
+	return true;
+
+
+    /*try {
         m_image.read(m_fileName);
         m_image.write(&m_blob, "RGBA");
     }
@@ -44,7 +67,7 @@ bool Texture::Load()
     glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);    
     glBindTexture(m_textureTarget, 0);
     
-    return true;
+    return true;*/
 }
 
 void Texture::Bind(GLenum TextureUnit)

@@ -1,19 +1,22 @@
 /*
+	ORIGINAL FILE:
+		Copyright 2011 Etay Meiri
 
-	Copyright 2011 Etay Meiri
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+		You should have received a copy of the GNU General Public License
+		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	EDITED BY:
+		Itay Gothelf 2017
 */
 
 #ifndef TEXTURE_H
@@ -22,8 +25,8 @@
 #include <string>
 
 #include <GL/glew.h>
-//#include <ImageMagick-6/Magick++.h>
-#include <Magick++.h>
+////#include <ImageMagick-6/Magick++.h>
+//#include <Magick++.h>		// Loading textures' blobs from image files
 
 class Texture
 {
@@ -38,8 +41,8 @@ private:
     std::string m_fileName;
     GLenum m_textureTarget;			// e.g. 'GL_TEXTURE_2D' 'GL_TEXTURE_1D' etc'
     GLuint m_textureObj;			// Handle to the OGL object (similar to '_vbo;)
-    Magick::Image m_image;			// Magick::Image object; Extracting texture files.
-    Magick::Blob m_blob;			// Binary Large Object - holding texture data
+    //Magick::Image m_image;			// Magick::Image object; Extracting texture files.
+    //Magick::Blob m_blob;			// Binary Large Object - holding texture data
 };
 
 
