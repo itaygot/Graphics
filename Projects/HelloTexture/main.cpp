@@ -55,7 +55,7 @@ struct App : ICallbacks {
 	bool Init() {
 
 		// Initialize GLUT Backend
-		GLUTBackendInit(0, nullptr, true, false);
+		GLUTBackendInit(0, nullptr, true, false, true);
 
 		// Create window & init glew
 		if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "Texture Test"))

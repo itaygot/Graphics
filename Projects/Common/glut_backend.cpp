@@ -34,6 +34,7 @@ static ICallbacks* s_pCallbacks = NULL;
 
 static bool sWithDepth = false;
 static bool sWithStencil = false;
+static bool sWithCulling = true;
 
 OGLDEV_KEY GLUTKeyToOGLDEVKey(uint Key)
 {
@@ -179,10 +180,11 @@ static void InitCallbacks()
 
 
 
-void GLUTBackendInit(int argc, char** argv, bool WithDepth, bool WithStencil)
+void GLUTBackendInit(int argc, char** argv, bool WithDepth, bool WithStencil, bool WithCulling)
 {
     sWithDepth = WithDepth;
     sWithStencil = WithStencil;
+	sWithCulling = WithCulling;
 
 	// GLUT call
     glutInit(&argc, argv);
@@ -238,13 +240,16 @@ void GLUTBackendRun(ICallbacks* pCallbacks)
 
 	// GLEW stuff
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
-
+	if (sWithCulling) {
+		glFrontFace(GL_CW);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+	}
+    
     if (sWithDepth) {
         glEnable(GL_DEPTH_TEST);
     }
+
 
     s_pCallbacks = pCallbacks;
     InitCallbacks();

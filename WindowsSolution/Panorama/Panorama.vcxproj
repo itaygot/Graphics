@@ -78,6 +78,10 @@
       <AdditionalIncludeDirectories>$(SolutionDir)../Include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Lib;$(SolutionDir)$(Configuration);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib;CORE_DB_Magick++_.lib;glew32.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

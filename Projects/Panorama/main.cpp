@@ -32,9 +32,9 @@ const char * pVSFileName = "shader.vs";
 const char * pFSFileName = "shader.fs";
 
 //#define TEXTURE_FILENAME "../../Content/Textures/test.png"
-#define TEXTURE_FILENAME "../../Content/Textures/earth.jpg"
+//#define TEXTURE_FILENAME "../../Content/Textures/earth.jpg"
 //#define TEXTURE_FILENAME "../../Content/Textures/city.jpg"
-//#define TEXTURE_FILENAME "../../Content/Textures/yard.jpg"
+#define TEXTURE_FILENAME "../../Content/Textures/yard.jpg"
 
 
 #define WINDOW_WIDTH	768
@@ -138,7 +138,7 @@ struct App : ICallbacks {
 	bool Init() {
 
 		// Initialize GLUT Backend
-		GLUTBackendInit(0, nullptr, true, false);
+		GLUTBackendInit(0, nullptr, true, false, false);
 
 		// Create window & init glew
 		if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "Sphere"))
@@ -171,7 +171,7 @@ struct App : ICallbacks {
 		
 		// Init Camera
 		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, 
-						{ 0.0f, 0.0f, -4.0f },
+						{ 0.0f, 0.0f, 0.0f },
 						{ 0.0f, 0.0f, 1.0f },
 						{ 0.0f, 1.0f, 0.0f });
 		

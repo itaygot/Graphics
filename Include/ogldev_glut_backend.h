@@ -26,7 +26,7 @@
 
 class ICallbacks;
 
-void GLUTBackendInit(int argc, char** argv, bool WithDepth, bool WithStencil);
+void GLUTBackendInit(int argc, char** argv, bool WithDepth, bool WithStencil, bool WithCulling);
 
 bool GLUTBackendCreateWindow(uint Width, uint Height, bool isFullScreen, const char* pTitle);
 
