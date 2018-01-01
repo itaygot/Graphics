@@ -33,12 +33,14 @@ const char * pFSFileName = "shader.fs";
 
 //#define TEXTURE_FILENAME "../../Content/Textures/test.png"
 //#define TEXTURE_FILENAME "../../Content/Textures/earth.jpg"
-//#define TEXTURE_FILENAME "../../Content/Textures/city.jpg"
-#define TEXTURE_FILENAME "../../Content/Textures/yard.jpg"
+#define TEXTURE_FILENAME "../../Content/Textures/boat.jpg"
+//#define TEXTURE_FILENAME "../../Content/Textures/yard.jpg"
 
 
 #define WINDOW_WIDTH	768
 #define WINDOW_HEIGHT	768
+
+
 
 #define SPHERE_SEGMENTS	12
 
