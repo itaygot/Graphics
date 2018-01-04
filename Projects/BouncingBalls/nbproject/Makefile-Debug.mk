@@ -55,7 +55,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lm -lglut -lGLEW -lGL ../Common/dist/Debug/GNU-Linux/libcommon.a
+LDLIBSOPTIONS=../Common/dist/Debug/GNU-Linux/libcommon.a -lm -lglut -lGLEW -lGL
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -67,25 +67,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bouncingballs: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bouncingballs ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/Ball.o: Ball.cpp 
+${OBJECTDIR}/Ball.o: Ball.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ball.o Ball.cpp
+	$(COMPILE.cc) -g -I../../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ball.o Ball.cpp
 
-${OBJECTDIR}/ShaderIO.o: ShaderIO.cpp 
+${OBJECTDIR}/ShaderIO.o: ShaderIO.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ShaderIO.o ShaderIO.cpp
+	$(COMPILE.cc) -g -I../../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ShaderIO.o ShaderIO.cpp
 
-${OBJECTDIR}/bouncingBalls.o: bouncingBalls.cpp 
+${OBJECTDIR}/bouncingBalls.o: bouncingBalls.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bouncingBalls.o bouncingBalls.cpp
+	$(COMPILE.cc) -g -I../../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bouncingBalls.o bouncingBalls.cpp
 
-${OBJECTDIR}/main.o: main.cpp 
+${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I../../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -94,7 +94,6 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bouncingballs
 
 # Subprojects
 .clean-subprojects:

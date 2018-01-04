@@ -67,7 +67,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/hellomesh: ${OBJECTFILES}
 ${OBJECTDIR}/helloMesh.o: helloMesh.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/helloMesh.o helloMesh.cpp
+	$(COMPILE.cc) -g -I../../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/helloMesh.o helloMesh.cpp
 
 # Subprojects
 .build-subprojects:

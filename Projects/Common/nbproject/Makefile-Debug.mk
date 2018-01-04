@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/camera.o \
 	${OBJECTDIR}/glew_backend.o \
 	${OBJECTDIR}/glut_backend.o \
 	${OBJECTDIR}/math_3d.o \
@@ -70,40 +71,45 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a: ${OBJECTFILES}
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcommon.a
 
+${OBJECTDIR}/camera.o: camera.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/camera.o camera.cpp
+
 ${OBJECTDIR}/glew_backend.o: glew_backend.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glew_backend.o glew_backend.cpp
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glew_backend.o glew_backend.cpp
 
 ${OBJECTDIR}/glut_backend.o: glut_backend.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glut_backend.o glut_backend.cpp
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/glut_backend.o glut_backend.cpp
 
 ${OBJECTDIR}/math_3d.o: math_3d.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/math_3d.o math_3d.cpp
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/math_3d.o math_3d.cpp
 
 ${OBJECTDIR}/ogldev_mesh.o: ogldev_mesh.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_mesh.o ogldev_mesh.cpp
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_mesh.o ogldev_mesh.cpp
 
 ${OBJECTDIR}/ogldev_texture.o: ogldev_texture.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_texture.o ogldev_texture.cpp
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_texture.o ogldev_texture.cpp
 
 ${OBJECTDIR}/ogldev_util.o: ogldev_util.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_util.o ogldev_util.cpp
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ogldev_util.o ogldev_util.cpp
 
 ${OBJECTDIR}/pipeline.o: pipeline.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../Include -I../Include/assimp -I/usr/include/ImageMagick-6 -I/usr/include/x86_64-linux-gnu/ImageMagick-6 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pipeline.o pipeline.cpp
+	$(COMPILE.cc) -g -I../../Include -I../../Include/assimp -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pipeline.o pipeline.cpp
 
 # Subprojects
 .build-subprojects:

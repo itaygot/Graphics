@@ -38,11 +38,12 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>../Include</pElem>
+            <pElem>../../Include</pElem>
           </incDir>
           <commandLine>`pkg-config --cflags assimp ImageMagick++`	</commandLine>
         </ccTool>
         <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/hellomesh</output>
           <linkerLibItems>
             <linkerLibProjectItem>
               <makeArtifact PL="../Common"

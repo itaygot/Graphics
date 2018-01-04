@@ -44,7 +44,7 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>../Include</pElem>
+            <pElem>../../Include</pElem>
           </incDir>
           <commandLine>-std=c++11</commandLine>
         </ccTool>

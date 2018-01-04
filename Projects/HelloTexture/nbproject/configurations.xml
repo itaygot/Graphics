@@ -38,7 +38,7 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>../Include</pElem>
+            <pElem>../../Include</pElem>
           </incDir>
           <commandLine>`pkg-config --cflags assimp ImageMagick++`	</commandLine>
         </ccTool>
@@ -68,6 +68,12 @@
         <packType>Tar</packType>
         <verbose>false</verbose>
         <packFileList>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
+                            from="${OUTPUT_PATH}"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
           <packFileListElem type="File"
                             to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}"
                             from="${OUTPUT_PATH}"

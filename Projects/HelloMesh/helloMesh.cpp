@@ -58,12 +58,21 @@ struct App : ICallbacks {
 		_projection.zFar = 400.0f;
 
 		// Init Camera
-		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
-
+		/*_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);*/
+		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT,
+		{ -3.0f, 1.0f, 20.0f },
+		{ 0.0f, 0.0f, 1.0f },
+		{ 0.0f, 1.0f, 0.0f });
+		
 
 		// Load mesh
 		if (!_mesh.LoadMesh(MESH_FILENAME))
 			return false;
+
+		// Mesh Initial Rotation
+		Pipeline P;
+		P.Rotate(-90.f, 180.f, 0.f);
+		_initialRotation = P.GetWorldTrans();
 
 		return true;
 	}
@@ -80,7 +89,7 @@ struct App : ICallbacks {
 		P.SetPerspectiveProj(_projection);
 		//P.SetCamera({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
 		P.SetCamera(_camera);
-		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, P.GetWVPTrans());
+		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, P.GetWVPTrans() * _initialRotation);
 
 		_mesh.Render();
 
@@ -119,6 +128,7 @@ private:
 	Camera _camera;
 	GLuint _textureUnitLocation;
 	GLuint _wvpLocation;
+	Matrix4f _initialRotation;
 
 
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)

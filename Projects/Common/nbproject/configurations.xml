@@ -4,15 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../Include/ogldev_callbacks.h</itemPath>
-      <itemPath>../Include/ogldev_glew_backend.h</itemPath>
-      <itemPath>../Include/ogldev_glut_backend.h</itemPath>
-      <itemPath>../Include/ogldev_keys.h</itemPath>
-      <itemPath>../Include/ogldev_math_3d.h</itemPath>
-      <itemPath>../Include/ogldev_mesh.h</itemPath>
-      <itemPath>../Include/ogldev_texture.h</itemPath>
-      <itemPath>../Include/ogldev_types.h</itemPath>
-      <itemPath>../Include/ogldev_util.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -21,6 +12,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>camera.cpp</itemPath>
       <itemPath>glew_backend.cpp</itemPath>
       <itemPath>glut_backend.cpp</itemPath>
       <itemPath>math_3d.cpp</itemPath>
@@ -53,33 +45,15 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>../Include</pElem>
-            <pElem>../Include/assimp</pElem>
-            <pElem>/usr/include/ImageMagick-6</pElem>
-            <pElem>/usr/include/x86_64-linux-gnu/ImageMagick-6</pElem>
+            <pElem>../../Include</pElem>
+            <pElem>../../Include/assimp</pElem>
           </incDir>
           <commandLine>`pkg-config --cflags ImageMagick++ assimp`</commandLine>
         </ccTool>
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../Include/ogldev_callbacks.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_glew_backend.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_glut_backend.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_keys.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_math_3d.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_mesh.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_texture.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_util.h" ex="false" tool="3" flavor2="0">
+      <item path="camera.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="glew_backend.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -118,23 +92,7 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../Include/ogldev_callbacks.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_glew_backend.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_glut_backend.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_keys.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_math_3d.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_mesh.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_texture.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/ogldev_util.h" ex="false" tool="3" flavor2="0">
+      <item path="camera.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="glew_backend.cpp" ex="false" tool="1" flavor2="0">
       </item>

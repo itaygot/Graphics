@@ -1,7 +1,7 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include <glm/vec2.hpp>		// glm::vec2 (pos and velo)
+#include "glm/vec2.hpp"		// glm::vec2 (pos and velo)
 //#include <ogldev_math_3d.h>
 
 

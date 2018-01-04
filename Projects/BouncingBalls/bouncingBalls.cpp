@@ -122,7 +122,7 @@ bool BBs::Init(int argc, char ** argv)
 {
 	
 	// Initialize GLUT Backend
-	GLUTBackendInit(argc, argv, false, false);
+	GLUTBackendInit(argc, argv, false, false, true);
 
 	// Create window & init glew
 	if (!GLUTBackendCreateWindow(BASE_WINDOW_SIZE, BASE_WINDOW_SIZE, false, "Bouncing Balls"))
