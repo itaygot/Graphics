@@ -20,6 +20,8 @@ Linux Users:
 
 	Run Project: 
 		Each project executable is under: '<GraphicsRepo>/<ProjectFolder>/dist/'
+		*Note*: Because each app depends on its shaders files, run each project
+		from its project folder.
 
 
 Prerequisites:

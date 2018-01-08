@@ -31,10 +31,9 @@ ROTATE_AXIS gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
 const char * pVSFileName = "shader.vs";
 const char * pFSFileName = "shader.fs";
 
-//#define TEXTURE_FILENAME "../../Content/Textures/test.png"
-//#define TEXTURE_FILENAME "../../Content/Textures/earth.jpg"
-#define TEXTURE_FILENAME "../../Content/Textures/boat.jpg"
-//#define TEXTURE_FILENAME "../../Content/Textures/yard.jpg"
+//#define TEXTURE_FILENAME "../../Content/Textures/boat.jpg"
+#define TEXTURE_FILENAME "../../Content/Textures/timesSquare.jpg"
+
 
 
 #define WINDOW_WIDTH	768
@@ -369,6 +368,7 @@ private:
 
 	void CompileShaders()
 	{
+		string vs, fs;
 		GLuint ShaderProgram = glCreateProgram();
 
 		if (ShaderProgram == 0) {
@@ -376,12 +376,12 @@ private:
 			exit(1);
 		}
 
-		string vs, fs;
-
+		
 		if (!ReadFile(pVSFileName, vs)) {
 			exit(1);
 		};
 
+		
 		if (!ReadFile(pFSFileName, fs)) {
 			exit(1);
 		};

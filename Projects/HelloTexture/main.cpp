@@ -214,7 +214,11 @@ private:
 		assert(_textureUnitLocation != INVALID_UNIFORM_LOCATION);
 	}
 
-	
+	std::string getAbsolutePath(const char * relativePath) {
+		char buffer[512];
+		snprintf(buffer, sizeof(buffer), "%s%s%s", __FILE__, "/../", relativePath);
+		return buffer;
+	}
 };
 
 
