@@ -470,19 +470,19 @@ private:
 int main(int argc, char ** argv) {
 	
 	
-	Vector3f e1(1.0f, 0.0f, 0.0f);
+	/*Vector3f e1(1.0f, 0.0f, 0.0f);
 	Vector3f e2(0.0f, 1.0f, 0.0f);
 	e1.Rotate(90.0f, e2);
-	e1.Print();
+	e1.Print();*/
 
 	
-	/*App app;
+	App app;
 	if (!app.Init())
 		return 1;
-	app.Run();*/
+	app.Run();
 }
 
 
-Check camera onMouse();
-Rotate camera VS rotate body;
-write the get Quaternion rotation from 2 positionts;
+//Check camera onMouse();
+//Rotate camera VS rotate body;
+//write the get Quaternion rotation from 2 positionts;
