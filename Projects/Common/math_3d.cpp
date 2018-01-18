@@ -1,19 +1,28 @@
 /*
 
-	Copyright 2010 Etay Meiri
+	Copyright 2010 Etay Meiri. Edit by Itay Gothelf 2018.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	Edit:
+		- Adding Quaternion default constructor.
+			Zero imaginary, 1 real.
+		- Change Vector3f::Rotate(float angle, Vector3f Axe): 
+			Normalizing the input axis 'Axe'.
+		- Change Matrix4f::InitRotateTransform(Quaternion)
+			Transposing.
+
 */
 
 #include <stdlib.h>
@@ -60,8 +69,10 @@ Vector3f Vector3f::Cross(const Vector3f& v) const
 }
 
 
-void Vector3f::Rotate(float Angle, const Vector3f& Axe)
+void Vector3f::Rotate(float Angle, Vector3f Axe)
 {
+	Axe.Normalize();
+
     const float SinHalfAngle = sinf(ToRadian(Angle/2));
     const float CosHalfAngle = cosf(ToRadian(Angle/2));
 
@@ -70,9 +81,10 @@ void Vector3f::Rotate(float Angle, const Vector3f& Axe)
     const float Rz = Axe.z * SinHalfAngle;
     const float Rw = CosHalfAngle;
     Quaternion RotationQ(Rx, Ry, Rz, Rw);
+	
 
     Quaternion ConjugateQ = RotationQ.Conjugate();
-  //  ConjugateQ.Normalize();
+  
     Quaternion W = RotationQ * (*this) * ConjugateQ;
 
     x = W.x;
@@ -127,7 +139,8 @@ void Matrix4f::InitRotateTransform(const Quaternion& quat)
     float wy2 = 2.0f * quat.w * quat.y;
     float wx2 = 2.0f * quat.w * quat.x;
     float xx2 = 2.0f * quat.x * quat.x;
-    m[0][0] = - yy2 - zz2 + 1.0f;
+    
+	/*m[0][0] = - yy2 - zz2 + 1.0f;
     m[0][1] = xy2 + wz2;
     m[0][2] = xz2 - wy2;
     m[0][3] = 0;
@@ -140,7 +153,23 @@ void Matrix4f::InitRotateTransform(const Quaternion& quat)
     m[2][2] = - xx2 - yy2 + 1.0f;
     m[2][3] = 0.0f;
     m[3][0] = m[3][1] = m[3][2] = 0;
-    m[3][3] = 1.0f;
+    m[3][3] = 1.0f;*/
+	
+
+	m[0][0] = -yy2 - zz2 + 1.0f;
+	m[0][1] = xy2 - wz2;
+	m[0][2] = xz2 + wy2;
+	m[0][3] = 0;
+	m[1][0] = xy2 + wz2;
+	m[1][1] = -xx2 - zz2 + 1.0f;
+	m[1][2] = yz2 - wx2;
+	m[1][3] = 0;
+	m[2][0] = xz2 - wy2;
+	m[2][1] = yz2 + wx2;
+	m[2][2] = -xx2 - yy2 + 1.0f;
+	m[2][3] = 0.0f;
+	m[3][0] = m[3][1] = m[3][2] = 0;
+	m[3][3] = 1.0f;
 }
 
 void Matrix4f::InitTranslationTransform(float x, float y, float z)
@@ -250,6 +279,13 @@ Matrix4f& Matrix4f::Inverse()
 	return *this;
 }
 
+Quaternion::Quaternion() {
+	x = 0.0f;
+	y = 0.0f;
+	z = 0.0f;
+	w = 1.0f;
+}
+
 Quaternion::Quaternion(float _x, float _y, float _z, float _w)
 {
     x = _x;
@@ -261,7 +297,7 @@ Quaternion::Quaternion(float _x, float _y, float _z, float _w)
 void Quaternion::Normalize()
 {
     float Length = sqrtf(x * x + y * y + z * z + w * w);
-
+	
     x /= Length;
     y /= Length;
     z /= Length;
@@ -275,9 +311,13 @@ Quaternion Quaternion::Conjugate()
     return ret;
 }
 
+
+
 Quaternion operator*(const Quaternion& l, const Quaternion& r)
 {
-    const float w = (l.w * r.w) - (l.x * r.x) - (l.y * r.y) - (l.z * r.z);
+    
+	
+	const float w = (l.w * r.w) - (l.x * r.x) - (l.y * r.y) - (l.z * r.z);
     const float x = (l.x * r.w) + (l.w * r.x) + (l.y * r.z) - (l.z * r.y);
     const float y = (l.y * r.w) + (l.w * r.y) + (l.z * r.x) - (l.x * r.z);
     const float z = (l.z * r.w) + (l.w * r.z) + (l.x * r.y) - (l.y * r.x);
@@ -285,6 +325,8 @@ Quaternion operator*(const Quaternion& l, const Quaternion& r)
     Quaternion ret(x, y, z, w);
 
     return ret;
+
+	
 }
 
 Quaternion operator*(const Quaternion& q, const Vector3f& v)

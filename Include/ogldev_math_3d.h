@@ -1,6 +1,6 @@
 /*
 
-	Copyright 2010 Etay Meiri
+	Copyright 2010 Etay Meiri. Edit by Itay Gothelf 2018.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,6 +14,11 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	Edit: 
+			- Adding Quaternion() default constructor.
+			- Adding Quaternion::Print()
+
 */
 
 #ifndef MATH_3D_H
@@ -158,7 +163,7 @@ struct Vector3f
 
     Vector3f& Normalize();
 
-    void Rotate(float Angle, const Vector3f& Axis);
+    void Rotate(float Angle, Vector3f Axis);
 
     void Print() const
     {
@@ -186,6 +191,8 @@ struct Vector4f
         w = _w;
     }
     
+	
+
     void Print(bool endl = true) const
     {
         printf("(%.02f, %.02f, %.02f, %.02f)", x, y, z, w);
@@ -200,6 +207,8 @@ struct Vector4f
         Vector3f v(x, y, z);
         return v;
     }
+
+	
 };
 
 
@@ -300,13 +309,27 @@ struct Quaternion
 {
     float x, y, z, w;
 
+	////////
+	Quaternion();
+
+	void Print() const{
+		printf("(%f, %f, %f, %f)\n", x, y, z, w);
+	}
+
+	////////
+
     Quaternion(float _x, float _y, float _z, float _w);
 
     void Normalize();
 
-    Quaternion Conjugate();  
+    Quaternion Conjugate();
     
     Vector3f ToDegrees();
+
+	
+
+	
+
  };
 
 

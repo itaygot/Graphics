@@ -88,6 +88,7 @@ public:
         Rotate(r.x, r.y, r.z);
     }
 
+	
     void SetPerspectiveProj(const PersProjInfo& p)
     {
         m_persProjInfo = p;
