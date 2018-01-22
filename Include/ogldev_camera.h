@@ -1,6 +1,6 @@
 /*
 
-	Copyright 2010 Etay Meiri
+	Copyright 2010 Etay Meiri.		Edit: Itay Gothelf, 2018;
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,6 +14,11 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	Edit:
+	- 'void OnRender()' --> 'bool OnRender()'.
+	- Adding 'ResetMousePos(int, int)'.
+
 */
 
 #ifndef CAMERA_H
@@ -56,6 +61,11 @@ public:
     }
     
     //void AddToATB(TwBar* bar);
+
+	void ResetMousePos(int x, int y) {
+		m_mousePos.x = x;
+		m_mousePos.y = y;
+	}
 
 private:
 

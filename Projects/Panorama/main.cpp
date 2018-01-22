@@ -60,7 +60,7 @@ enum ROTATE_AXIS {
 
 // ----------------- GLOBAL BEHAVIOR SETTINGS -----------------------
 
-float gRotationSpeed = 0.03125f / 8;
+float gRotationSpeed = ToRadian(0.125f);
 int gPOLYGON_MODE = GL_FILL;
 ROTATE_AXIS gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
 
@@ -159,6 +159,11 @@ struct App : ICallbacks {
 	void PassiveMouseCB(int x, int y) {
 		_camera.OnMouse(x, y);
 		_cameraChange = true;
+	}
+
+	void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
+		if (State == OGLDEV_KEY_STATE_RELEASE)
+			_camera.ResetMousePos(x, y);
 	}
 
 	void IdleCB() {
@@ -485,6 +490,7 @@ int main(int argc, char ** argv) {
 }
 
 
-//Check camera onMouse();
+//BallHandler;	Pipeline::ViewDrag;
+//Make rotating objects;
 //Rotate camera VS rotate body;
 //write the get Quaternion rotation from 2 positionts;

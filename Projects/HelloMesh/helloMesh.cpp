@@ -71,7 +71,7 @@ struct App : ICallbacks {
 
 		// Mesh Initial Rotation
 		Pipeline P;
-		P.Rotate(-90.f, 180.f, 0.f);
+		P.SetRotation(-90.f, 180.f, 0.f);
 		_initialRotation = P.GetWorldTrans();
 
 		return true;
@@ -84,8 +84,8 @@ struct App : ICallbacks {
 		_camera.OnRender();
 
 		Pipeline P;
-		P.WorldPos(0.f, 0.f, 40.f);
-		P.Scale(Vector3f(0.1f, 0.1f, 0.1f));
+		P.SetWorldPos(0.f, 0.f, 40.f);
+		P.SetScale(Vector3f(0.1f, 0.1f, 0.1f));
 		P.SetPerspectiveProj(_projection);
 		//P.SetCamera({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
 		P.SetCamera(_camera);

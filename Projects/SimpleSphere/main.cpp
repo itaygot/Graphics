@@ -150,7 +150,7 @@ struct App : ICallbacks {
 		// Init Rotation matrices
 		_theta = 0.f;
 		Pipeline P;
-		P.Rotate(90.f, 0.f, 0.f);
+		P.SetRotation(90.f, 0.f, 0.f);
 		_accumRotation = P.GetWorldTrans();
 		
 		
@@ -209,22 +209,22 @@ struct App : ICallbacks {
 			_theta += gRotationSpeed;
 			switch (gCURR_ROTATE_AXIS) {
 			case ROTATE_AXIS_X:
-				P.Rotate(_theta, 0, 0);
+				P.SetRotation(_theta, 0, 0);
 				break;
 			case ROTATE_AXIS_X_OPP:
-				P.Rotate(-_theta, 0, 0);
+				P.SetRotation(-_theta, 0, 0);
 				break;
 			case ROTATE_AXIS_Y:
-				P.Rotate(0, _theta, 0);
+				P.SetRotation(0, _theta, 0);
 				break;
 			case ROTATE_AXIS_Y_OPP:
-				P.Rotate(0, -_theta, 0);
+				P.SetRotation(0, -_theta, 0);
 				break;
 			case ROTATE_AXIS_Z:
-				P.Rotate(0, 0, _theta);
+				P.SetRotation(0, 0, _theta);
 				break;
 			default:
-				P.Rotate(0, 0, -_theta);		// ROTATE_AXIS_Z_OPP
+				P.SetRotation(0, 0, -_theta);		// ROTATE_AXIS_Z_OPP
 				break;
 			}
 
@@ -422,22 +422,22 @@ private:
 		Pipeline P;
 		switch (gCURR_ROTATE_AXIS) {
 		case ROTATE_AXIS_X:
-			P.Rotate(_theta, 0, 0);
+			P.SetRotation(_theta, 0, 0);
 			break;
 		case ROTATE_AXIS_X_OPP:
-			P.Rotate(-_theta, 0, 0);
+			P.SetRotation(-_theta, 0, 0);
 			break;
 		case ROTATE_AXIS_Y:
-			P.Rotate(0, _theta, 0);
+			P.SetRotation(0, _theta, 0);
 			break;
 		case ROTATE_AXIS_Y_OPP:
-			P.Rotate(0, -_theta, 0);
+			P.SetRotation(0, -_theta, 0);
 			break;
 		case ROTATE_AXIS_Z:
-			P.Rotate(0, 0, _theta);
+			P.SetRotation(0, 0, _theta);
 			break;
 		default:			// (ROTATE_AXIS_Z_OPP)
-			P.Rotate(0, 0, -_theta);
+			P.SetRotation(0, 0, -_theta);
 			break;
 		}
 
