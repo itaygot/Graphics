@@ -16,7 +16,7 @@
 #include <stdio.h>
 
 
-
+#define DEBUG
 
 
 //struct Spinner {
