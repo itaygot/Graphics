@@ -19,36 +19,7 @@
 #define DEBUG
 
 
-//struct Spinner {
-//	
-//	bool Touch(float x, float y) {
-//
-//		if (!_hold) {
-//			_hold = true;
-//			
-//		}
-//
-//		if (_hold) {
-//			
-//		}
-//		else {
-//			
-//		}
-//	}
-//
-//	void release(){
-//		_hold = false;
-//	}
-//
-//	
-//	
-//	IPipeline * _ppipeline;
-//	Vector3f _lastTouch;
-//	Quaternion _rotation;
-//	bool _hold;
-//
-//
-//};
+
 
 
 //enum ROTATE_AXIS {ROTATE_AXIS_X, ROTATE_AXIS_Y, ROTATE_AXIS_Z};
@@ -95,6 +66,46 @@ struct Vertex {
 		_tex.Print();
 	}
 };
+
+struct ViewDrag {
+
+	void SetProjectionInfo(const PersProjInfo& projection) {
+		_projection = projection;
+		_d = 1.0f / std::tanf(ToRadian(_projection.FOV / 2));
+		_aspectRatio = _projection.Width / _projection.Height;
+	}
+
+	void OnMouseButton(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
+		_lastTouch = ToNormalizedCamSpaceDirection(x, y);
+	}
+
+	Quaternion OnMouseActiveMotion(int x, int y) {
+		Vector3f currTouch = ToNormalizedCamSpaceDirection(x, y);
+		Vector3f axis = _lastTouch.Cross(currTouch).Normalize();
+
+		float  halfAngle = std::acos(Dot(currTouch, _lastTouch)) / 2;
+		float sinHalfAngle = std::sin(halfAngle);
+		float cosHalfAngle = std::cos(halfAngle);
+		_lastTouch = currTouch;
+		return Quaternion(sinHalfAngle * axis.x,
+							sinHalfAngle * axis.y, 
+							sinHalfAngle * axis.z,
+							cosHalfAngle);
+		
+	}
+
+	Vector3f ToNormalizedCamSpaceDirection(int x, int y) {
+		float xcamera = _aspectRatio * (float)x / (_projection.Width - 1);
+		float ycamera = (float)y / (_projection.Height - 1);
+		return Vector3f(xcamera, ycamera, -_d).Normalize();
+	}
+
+	PersProjInfo _projection;
+	Vector3f _lastTouch;
+	float _d, _aspectRatio;
+
+};
+
 
 struct App : ICallbacks {
 
@@ -164,6 +175,12 @@ struct App : ICallbacks {
 	void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 		if (State == OGLDEV_KEY_STATE_RELEASE)
 			_camera.ResetMousePos(x, y);
+		_vdrag.OnMouseButton(Button, State, x, y);
+	}
+
+	void MouseActiveMotionCB(int x, int y) {
+		Quaternion rotateQ = _vdrag.OnMouseActiveMotion(x, y);
+		_pipeline.;
 	}
 
 	void IdleCB() {
@@ -208,14 +225,17 @@ struct App : ICallbacks {
 		// Texture unit's Uniform variables
 		glUniform1i(_textureUnitLocation, 0);// Should correspond to the texture target
 
-											 // Set the Perspective Projection values
+
+		// Set the Perspective Projection values
 		_projection.FOV = 60.0f;
 		_projection.Width = WINDOW_WIDTH;
 		_projection.Height = WINDOW_HEIGHT;
 		_projection.zNear = 0.1f;
 		_projection.zFar = 400.0f;
-		//////////
 		_pipeline.SetPerspectiveProj(_projection);
+
+		/////////
+		_vdrag.SetProjectionInfo(_projection);
 
 
 		// Init Camera
@@ -469,7 +489,8 @@ private:
 	bool _render;
 	bool _animate;
 	bool _cameraChange;
-
+	////////////////
+	ViewDrag _vdrag;
 
 };
 

@@ -20,6 +20,7 @@
 			Zero imaginary, 1 real.
 		- Change Vector3f::Rotate(float angle, Vector3f Axe): 
 			Normalizing the input axis 'Axe'.
+		- Adding Vector3f::Rotate(const Quaternion&).
 		- Change Matrix4f::InitRotateTransform(Quaternion)
 			Transposing.
 
@@ -69,9 +70,10 @@ Vector3f Vector3f::Cross(const Vector3f& v) const
 }
 
 
-void Vector3f::Rotate(float Angle, Vector3f Axe)
+void Vector3f::Rotate(float Angle, Vector3f Axe, bool normalized)
 {
-	Axe.Normalize();
+	if(!normalized)
+		Axe.Normalize();
 
     const float SinHalfAngle = sinf(ToRadian(Angle/2));
     const float CosHalfAngle = cosf(ToRadian(Angle/2));
@@ -82,16 +84,26 @@ void Vector3f::Rotate(float Angle, Vector3f Axe)
     const float Rw = CosHalfAngle;
     Quaternion RotationQ(Rx, Ry, Rz, Rw);
 	
-
-    Quaternion ConjugateQ = RotationQ.Conjugate();
+    /*Quaternion ConjugateQ = RotationQ.Conjugate();
   
     Quaternion W = RotationQ * (*this) * ConjugateQ;
 
     x = W.x;
     y = W.y;
-    z = W.z;
+    z = W.z;*/
+
+	Rotate(RotationQ);
 }
 
+////////////
+void Vector3f::Rotate(const Quaternion& q) {
+	Quaternion res = q * (*this) * (q.Conjugate());
+
+	x = res.x;
+	y = res.y;
+	z = res.z;
+}
+////////////
 
 void Matrix4f::InitScaleTransform(float ScaleX, float ScaleY, float ScaleZ)
 {
@@ -305,7 +317,7 @@ void Quaternion::Normalize()
 }
 
 
-Quaternion Quaternion::Conjugate()
+Quaternion Quaternion::Conjugate() const
 {
     Quaternion ret(-x, -y, -z, w);
     return ret;

@@ -18,7 +18,7 @@
 	Edit: 
 			- Adding Quaternion() default constructor.
 			- Adding Quaternion::Print()
-
+			- Adding Vector3f::Rotate(const Quaternion&)
 */
 
 #ifndef MATH_3D_H
@@ -45,6 +45,13 @@
 #define ToDegree(x) (float)(((x) * 180.0f / M_PI))
 
 float RandomFloat();
+
+// Forward Declarations:
+struct Vector2i;
+struct Vector2f;
+struct Vector3f;
+struct Vector4f;
+struct Quaternion;
 
 struct Vector2i
 {
@@ -98,6 +105,7 @@ struct Vector2f
 		printf("(%.02f, %.02f)\n", x, y);
 	}
 };
+
 
 
 struct Vector3f
@@ -163,7 +171,11 @@ struct Vector3f
 
     Vector3f& Normalize();
 
-    void Rotate(float Angle, Vector3f Axis);
+    void Rotate(float Angle, Vector3f Axis, bool normalized = false);
+
+	/////////////
+	void Rotate(const Quaternion& q);
+	////////////
 
     void Print() const
     {
@@ -322,13 +334,9 @@ struct Quaternion
 
     void Normalize();
 
-    Quaternion Conjugate();
+    Quaternion Conjugate() const;
     
     Vector3f ToDegrees();
-
-	
-
-	
 
  };
 

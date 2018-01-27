@@ -12,6 +12,7 @@
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Lib;$(SolutionDir)$(Configuration);</AdditionalLibraryDirectories>
       <AdditionalDependencies>Common.lib;CORE_DB_Magick++_.lib;glew32.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
