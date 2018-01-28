@@ -18,7 +18,7 @@
 	Edit:
 	- 'void OnRender()' --> 'bool OnRender()'.
 	- Adding 'ResetMousePos(int, int)'.
-
+	- Adding 'Camera::Rotate(Quaternion)'.
 */
 
 #ifndef CAMERA_H
@@ -62,10 +62,16 @@ public:
     
     //void AddToATB(TwBar* bar);
 
+	////////////
+
 	void ResetMousePos(int x, int y) {
 		m_mousePos.x = x;
 		m_mousePos.y = y;
 	}
+
+	void Rotate(const Quaternion& q);
+
+	/////////////
 
 private:
 

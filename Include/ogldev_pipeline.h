@@ -15,7 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Edit:
-- Using Quaternion to track the rotation (insted of Vector3f).
+	- Using Quaternion to track the rotation (insted of Vector3f).
+	- Adding 'Rotate(const Quaternion&)'.
+	- Adding 'RotateCamera(const Quaternion&)'.
 
 */
 
@@ -132,10 +134,13 @@ public:
 		m_rotation = q;
 	}
 
-	void rotate(const Quaternion& q) {
-		m_rotation = q * m_rotation;
-		//m_rotation = m_rotation * q;
-	}
+	/////////////
+
+	void rotate(const Quaternion& q);
+
+	void RotateCamera(const Quaternion& q);
+
+	/////////////
 
 	void SetPerspectiveProj(const PersProjInfo& p)
 	{

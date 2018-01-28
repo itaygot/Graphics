@@ -14,6 +14,9 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	Edit:
+		- Adding 'Camera::Rotate(const Quaternion&)'.
 */
 
 #include "ogldev_camera.h"
@@ -250,7 +253,13 @@ void Camera::Update()
     m_up.Normalize();
 }
 
-/*  */
+/////////////
+
+void Camera::Rotate(const Quaternion& q) {
+	m_target.Rotate(q);
+}
+
+/////////////
 
 //void Camera::AddToATB(TwBar* bar)
 //{

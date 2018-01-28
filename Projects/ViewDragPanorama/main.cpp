@@ -19,9 +19,6 @@
 #define DEBUG
 
 
-
-
-
 //enum ROTATE_AXIS {ROTATE_AXIS_X, ROTATE_AXIS_Y, ROTATE_AXIS_Z};
 enum ROTATE_AXIS {
 	ROTATE_AXIS_X, ROTATE_AXIS_X_OPP, ROTATE_AXIS_Y, ROTATE_AXIS_Y_OPP,
@@ -170,17 +167,21 @@ struct App : ICallbacks {
 	void PassiveMouseCB(int x, int y) {
 		_camera.OnMouse(x, y);
 		_cameraChange = true;
+		printf("passive\n"); why is the aftermove ? ;
 	}
 
 	void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
-		if (State == OGLDEV_KEY_STATE_RELEASE)
+		if (State == OGLDEV_KEY_STATE_RELEASE) {
 			_camera.ResetMousePos(x, y);
+			printf("release\n");
+		}
 		_vdrag.OnMouseButton(Button, State, x, y);
 	}
 
 	void MouseActiveMotionCB(int x, int y) {
 		Quaternion rotateQ = _vdrag.OnMouseActiveMotion(x, y);
-		_pipeline.;
+		_camera.Rotate(rotateQ);
+		_cameraChange = true; 
 	}
 
 	void IdleCB() {
