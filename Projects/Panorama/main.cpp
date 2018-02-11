@@ -157,13 +157,14 @@ struct App : ICallbacks {
 	}
 
 	void PassiveMouseCB(int x, int y) {
-		_camera.OnMouse(x, y);
+		//_camera.OnMouse(x, y);
+		_camera.OnMouseMotion(x, y, false);
 		_cameraChange = true;
 	}
 
 	void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 		if (State == OGLDEV_KEY_STATE_RELEASE)
-			_camera.ResetMousePos(x, y);
+			_camera.OnMouseClick(x, y);
 	}
 
 	void IdleCB() {

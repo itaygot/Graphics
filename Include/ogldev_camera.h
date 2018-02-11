@@ -19,6 +19,12 @@
 	- 'void OnRender()' --> 'bool OnRender()'.
 	- Adding 'ResetMousePos(int, int)'.
 	- Adding 'Camera::Rotate(Quaternion)'.
+
+	11.2.18:
+		- Commenting out 'ResetMousePos(int, int)'.
+		- Commenting out 'Rotate(const Quaternion )'
+		- Adding 'OnMouseClick(int, int)' - reset mouse pos' after clicks to allow drag motion
+		- Adding 'OnMouseMoution(int, int, boolean)' instead of 'OnMouse(int, int)
 */
 
 #ifndef CAMERA_H
@@ -40,7 +46,7 @@ public:
 
     bool OnKeyboard(OGLDEV_KEY Key);
 
-    void OnMouse(int x, int y);
+    /*void OnMouse(int x, int y);*/
 
     //void OnRender();
 	bool OnRender();
@@ -64,12 +70,16 @@ public:
 
 	////////////
 
-	void ResetMousePos(int x, int y) {
+	/*void ResetMousePos(int x, int y) {
 		m_mousePos.x = x;
 		m_mousePos.y = y;
-	}
+	}*/
 
-	void Rotate(const Quaternion& q);
+	/*void Rotate(const Quaternion& q);*/
+
+	void OnMouseClick(int x, int y);
+
+	void OnMouseMotion(int x, int y, bool active);
 
 	/////////////
 

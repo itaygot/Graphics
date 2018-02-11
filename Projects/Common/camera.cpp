@@ -17,6 +17,11 @@
 
 	Edit:
 		- Adding 'Camera::Rotate(const Quaternion&)'.
+
+	11.2.18:
+		- Commenting out 'Rotate(const Quaternion )'
+		- Adding 'OnMouseClick(int, int)' - reset mouse pos' after clicks to allow drag motion
+		- Adding 'OnMouseMoution(int, int, boolean)' instead of 'OnMouse(int, int)
 */
 
 #include "ogldev_camera.h"
@@ -156,47 +161,47 @@ bool Camera::OnKeyboard(OGLDEV_KEY Key)
 }
 
 
-void Camera::OnMouse(int x, int y)
-{
-    const int DeltaX = x - m_mousePos.x;
-    const int DeltaY = y - m_mousePos.y;
-
-    m_mousePos.x = x;
-    m_mousePos.y = y;
-
-    m_AngleH += (float)DeltaX / 20.0f;
-    m_AngleV += (float)DeltaY / 20.0f;
-
-    if (DeltaX == 0) {
-        if (x <= MARGIN) {
-        //    m_AngleH -= 1.0f;
-            m_OnLeftEdge = true;
-        }
-        else if (x >= (m_windowWidth - MARGIN)) {
-        //    m_AngleH += 1.0f;
-            m_OnRightEdge = true;
-        }
-    }
-    else {
-        m_OnLeftEdge = false;
-        m_OnRightEdge = false;
-    }
-
-    if (DeltaY == 0) {
-        if (y <= MARGIN) {
-            m_OnUpperEdge = true;
-        }
-        else if (y >= (m_windowHeight - MARGIN)) {
-            m_OnLowerEdge = true;
-        }
-    }
-    else {
-        m_OnUpperEdge = false;
-        m_OnLowerEdge = false;
-    }
-
-    Update();
-}
+//void Camera::OnMouse(int x, int y)
+//{
+//    const int DeltaX = x - m_mousePos.x;
+//    const int DeltaY = y - m_mousePos.y;
+//
+//    m_mousePos.x = x;
+//    m_mousePos.y = y;
+//
+//    m_AngleH += (float)DeltaX / 10.0f;
+//    m_AngleV += (float)DeltaY / 10.0f;
+//
+//    if (DeltaX == 0) {
+//        if (x <= MARGIN) {
+//        //    m_AngleH -= 1.0f;
+//            m_OnLeftEdge = true;
+//        }
+//        else if (x >= (m_windowWidth - MARGIN)) {
+//        //    m_AngleH += 1.0f;
+//            m_OnRightEdge = true;
+//        }
+//    }
+//    else {
+//        m_OnLeftEdge = false;
+//        m_OnRightEdge = false;
+//    }
+//
+//    if (DeltaY == 0) {
+//        if (y <= MARGIN) {
+//            m_OnUpperEdge = true;
+//        }
+//        else if (y >= (m_windowHeight - MARGIN)) {
+//            m_OnLowerEdge = true;
+//        }
+//    }
+//    else {
+//        m_OnUpperEdge = false;
+//        m_OnLowerEdge = false;
+//    }
+//
+//    Update();
+//}
 
 
 bool Camera::OnRender()
@@ -255,8 +260,61 @@ void Camera::Update()
 
 /////////////
 
-void Camera::Rotate(const Quaternion& q) {
+/*void Camera::Rotate(const Quaternion& q) {
 	m_target.Rotate(q);
+}*/
+
+void Camera::OnMouseClick(int x, int y) {
+	m_mousePos.x = x;
+	m_mousePos.y = y;
+}
+
+void Camera::OnMouseMotion(int x, int y, bool active) {
+	const int DeltaX = x - m_mousePos.x;
+	const int DeltaY = y - m_mousePos.y;
+
+	m_mousePos.x = x;
+	m_mousePos.y = y;
+
+	if (active) {
+		m_AngleH -= (float)DeltaX / 10.0f;
+		m_AngleV -= (float)DeltaY / 10.0f;
+	}
+	else {
+		m_AngleH += (float)DeltaX / 10.0f;
+		m_AngleV += (float)DeltaY / 10.0f;
+	}
+	
+
+	if (DeltaX == 0) {
+		if (x <= MARGIN) {
+			//    m_AngleH -= 1.0f;
+			m_OnLeftEdge = true;
+		}
+		else if (x >= (m_windowWidth - MARGIN)) {
+			//    m_AngleH += 1.0f;
+			m_OnRightEdge = true;
+		}
+	}
+	else {
+		m_OnLeftEdge = false;
+		m_OnRightEdge = false;
+	}
+
+	if (DeltaY == 0) {
+		if (y <= MARGIN) {
+			m_OnUpperEdge = true;
+		}
+		else if (y >= (m_windowHeight - MARGIN)) {
+			m_OnLowerEdge = true;
+		}
+	}
+	else {
+		m_OnUpperEdge = false;
+		m_OnLowerEdge = false;
+	}
+
+	Update();
 }
 
 /////////////

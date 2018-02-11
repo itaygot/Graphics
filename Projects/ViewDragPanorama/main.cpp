@@ -65,7 +65,7 @@ struct Vertex {
 };
 
 struct ViewDrag {
-
+	
 	void SetProjectionInfo(const PersProjInfo& projection) {
 		_projection = projection;
 		_d = 1.0f / std::tanf(ToRadian(_projection.FOV / 2));
@@ -78,7 +78,8 @@ struct ViewDrag {
 
 	Quaternion OnMouseActiveMotion(int x, int y) {
 		Vector3f currTouch = ToNormalizedCamSpaceDirection(x, y);
-		Vector3f axis = _lastTouch.Cross(currTouch).Normalize();
+		//Vector3f axis = _lastTouch.Cross(currTouch).Normalize();
+		Vector3f axis = currTouch.Cross(_lastTouch).Normalize();
 
 		float  halfAngle = std::acos(Dot(currTouch, _lastTouch)) / 2;
 		float sinHalfAngle = std::sin(halfAngle);
@@ -92,8 +93,10 @@ struct ViewDrag {
 	}
 
 	Vector3f ToNormalizedCamSpaceDirection(int x, int y) {
-		float xcamera = _aspectRatio * (float)x / (_projection.Width - 1);
-		float ycamera = (float)y / (_projection.Height - 1);
+		/*float xcamera = _aspectRatio * (float)x / (_projection.Width - 1);
+		float ycamera = 1.0f - (float)y / (_projection.Height - 1);*/
+		float xcamera = _aspectRatio * (1.0f - 2.0f * (float)x / (_projection.Width - 1));
+		float ycamera = 2.0f * (float)y / (_projection.Height - 1) - 1.0f;
 		return Vector3f(xcamera, ycamera, -_d).Normalize();
 	}
 
@@ -165,23 +168,25 @@ struct App : ICallbacks {
 	}
 
 	void PassiveMouseCB(int x, int y) {
-		_camera.OnMouse(x, y);
-		_cameraChange = true;
-		printf("passive\n"); why is the aftermove ? ;
+		/*_camera.OnMouse(x, y);
+		_cameraChange = true;*/
+
+		/*_camera.OnMouseMotion(x, y, false);
+		_cameraChange = true;*/
 	}
 
 	void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
-		if (State == OGLDEV_KEY_STATE_RELEASE) {
-			_camera.ResetMousePos(x, y);
-			printf("release\n");
-		}
-		_vdrag.OnMouseButton(Button, State, x, y);
+		//if (State == OGLDEV_KEY_STATE_RELEASE) {
+		//	_camera.ResetMousePos(x, y);
+		//	
+		//}
+		//_vdrag.OnMouseButton(Button, State, x, y);
+		_camera.OnMouseClick(x, y);
 	}
 
 	void MouseActiveMotionCB(int x, int y) {
-		Quaternion rotateQ = _vdrag.OnMouseActiveMotion(x, y);
-		_camera.Rotate(rotateQ);
-		_cameraChange = true; 
+		_camera.OnMouseMotion(x, y, true);
+		_cameraChange = true;
 	}
 
 	void IdleCB() {
@@ -216,6 +221,7 @@ struct App : ICallbacks {
 
 		// Init Rotation matrices
 		_pipeline.SetRotation(90.f, 0.f, 0.f);
+		
 
 
 		// Init Texture
