@@ -20,11 +20,15 @@
 	- Adding 'ResetMousePos(int, int)'.
 	- Adding 'Camera::Rotate(Quaternion)'.
 
-	11.2.18:
+	2.11.18:
 		- Commenting out 'ResetMousePos(int, int)'.
 		- Commenting out 'Rotate(const Quaternion )'
-		- Adding 'OnMouseClick(int, int)' - reset mouse pos' after clicks to allow drag motion
-		- Adding 'OnMouseMoution(int, int, boolean)' instead of 'OnMouse(int, int)
+		- Adding 'OnMouseClick(int, int)' - reset mouse pos' after clicks to allow drag motion, 
+		- Adding 'OnMouseMoution(int, int, boolean)' instead of 'OnMouse(int, int): 
+			Boolean parameter indicates if active (pressed) or passive mouse moution.
+
+	3.4.18:
+		- Adding back - Adding 'ResetMousePos(int, int)'.
 */
 
 #ifndef CAMERA_H
@@ -70,14 +74,23 @@ public:
 
 	////////////
 
-	/*void ResetMousePos(int x, int y) {
-		m_mousePos.x = x;
-		m_mousePos.y = y;
-	}*/
-
 	/*void Rotate(const Quaternion& q);*/
 
+	void ResetMousePos(int x, int y){
+		m_mousePos.x = x;
+		m_mousePos.y = y;
+	}
+
+	
+	/*
+	*	Originally created to enable resetting the 'm_mousePos' var. 
+	*	Needed because after active mouse motion, after the release of the mouse, apparantly the 'passive' 
+	*	mouse motion call-back is called, and if not resetted at the release mouse function, we get, 
+	*	at the time of the 'passive'  mouse motion,  a non-zero deviation from the previous saved 
+	*	location of the mouse - which causes an unintended view change of the camera.
+	*/
 	void OnMouseClick(int x, int y);
+
 
 	void OnMouseMotion(int x, int y, bool active);
 

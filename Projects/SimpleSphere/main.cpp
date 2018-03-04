@@ -24,7 +24,7 @@ enum ROTATE_AXIS { ROTATE_AXIS_X, ROTATE_AXIS_X_OPP, ROTATE_AXIS_Y, ROTATE_AXIS_
 
 // ----------------- GLOBAL BEHAVIOR SETTINGS -----------------------
 
-float gRotationSpeed = 0.25f;
+float gRotationSpeed = ToRadian(0.125f);
 int gPOLYGON_MODE = GL_FILL;
 ROTATE_AXIS gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
 
@@ -43,7 +43,6 @@ const char * pFSFileName = "shader.fs";
 #define SPHERE_SEGMENTS	12
 
 // ------------------------------------------------------------------
-
 
 
 
@@ -100,27 +99,26 @@ struct App : ICallbacks {
 			_render = true;
 			break;
 		case OGLDEV_KEY_x:
-			if(gCURR_ROTATE_AXIS == ROTATE_AXIS_X)
-				ChangeRotationAxis(ROTATE_AXIS_X_OPP);
+			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_X)
+				gCURR_ROTATE_AXIS = ROTATE_AXIS_X_OPP;
 			else
-				ChangeRotationAxis(ROTATE_AXIS_X);
+				gCURR_ROTATE_AXIS = ROTATE_AXIS_X;
 			break;
 		case OGLDEV_KEY_y:
 			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_Y)
-				ChangeRotationAxis(ROTATE_AXIS_Y_OPP);
+				gCURR_ROTATE_AXIS = ROTATE_AXIS_Y_OPP;
 			else
-				ChangeRotationAxis(ROTATE_AXIS_Y);
+				gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
 			break;
 		case OGLDEV_KEY_z:
 			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_Z)
-				ChangeRotationAxis(ROTATE_AXIS_Z_OPP);
+				gCURR_ROTATE_AXIS = ROTATE_AXIS_Z_OPP;
 			else
-				ChangeRotationAxis(ROTATE_AXIS_Z);
+				gCURR_ROTATE_AXIS = ROTATE_AXIS_Z;
 			break;
 		default:
 			if (_camera.OnKeyboard(OgldevKey))
-				//GLUTBeckendPostRedisplay();
-				_render = true;
+				_cameraChange = true;
 		}
 	}
 
@@ -128,13 +126,32 @@ struct App : ICallbacks {
 		//_camera.OnMouse(x, y);
 		_camera.OnMouseMotion(x, y, false);
 		//GLUTBeckendPostRedisplay();
-		_render = true;
+		//_render = true;
+		_cameraChange = true;
 	}
 
 	void IdleCB() {
-		if (_render |= _animate)
+
+		// Camera movement from mouse on screen's edges
+		_cameraChange |= _camera.OnRender();
+		if (_cameraChange)
+			_pipeline.SetCamera(_camera);
+
+		// Add to render
+		_render |= _cameraChange;
+		_render |= _animate;
+
+		// Render if neccesary
+		if (_render)
 			RenderSceneCB();
+
+		// Reset variables
+		_render = false;
+		_cameraChange = false;
+
 	}
+
+	
 
 	bool Init() {
 
@@ -148,11 +165,8 @@ struct App : ICallbacks {
 		// Compile shaders
 		CompileShaders();
 
-		// Init Rotation matrices
-		_theta = 0.f;
-		Pipeline P;
-		P.SetRotation(90.f, 0.f, 0.f);
-		_accumRotation = P.GetWorldTrans();
+		// Init Rotation matrix
+		_pipeline.SetRotation(90.f, 0.f, 0.f);
 		
 		
 		// Init Texture
@@ -169,12 +183,16 @@ struct App : ICallbacks {
 		_projection.Height = WINDOW_HEIGHT;
 		_projection.zNear = 0.1f;
 		_projection.zFar = 400.0f;
+		//////////////////
+		_pipeline.SetPerspectiveProj(_projection);
 		
 		// Init Camera
 		_camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, 
 						{ 0.0f, 0.0f, -4.0f },
 						{ 0.0f, 0.0f, 1.0f },
 						{ 0.0f, 1.0f, 0.0f });
+		////////////////
+		_pipeline.SetCamera(_camera);
 		
 		
 			
@@ -197,44 +215,16 @@ struct App : ICallbacks {
 
 	void RenderSceneCB() {
 
-		Pipeline P;
-
 		// Clear Color and Depth buffers
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Camera movement from mouse on screen's edges
-		_camera.OnRender();
-	
 		// Animate Sphere
 		if (_animate)
-			_theta += gRotationSpeed;
-			switch (gCURR_ROTATE_AXIS) {
-			case ROTATE_AXIS_X:
-				P.SetRotation(_theta, 0, 0);
-				break;
-			case ROTATE_AXIS_X_OPP:
-				P.SetRotation(-_theta, 0, 0);
-				break;
-			case ROTATE_AXIS_Y:
-				P.SetRotation(0, _theta, 0);
-				break;
-			case ROTATE_AXIS_Y_OPP:
-				P.SetRotation(0, -_theta, 0);
-				break;
-			case ROTATE_AXIS_Z:
-				P.SetRotation(0, 0, _theta);
-				break;
-			default:
-				P.SetRotation(0, 0, -_theta);		// ROTATE_AXIS_Z_OPP
-				break;
-			}
+			Rotate();
 
 		
 		// Set Uniform Transformation
-		P.SetPerspectiveProj(_projection);
-		P.SetCamera(_camera);
-		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE,
-			P.GetVPTrans() * P.GetWorldTrans() * _accumRotation);
+		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, _pipeline.GetWVPTrans());
 		
 
 		// Draw the Scene
@@ -252,12 +242,6 @@ struct App : ICallbacks {
 		glDisableVertexAttribArray(1);
 
 		GLUTBackendSwapBuffers();
-
-
-
-		// Reset '_render' var
-		_render = _animate;
-		
 	}
 
 private:
@@ -415,39 +399,32 @@ private:
 		_textureUnitLocation = glGetUniformLocation(ShaderProgram, "gTextureUnit");
 		assert(_textureUnitLocation != INVALID_UNIFORM_LOCATION);
 	}
+	
+	void Rotate() {
 
-	void ChangeRotationAxis(ROTATE_AXIS axis) {
-		/*if (axis == gCURR_ROTATE_AXIS)
-			return;*/
-
-		Pipeline P;
 		switch (gCURR_ROTATE_AXIS) {
 		case ROTATE_AXIS_X:
-			P.SetRotation(_theta, 0, 0);
+			_pipeline.rotate(Quaternion(sinf(gRotationSpeed), 0.0f, 0.0f, cosf(gRotationSpeed)));
 			break;
 		case ROTATE_AXIS_X_OPP:
-			P.SetRotation(-_theta, 0, 0);
+			_pipeline.rotate(Quaternion(-sinf(gRotationSpeed), 0.0f, 0.0f, cosf(gRotationSpeed)));
 			break;
 		case ROTATE_AXIS_Y:
-			P.SetRotation(0, _theta, 0);
+			_pipeline.rotate(Quaternion(0.0f, sinf(gRotationSpeed), 0.0f, cosf(gRotationSpeed)));
 			break;
 		case ROTATE_AXIS_Y_OPP:
-			P.SetRotation(0, -_theta, 0);
+			_pipeline.rotate(Quaternion(0.0f, -sinf(gRotationSpeed), 0.0f, cosf(gRotationSpeed)));
 			break;
 		case ROTATE_AXIS_Z:
-			P.SetRotation(0, 0, _theta);
+			_pipeline.rotate(Quaternion(0.0f, 0.0f, sinf(gRotationSpeed), cosf(gRotationSpeed)));
 			break;
-		default:			// (ROTATE_AXIS_Z_OPP)
-			P.SetRotation(0, 0, -_theta);
+		default:
+			// ROTATE_AXIS_Z_OPP
+			_pipeline.rotate(Quaternion(0.0f, 0.0f, -sinf(gRotationSpeed), cosf(gRotationSpeed)));
 			break;
 		}
 
-		gCURR_ROTATE_AXIS = axis;
-		_theta = 0.f;
-		_accumRotation = P.GetWorldTrans() * _accumRotation;
-		
 	}
-	
 
 	PersProjInfo _projection;
 	Camera _camera;
@@ -456,9 +433,9 @@ private:
 	GLuint _wvpLocation, _textureUnitLocation;
 	bool _render;
 	bool _animate;
-	// rotaion stuff:
-	Matrix4f _accumRotation;
-	float _theta;
+	////////////////////
+	bool _cameraChange;
+	Pipeline _pipeline;
 
 };
 
@@ -470,6 +447,4 @@ int main(int argc, char ** argv) {
 		return 1;
 	app.Run();
 }
-
-
 

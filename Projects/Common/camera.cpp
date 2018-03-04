@@ -22,6 +22,9 @@
 		- Commenting out 'Rotate(const Quaternion )'
 		- Adding 'OnMouseClick(int, int)' - reset mouse pos' after clicks to allow drag motion
 		- Adding 'OnMouseMoution(int, int, boolean)' instead of 'OnMouse(int, int)
+
+	3.4.18:
+		- Edit implementation of 'OnMouseClick(int, int)' - calling the 'ResetMousePos()'.
 */
 
 #include "ogldev_camera.h"
@@ -264,9 +267,15 @@ void Camera::Update()
 	m_target.Rotate(q);
 }*/
 
+/*
+*	Originally created to enable resetting the 'm_mousePos' var.
+*	Needed because after active mouse motion, after the release of the mouse, apparantly the 'passive'
+*	mouse motion call-back is called, and if not resetted at the release mouse function, we get,
+*	at the time of the 'passive'  mouse motion,  a non-zero deviation from the previous saved
+*	location of the mouse - which causes an unintended view change of the camera.
+*/
 void Camera::OnMouseClick(int x, int y) {
-	m_mousePos.x = x;
-	m_mousePos.y = y;
+	ResetMousePos(x, y);
 }
 
 void Camera::OnMouseMotion(int x, int y, bool active) {
