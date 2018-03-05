@@ -136,7 +136,8 @@ static void KeyboardCB(unsigned char Key, int x, int y)
 
 static void PassiveMouseCB(int x, int y)
 {
-    s_pCallbacks->PassiveMouseCB(x, y);
+    //s_pCallbacks->PassiveMouseCB(x, y);
+	s_pCallbacks->MousePassiveMotionCB(x, y);
 }
 
 static void RenderSceneCB()

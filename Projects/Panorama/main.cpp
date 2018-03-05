@@ -23,12 +23,15 @@ enum ROTATE_AXIS {
 };
 
 
+enum MOUSE_ROTATION_METHOD{ ROTATION_DRAG, ROTATION_PASSIVE};
+
 
 // ----------------- GLOBAL BEHAVIOR SETTINGS -----------------------
 
 float gRotationSpeed = ToRadian(0.125f);
 int gPOLYGON_MODE = GL_FILL;
-ROTATE_AXIS gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
+ROTATE_AXIS gROTATE_AXIS = ROTATE_AXIS_Y;
+MOUSE_ROTATION_METHOD gROTATION_METHOD = ROTATION_DRAG;
 
 const char * pVSFileName = "shader.vs";
 const char * pFSFileName = "shader.fs";
@@ -140,22 +143,22 @@ struct App : ICallbacks {
 			_render = true;
 			break;
 		case OGLDEV_KEY_x:
-			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_X)
-				gCURR_ROTATE_AXIS = ROTATE_AXIS_X_OPP;
+			if (gROTATE_AXIS == ROTATE_AXIS_X)
+				gROTATE_AXIS = ROTATE_AXIS_X_OPP;
 			else
-				gCURR_ROTATE_AXIS = ROTATE_AXIS_X;
+				gROTATE_AXIS = ROTATE_AXIS_X;
 			break;
 		case OGLDEV_KEY_y:
-			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_Y)
-				gCURR_ROTATE_AXIS = ROTATE_AXIS_Y_OPP;
+			if (gROTATE_AXIS == ROTATE_AXIS_Y)
+				gROTATE_AXIS = ROTATE_AXIS_Y_OPP;
 			else
-				gCURR_ROTATE_AXIS = ROTATE_AXIS_Y;
+				gROTATE_AXIS = ROTATE_AXIS_Y;
 			break;
 		case OGLDEV_KEY_z:
-			if (gCURR_ROTATE_AXIS == ROTATE_AXIS_Z)
-				gCURR_ROTATE_AXIS = ROTATE_AXIS_Z_OPP;
+			if (gROTATE_AXIS == ROTATE_AXIS_Z)
+				gROTATE_AXIS = ROTATE_AXIS_Z_OPP;
 			else
-				gCURR_ROTATE_AXIS = ROTATE_AXIS_Z;
+				gROTATE_AXIS = ROTATE_AXIS_Z;
 			break;
 		default:
 			if (_camera.OnKeyboard(OgldevKey))
@@ -163,12 +166,7 @@ struct App : ICallbacks {
 		}
 	}
 
-	void PassiveMouseCB(int x, int y) {
-		
-
-		/*_camera.OnMouseMotion(x, y, false);
-		_cameraChange = true;*/
-	}
+	
 
 	void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 		//if (State == OGLDEV_KEY_STATE_RELEASE) {
@@ -180,8 +178,19 @@ struct App : ICallbacks {
 	}
 
 	void MouseActiveMotionCB(int x, int y) {
-		_camera.OnMouseMotion(x, y, true);
-		_cameraChange = true;
+		if (gROTATION_METHOD == ROTATION_DRAG) {
+			_camera.OnMouseMotion(x, y, true);
+			_cameraChange = true;
+		}
+	}
+
+	void MousePassiveMotionCB(int x, int y) {
+
+		if (gROTATION_METHOD == ROTATION_PASSIVE) {
+			_camera.OnMouseMotion(x, y, false);
+			_cameraChange = true;
+		}
+
 	}
 
 	void IdleCB() {
@@ -454,7 +463,7 @@ private:
 
 	void Rotate() {
 
-		switch (gCURR_ROTATE_AXIS) {
+		switch (gROTATE_AXIS) {
 		case ROTATE_AXIS_X:
 			_pipeline.rotate(Quaternion(sinf(gRotationSpeed), 0.0f, 0.0f, cosf(gRotationSpeed)));
 			break;
@@ -478,7 +487,6 @@ private:
 
 	}
 
-
 	Pipeline _pipeline;
 	PersProjInfo _projection;
 	Camera _camera;
@@ -490,7 +498,6 @@ private:
 	bool _cameraChange;
 	////////////////
 	
-
 };
 
 
@@ -508,7 +515,6 @@ int main(int argc, char ** argv) {
 		return 1;
 	app.Run();
 }
-
 
 //BallHandler;	Pipeline::ViewDrag;
 //Make rotating objects;

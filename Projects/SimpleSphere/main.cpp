@@ -122,7 +122,7 @@ struct App : ICallbacks {
 		}
 	}
 
-	void PassiveMouseCB(int x, int y) {
+	void MousePassiveMotionCB(int x, int y) {
 		//_camera.OnMouse(x, y);
 		_camera.OnMouseMotion(x, y, false);
 		//GLUTBeckendPostRedisplay();
