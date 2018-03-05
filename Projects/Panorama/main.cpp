@@ -263,7 +263,7 @@ struct App : ICallbacks {
 		glPolygonMode(GL_FRONT_AND_BACK, gPOLYGON_MODE);
 
 		// Animate at start
-		_animate = true;
+		_animate = false;
 
 		// Render at start
 		_render = true;
