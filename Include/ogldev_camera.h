@@ -29,6 +29,19 @@
 
 	3.4.18:
 		- Adding back - Adding 'ResetMousePos(int, int)'.
+
+	3.14.18:
+		- Removing 'OnMouseClick(int, int)'. Camera implementation will take care of the
+			resetting of the mouse position. 
+		- Defining the 'MOUSE_ROTATION_METHOD' enum, and creating new member of that type
+			dictating the type of mouse rotation the camera follows.
+		- The method that checks if mouse is on the borders now is calld 'OnIdle()'
+		- Adding bollean members 'mTargetChange' and 'mPosChange'
+			Any method that changes an angle, should set on the 'mTargetChange' flag.
+			any method that changes the position should set on the 'mPosChange' flag.
+		- The method 'OnRender' should check if a target update is needed (and if so 
+			call 'TargetUpdate()').
+			It also should reset the 'mPosChange' flag.
 */
 
 #ifndef CAMERA_H
@@ -42,18 +55,27 @@ class Camera
 {
 public:
 
+	enum MOUSE_ROTATION_METHOD { ROTATION_DRAG, ROTATION_PASSIVE };
+
+	MOUSE_ROTATION_METHOD m_MouseRotationMethod;
+	
+
 	Camera();
 
     Camera(int WindowWidth, int WindowHeight);
 
     Camera(int WindowWidth, int WindowHeight, const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up);
 
-    bool OnKeyboard(OGLDEV_KEY Key);
+	void UpdateTarget();
 
-    /*void OnMouse(int x, int y);*/
+	bool ShouldUpdate() {
+		return mTargetChange | mPosChange;
+	}
+
+    void OnKeyboard(OGLDEV_KEY Key);
 
     //void OnRender();
-	bool OnRender();
+	void OnRender();
 
     const Vector3f& GetPos() const
     {
@@ -72,34 +94,29 @@ public:
     
     //void AddToATB(TwBar* bar);
 
+
+
+
+
 	////////////
-
-	/*void Rotate(const Quaternion& q);*/
-
 	void ResetMousePos(int x, int y){
 		m_mousePos.x = x;
 		m_mousePos.y = y;
 	}
 
 	
-	/*
-	*	Originally created to enable resetting the 'm_mousePos' var. 
-	*	Needed because after active mouse motion, after the release of the mouse, apparantly the 'passive' 
-	*	mouse motion call-back is called, and if not resetted at the release mouse function, we get, 
-	*	at the time of the 'passive'  mouse motion,  a non-zero deviation from the previous saved 
-	*	location of the mouse - which causes an unintended view change of the camera.
-	*/
-	void OnMouseClick(int x, int y);
-
+	//void OnMouseClick(int x, int y);
 
 	void OnMouseMotion(int x, int y, bool active);
+
+	void OnIdle();
 
 	/////////////
 
 private:
 
     void Init();
-    void Update();
+    
 
     Vector3f m_pos;
     Vector3f m_target;
@@ -117,6 +134,12 @@ private:
     bool m_OnRightEdge;
 
     Vector2i m_mousePos;
+
+	//////////////////////
+	//bool m_shouldUpdate;
+	bool mTargetChange;
+	bool mPosChange;
+	//////////////////////
 };
 
 #endif	/* CAMERA_H */

@@ -1,6 +1,6 @@
 /*
 
-	Copyright 2010 Etay Meiri
+	Copyright 2010 Etay Meiri.		Edit: Itay Gothelf, 2018;
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,29 +25,47 @@
 
 	3.4.18:
 		- Edit implementation of 'OnMouseClick(int, int)' - calling the 'ResetMousePos()'.
+
+	3.14.18:
+		- Removing 'OnMouseClick(int, int)'.
+			Resetting of the mouse position happens in the 'OnMouseMotion' function.
+			Using global indicator we detect the switch between active and non active 
+			mouse movements. In the following call to 'OnMouseMotion' after such a switch,
+			we firstly RESETTING THE MOUSE POSITION.
+		- Defining the 'MOUSE_ROTATION_METHOD' enum, and creating new member of that type
+			dictating the type of mouse rotation the camera follows.
+		- The method that checks if mouse is on the borders now is calld 'IdleMovement()'
+		- Adding bollean members 'mTargetChange' and 'mPosChange'
+			Any method that changes an angle, should set on the 'mTargetChange' flag.
+			any method that changes the position should set on the 'mPosChange' flag.
+		- The method 'OnRender' should check if a target update is needed 
+			(and if so call 'TargetUpdate()').
+			It also should reset the 'mPosChange' flag.
+			
+		
 */
 
 #include "ogldev_camera.h"
 
-//const static float STEP_SCALE = 1.0f;
 const static float STEP_SCALE = 0.5f;
 const static float EDGE_STEP = 0.5f;
 const static int MARGIN = 10;
 
+/////////////////////////////
+bool LastMoveActive = false;
+//////////////////////////////
+
+
+
 Camera::Camera() : Camera(1, 1) {}
 
-Camera::Camera(int WindowWidth, int WindowHeight)
-{
-    m_windowWidth  = WindowWidth;
-    m_windowHeight = WindowHeight;
-    m_pos          = Vector3f(0.0f, 0.0f, 0.0f);
-    m_target       = Vector3f(0.0f, 0.0f, 1.0f);
-    m_target.Normalize();
-    m_up           = Vector3f(0.0f, 1.0f, 0.0f);
-
-    Init();
-}
-
+Camera::Camera(int WindowWidth, int WindowHeight) : 
+	Camera(WindowWidth,
+		WindowHeight,
+		Vector3f(0.0f, 0.0f, 0.0f),
+		Vector3f(0.0f, 0.0f, 1.0f),
+		m_up = Vector3f(0.0f, 1.0f, 0.0f))
+{}
 
 Camera::Camera(int WindowWidth, int WindowHeight, const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up)
 {
@@ -61,9 +79,16 @@ Camera::Camera(int WindowWidth, int WindowHeight, const Vector3f& Pos, const Vec
     m_up = Up;
     m_up.Normalize();
 
+	
+	mTargetChange = true;
+	mPosChange = true;
+
+	//////////////////////////
+	m_MouseRotationMethod = ROTATION_PASSIVE;
+	//////////////////////////
+
     Init();
 }
-
 
 void Camera::Init()
 {
@@ -102,27 +127,33 @@ void Camera::Init()
     m_mousePos.x  = m_windowWidth / 2;
     m_mousePos.y  = m_windowHeight / 2;
 
+	//////////////////////////
+	mTargetChange = true;
+	mPosChange = true;
+	//////////////////////////
+
    // glutWarpPointer(m_mousePos.x, m_mousePos.y);
 }
 
-
-bool Camera::OnKeyboard(OGLDEV_KEY Key)
+void Camera::OnKeyboard(OGLDEV_KEY Key)
 {
-    bool Ret = false;
+    //bool Ret = false;
 
     switch (Key) {
 
     case OGLDEV_KEY_UP:
         {
             m_pos += (m_target * STEP_SCALE);
-            Ret = true;
+            //Ret = true;
+			mPosChange = true;
         }
         break;
 
     case OGLDEV_KEY_DOWN:
         {
             m_pos -= (m_target * STEP_SCALE);
-            Ret = true;
+            //Ret = true;
+			mPosChange = true;
         }
         break;
 
@@ -132,7 +163,8 @@ bool Camera::OnKeyboard(OGLDEV_KEY Key)
             Left.Normalize();
             Left *= STEP_SCALE;
             m_pos += Left;
-            Ret = true;
+            //Ret = true;
+			mPosChange = true;
         }
         break;
 
@@ -142,74 +174,35 @@ bool Camera::OnKeyboard(OGLDEV_KEY Key)
             Right.Normalize();
             Right *= STEP_SCALE;
             m_pos += Right;
-            Ret = true;
+            //Ret = true;
+			mPosChange = true;
         }
         break;
         
     case OGLDEV_KEY_PAGE_UP:
         m_pos.y += STEP_SCALE;
-		Ret = true;
+		//Ret = true;
+		mPosChange = true;
         break;
     
     case OGLDEV_KEY_PAGE_DOWN:
         m_pos.y -= STEP_SCALE;
-		Ret = true;
+		//Ret = true;
+		mPosChange = true;
         break;
     
     default:
         break;            
     } /* switch (key) */
 
-    return Ret;
+
+
+    //return Ret;
 }
 
-
-//void Camera::OnMouse(int x, int y)
-//{
-//    const int DeltaX = x - m_mousePos.x;
-//    const int DeltaY = y - m_mousePos.y;
-//
-//    m_mousePos.x = x;
-//    m_mousePos.y = y;
-//
-//    m_AngleH += (float)DeltaX / 10.0f;
-//    m_AngleV += (float)DeltaY / 10.0f;
-//
-//    if (DeltaX == 0) {
-//        if (x <= MARGIN) {
-//        //    m_AngleH -= 1.0f;
-//            m_OnLeftEdge = true;
-//        }
-//        else if (x >= (m_windowWidth - MARGIN)) {
-//        //    m_AngleH += 1.0f;
-//            m_OnRightEdge = true;
-//        }
-//    }
-//    else {
-//        m_OnLeftEdge = false;
-//        m_OnRightEdge = false;
-//    }
-//
-//    if (DeltaY == 0) {
-//        if (y <= MARGIN) {
-//            m_OnUpperEdge = true;
-//        }
-//        else if (y >= (m_windowHeight - MARGIN)) {
-//            m_OnLowerEdge = true;
-//        }
-//    }
-//    else {
-//        m_OnUpperEdge = false;
-//        m_OnLowerEdge = false;
-//    }
-//
-//    Update();
-//}
-
-
-bool Camera::OnRender()
+void Camera::OnRender()
 {
-    bool ShouldUpdate = false;
+    /*bool ShouldUpdate = false;
 
     if (m_OnLeftEdge) {
         m_AngleH -= EDGE_STEP;
@@ -237,10 +230,18 @@ bool Camera::OnRender()
         Update();
     }
 
-	return ShouldUpdate;
+	return ShouldUpdate;*/
+
+	if (mTargetChange)
+		UpdateTarget();
+	
+	mTargetChange = false;
+	mPosChange = false;
+
+	
 }
 
-void Camera::Update()
+void Camera::UpdateTarget()
 {
     const Vector3f Vaxis(0.0f, 1.0f, 0.0f);
 
@@ -259,13 +260,13 @@ void Camera::Update()
 
     m_up = m_target.Cross(Haxis);
     m_up.Normalize();
+
+	mTargetChange = false;
 }
 
-/////////////
 
-/*void Camera::Rotate(const Quaternion& q) {
-	m_target.Rotate(q);
-}*/
+
+/////////////
 
 /*
 *	Originally created to enable resetting the 'm_mousePos' var.
@@ -274,26 +275,55 @@ void Camera::Update()
 *	at the time of the 'passive'  mouse motion,  a non-zero deviation from the previous saved
 *	location of the mouse - which causes an unintended view change of the camera.
 */
-void Camera::OnMouseClick(int x, int y) {
-	ResetMousePos(x, y);
-}
+//void Camera::OnMouseClick(int x, int y) {
+//	ResetMousePos(x, y);
+//}
+
 
 void Camera::OnMouseMotion(int x, int y, bool active) {
 	const int DeltaX = x - m_mousePos.x;
 	const int DeltaY = y - m_mousePos.y;
 
+
 	m_mousePos.x = x;
 	m_mousePos.y = y;
 
 	if (active) {
-		m_AngleH -= (float)DeltaX / 10.0f;
-		m_AngleV -= (float)DeltaY / 10.0f;
+		////////////////////////////
+		if (!LastMoveActive) {
+			LastMoveActive = true;
+		}
+		else if(m_MouseRotationMethod == ROTATION_DRAG){
+			m_AngleH -= (float)DeltaX / 10.0f;
+			m_AngleV -= (float)DeltaY / 10.0f;
+			mTargetChange = true;
+		}
+		////////////////////////////
+
+				
+		/*m_AngleH -= (float)DeltaX / 10.0f;
+		m_AngleV -= (float)DeltaY / 10.0f;*/
+		
 	}
 	else {
-		m_AngleH += (float)DeltaX / 10.0f;
-		m_AngleV += (float)DeltaY / 10.0f;
+		////////////////////////////
+		if (LastMoveActive) {
+			LastMoveActive = false;
+		}
+		else if (m_MouseRotationMethod == ROTATION_PASSIVE) {
+			m_AngleH += (float)DeltaX / 10.0f;
+			m_AngleV += (float)DeltaY / 10.0f;
+			mTargetChange = true;
+		}
+		////////////////////////////
+
+		/*m_AngleH += (float)DeltaX / 10.0f;
+		m_AngleV += (float)DeltaY / 10.0f;*/
 	}
 	
+	// SEE IF MOUSE IS ON SCREEN BORDERS 
+	// (just setting the flags....  changing the angles will be in 'OnIdle()'
+	// based on those flags.)
 
 	if (DeltaX == 0) {
 		if (x <= MARGIN) {
@@ -323,7 +353,45 @@ void Camera::OnMouseMotion(int x, int y, bool active) {
 		m_OnLowerEdge = false;
 	}
 
-	Update();
+
+	/*Update();*/
+}
+
+void Camera::OnIdle()
+{
+	//bool ShouldUpdate = false;
+
+	if (m_OnLeftEdge) {
+		m_AngleH -= EDGE_STEP;
+		//ShouldUpdate = true;
+		mTargetChange = true;
+	}
+	else if (m_OnRightEdge) {
+		m_AngleH += EDGE_STEP;
+		//ShouldUpdate = true;
+		mTargetChange = true;
+	}
+
+	if (m_OnUpperEdge) {
+		if (m_AngleV > -90.0f) {
+			m_AngleV -= EDGE_STEP;
+			//ShouldUpdate = true;
+			mTargetChange = true;
+		}
+	}
+	else if (m_OnLowerEdge) {
+		if (m_AngleV < 90.0f) {
+			m_AngleV += EDGE_STEP;
+			//ShouldUpdate = true;
+			mTargetChange = true;
+		}
+	}
+
+	/*if (ShouldUpdate) {
+		Update();
+	}*/
+
+	//return ShouldUpdate;
 }
 
 /////////////

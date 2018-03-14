@@ -23,7 +23,7 @@ enum ROTATE_AXIS {
 };
 
 
-enum MOUSE_ROTATION_METHOD{ ROTATION_DRAG, ROTATION_PASSIVE};
+//enum MOUSE_ROTATION_METHOD{ ROTATION_DRAG, ROTATION_PASSIVE};
 
 
 // ----------------- GLOBAL BEHAVIOR SETTINGS -----------------------
@@ -31,7 +31,7 @@ enum MOUSE_ROTATION_METHOD{ ROTATION_DRAG, ROTATION_PASSIVE};
 float gRotationSpeed = ToRadian(0.125f);
 int gPOLYGON_MODE = GL_FILL;
 ROTATE_AXIS gROTATE_AXIS = ROTATE_AXIS_Y;
-MOUSE_ROTATION_METHOD gROTATION_METHOD = ROTATION_DRAG;
+//MOUSE_ROTATION_METHOD gROTATION_METHOD = ROTATION_DRAG;
 
 const char * pVSFileName = "shader.vs";
 const char * pFSFileName = "shader.fs";
@@ -161,40 +161,44 @@ struct App : ICallbacks {
 				gROTATE_AXIS = ROTATE_AXIS_Z;
 			break;
 		default:
-			if (_camera.OnKeyboard(OgldevKey))
-				_cameraChange = true;
+			/*if (_camera.OnKeyboard(OgldevKey))
+				_cameraChange = true;*/
+			_camera.OnKeyboard(OgldevKey);
 		}
 	}
 
 	
 
-	void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
-		//if (State == OGLDEV_KEY_STATE_RELEASE) {
-		//	_camera.ResetMousePos(x, y);
-		//	
-		//}
-		//_vdrag.OnMouseButton(Button, State, x, y);
-		_camera.OnMouseClick(x, y);
-	}
+	//void MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
+	//	
+	//	//_camera.OnMouseClick(x, y);
+	//}
 
 	void MouseActiveMotionCB(int x, int y) {
-		if (gROTATION_METHOD == ROTATION_DRAG) {
+		/*if (gROTATION_METHOD == ROTATION_DRAG) {
 			_camera.OnMouseMotion(x, y, true);
 			_cameraChange = true;
-		}
+		}*/
+
+		_camera.OnMouseMotion(x, y, true);
+		//_cameraChange = true;
+
 	}
 
 	void MousePassiveMotionCB(int x, int y) {
-
-		if (gROTATION_METHOD == ROTATION_PASSIVE) {
+		
+		/*if (gROTATION_METHOD == ROTATION_PASSIVE) {
 			_camera.OnMouseMotion(x, y, false);
 			_cameraChange = true;
-		}
-
+		}*/
+		
+		_camera.OnMouseMotion(x, y, false);
+		//_cameraChange = true;
+		
 	}
 
 	void IdleCB() {
-
+		/*
 		// Camera movement from mouse on screen's edges
 		_cameraChange |= _camera.OnRender();
 		if (_cameraChange)
@@ -206,9 +210,24 @@ struct App : ICallbacks {
 		if (_render)
 			RenderSceneCB();
 
+		*/
+
+		// Camera movement from mouse on screen's edges
+		_camera.OnIdle();
+		
+		_render |= _camera.ShouldUpdate();
+		_render |= _animate;
+
+		if (_render)
+			RenderSceneCB();
+
+
+
+
+
 		// Reset variables
 		_render = false;
-		_cameraChange = false;
+		//_cameraChange = false;
 	}
 
 	bool Init() {
@@ -237,7 +256,7 @@ struct App : ICallbacks {
 		glUniform1i(_textureUnitLocation, 0);// Should correspond to the texture target
 
 
-											 // Set the Perspective Projection values
+		// Perspective Projection parameters
 		_projection.FOV = 60.0f;
 		_projection.Width = WINDOW_WIDTH;
 		_projection.Height = WINDOW_HEIGHT;
@@ -251,6 +270,9 @@ struct App : ICallbacks {
 		{ 0.0f, 0.0f, 0.0f },
 		{ 0.0f, 0.0f, 1.0f },
 		{ 0.0f, 1.0f, 0.0f });
+		///////////////////
+		_camera.m_MouseRotationMethod = Camera::ROTATION_DRAG;
+		//_camera.m_MouseRotationMethod = Camera::ROTATION_PASSIVE;
 		///////////////////
 		_pipeline.SetCamera(_camera);
 
@@ -281,6 +303,11 @@ struct App : ICallbacks {
 		// Animate Sphere
 		if (_animate)
 			Rotate();
+
+		// Camera on Render, and set the camera in the pipeline
+		_camera.OnRender();
+		_pipeline.SetCamera(_camera);
+
 
 		// Set Uniform Transformation
 		glUniformMatrix4fv(_wvpLocation, 1, GL_TRUE, _pipeline.GetWVPTrans());
@@ -495,7 +522,7 @@ private:
 	GLuint _wvpLocation, _textureUnitLocation;
 	bool _render;
 	bool _animate;
-	bool _cameraChange;
+	//bool _cameraChange;
 	////////////////
 	
 };
@@ -515,6 +542,10 @@ int main(int argc, char ** argv) {
 		return 1;
 	app.Run();
 }
+
+
+
+camera methods turned to void , check other projects
 
 //BallHandler;	Pipeline::ViewDrag;
 //Make rotating objects;
