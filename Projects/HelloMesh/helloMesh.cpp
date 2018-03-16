@@ -109,7 +109,10 @@ struct App : ICallbacks {
 			GLUTBackendLeaveMainLoop();
 			break;
 		default:
-			if (_camera.OnKeyboard(OgldevKey))
+			/*if (_camera.OnKeyboard(OgldevKey))
+				GLUTBeckendPostRedisplay();*/
+			_camera.OnKeyboard(OgldevKey);
+			if(_camera.ChangesSinceRender())
 				GLUTBeckendPostRedisplay();
 		}
 	}

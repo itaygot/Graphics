@@ -117,7 +117,10 @@ struct App : ICallbacks {
 				gCURR_ROTATE_AXIS = ROTATE_AXIS_Z;
 			break;
 		default:
-			if (_camera.OnKeyboard(OgldevKey))
+			/*if (_camera.OnKeyboard(OgldevKey))
+				_cameraChange = true;*/
+			_camera.OnKeyboard(OgldevKey);
+			if (_camera.ChangesSinceRender())
 				_cameraChange = true;
 		}
 	}
@@ -133,7 +136,7 @@ struct App : ICallbacks {
 	void IdleCB() {
 
 		// Camera movement from mouse on screen's edges
-		_cameraChange |= _camera.OnRender();
+		_cameraChange |= _camera.ChangesSinceRender();
 		if (_cameraChange)
 			_pipeline.SetCamera(_camera);
 

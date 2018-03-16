@@ -215,7 +215,7 @@ struct App : ICallbacks {
 		// Camera movement from mouse on screen's edges
 		_camera.OnIdle();
 		
-		_render |= _camera.ShouldUpdate();
+		_render |= _camera.ChangesSinceRender();
 		_render |= _animate;
 
 		if (_render)
@@ -545,7 +545,7 @@ int main(int argc, char ** argv) {
 
 
 
-camera methods turned to void , check other projects
+//camera methods turned to void , check other projects
 
 //BallHandler;	Pipeline::ViewDrag;
 //Make rotating objects;

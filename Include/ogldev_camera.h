@@ -68,7 +68,11 @@ public:
 
 	void UpdateTarget();
 
-	bool ShouldUpdate() {
+	/*bool ShouldUpdate() {
+		return mTargetChange | mPosChange;
+	}*/
+
+	bool ChangesSinceRender() {
 		return mTargetChange | mPosChange;
 	}
 
