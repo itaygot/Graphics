@@ -17,7 +17,7 @@ out vec2 worldPos;
 void main()
 {
 	worldPos = ballRadius * position.xy + ballCenter;
-	gl_Position.xy = (ballRadius * position.xy + ballCenter) / vec2(worldXRadius, worldYRadius);
-	
+	vec2 temp = worldPos / vec2(worldXRadius, worldYRadius);
+	gl_Position = vec4(temp.x, temp.y, 0.0, 1.0);
 	
 }
