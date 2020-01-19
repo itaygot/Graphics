@@ -3,13 +3,13 @@
 #include <GL/freeglut.h>
 
 // Lib includes
+#define _USE_MATH_DEFINES
 #include "bouncingBalls.h"
 #include "ogldev_glut_backend.h"		// glut backend calls
 #include "ogldev_util.h"				// #define INVALID_UNIFORM_LOCATION;
 #include "ShaderIO.h"					// handling shaders
 
 // math includes
-#include <cmath>				// std::sin(); std::cos(); std::rand();
 #include "glm/geometric.hpp"	// normalize(); length();
 #include <algorithm>			// min(); max();
 
@@ -17,7 +17,7 @@
 
 #define VERTEX_SHADER_PATH "SimpleShader.vert"
 #define FRAGMENT_SHADER_PATH "SimpleShader.frag"
-#define PI 3.1415926f
+//#define PI 3.1415926f
 
 
 /************************************************************/
@@ -47,6 +47,8 @@ static int gDeltaTime;			// For balls' movements
 static int gScreenWidth;			// For mouse's active motion (drop)
 static int gScreenHeight;
 typedef BouncingBalls BBs;
+
+static enum ACTIVE_MOUSE_STATUS { ACTIVE_MOUSE_ON, IDLE_FUNCTION_READ_ACTIVE_MOUSE_ON, ACTIVE_MOUSE_OFF } gActiveMouseStatus;
 
 /************************************************************/
 //					HELPER FUNCTIONS						//
@@ -170,7 +172,7 @@ bool BBs::Init(int argc, char ** argv)
 		
 	int vertex = 0;
 	float angle = 0;
-	for (vertex = 0; vertex < CIRCLE_EDGES_AMOUNT; vertex++, angle += 2.f * PI / CIRCLE_EDGES_AMOUNT){
+	for (vertex = 0; vertex < CIRCLE_EDGES_AMOUNT; vertex++, angle += 2.f * M_PI / CIRCLE_EDGES_AMOUNT){
 		vertices[SCALARS_PER_VERTEX * vertex] = std::cos(-angle);		// x coordinate
 		vertices[SCALARS_PER_VERTEX * vertex + 1] = std::sin(-angle);	// y coordinate
 		/* Note: The negative angle is so we have clock-wise vertices */
@@ -390,12 +392,26 @@ void BBs::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 	}
 
 	// MOUSE RELEASE:
-	else
+	else {
 		// If still holding ball (can be dropped during mouse motion out of bounds)
 		if (it_heldBall != _balls.end()) {
+
+
+			if (gActiveMouseStatus == ACTIVE_MOUSE_OFF) {
+				it_heldBall->_velo.x = 0.0;
+				it_heldBall->_velo.y = 0.0;
+			}
+			
+
+
 			it_heldBall->_static = false;
 			it_heldBall = _balls.end();
 		}
+
+		gActiveMouseStatus = ACTIVE_MOUSE_OFF;
+
+	}
+		
 
 	
 
@@ -434,10 +450,19 @@ void BBs::IdleCB() {
 	if (_animate)
 		GLUTBeckendPostRedisplay();
 	
+
+	if (gActiveMouseStatus == ACTIVE_MOUSE_ON)
+		gActiveMouseStatus = IDLE_FUNCTION_READ_ACTIVE_MOUSE_ON;
+	else
+		gActiveMouseStatus = ACTIVE_MOUSE_OFF;
 }
 
 void BBs::MouseActiveMotionCB(int x, int y) {
 	
+	assert(gActiveMouseStatus != ACTIVE_MOUSE_ON);
+
+	gActiveMouseStatus = ACTIVE_MOUSE_ON;
+
 	// if not holding ball, return.
 	if (it_heldBall == _balls.end())
 		return;
@@ -448,7 +473,8 @@ void BBs::MouseActiveMotionCB(int x, int y) {
 	it_heldBall->_pos += delta;
 	
 	// Set speed
-	it_heldBall->_velo = delta / (float)(gDeltaTime);
+	if(gDeltaTime > 0)
+		it_heldBall->_velo = delta / (float)(gDeltaTime);
 
 	// If mouse out of screen - drop the ball
 	if (!it_heldBall->fitToScreen(_worldXRadius, _worldYRadius)
