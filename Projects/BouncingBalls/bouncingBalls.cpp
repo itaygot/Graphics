@@ -48,7 +48,28 @@ static int gScreenWidth;			// For mouse's active motion (drop)
 static int gScreenHeight;
 typedef BouncingBalls BBs;
 
-static enum ACTIVE_MOUSE_STATUS { ACTIVE_MOUSE_ON, IDLE_FUNCTION_READ_ACTIVE_MOUSE_ON, ACTIVE_MOUSE_OFF } gActiveMouseStatus;
+static enum ACTIVE_MOUSE_STATUS { ACTIVE_MOUSE_ON, IDLE_FUNCTION_READ_ACTIVE_MOUSE_ON, ACTIVE_MOUSE_OFF };
+
+static int gTime;
+static int gMouseActiveMotionTime;  // see note about tracking the speed of held ball;
+static glm::vec2 gHeldBallBigDelta;
+static ACTIVE_MOUSE_STATUS gActiveMouseStatus;
+
+
+
+
+
+
+/************************************************************/
+//	Note about tracking speed of held ball:
+// appearently, even when dragging the ball continously with the mouse, the 
+// mouse active motion isn't called every loop iteration. 
+// Hence, to track speed of mouse dragging, one should keep track of last time the mouse active motion
+// function was called - 'gActiveMotionTime', which again, is different then the gTime, since again,
+// the active mouse call back isn't called every loop iteration.
+/************************************************************/
+
+
 
 /************************************************************/
 //					HELPER FUNCTIONS						//
@@ -197,7 +218,8 @@ bool BBs::Init(int argc, char ** argv)
 		
 
 
-	
+	// Set time
+	gTime = glutGet(GLUT_ELAPSED_TIME);
 
 	return true;
 }
@@ -382,12 +404,15 @@ void BBs::MouseCB(OGLDEV_MOUSE Button, OGLDEV_KEY_STATE State, int x, int y) {
 		else {
 			newBall = Ball(worldPos.x, worldPos.y, DFLT_RADIUS);
 			it_heldBall = addBall(newBall);
+			GLUTBeckendPostRedisplay();
 		}
 
 		it_heldBall->_static = true;
 
-		// Update mouse pos
+		// Update mouse pos, time, and delta.
 		gMousePos = glm::ivec2(x, y);
+		gHeldBallBigDelta = glm::vec2();
+		gMouseActiveMotionTime = gTime;
 		
 	}
 
@@ -441,13 +466,11 @@ void BBs::RenderSceneCB() {
 
 void BBs::IdleCB() {
 
+	gDeltaTime = glutGet(GLUT_ELAPSED_TIME) - gTime;
+	gTime += gDeltaTime;
 	
-	static int lastTime = glutGet(GLUT_ELAPSED_TIME);
-	gDeltaTime = glutGet(GLUT_ELAPSED_TIME) - lastTime;
-	lastTime += gDeltaTime;
 	
-
-	if (_animate)
+	if (_animate && gDeltaTime > 0)
 		GLUTBeckendPostRedisplay();
 	
 
@@ -467,14 +490,26 @@ void BBs::MouseActiveMotionCB(int x, int y) {
 	if (it_heldBall == _balls.end())
 		return;
 	
-	glm::vec2 delta = screenToWorldDelta(x - gMousePos.x, y - gMousePos.y);
+	
+	glm::vec2 smallDelta = screenToWorldDelta(x - gMousePos.x, y - gMousePos.y);
+	gHeldBallBigDelta += smallDelta;
+
+
 
 	// Move the ball with the mouse
-	it_heldBall->_pos += delta;
+	it_heldBall->_pos += smallDelta;
 	
 	// Set speed
-	if(gDeltaTime > 0)
-		it_heldBall->_velo = delta / (float)(gDeltaTime);
+	int macDeltaTime; // mouseActiveMotionDeltaTime
+	//if (gDeltaTime > 0) {
+	if ((macDeltaTime = gTime - gMouseActiveMotionTime) > 0) {
+		
+		it_heldBall->_velo = gHeldBallBigDelta / (float)(macDeltaTime);
+		//it_heldBall->_velo = smallDelta / (float)(gDeltaTime);
+
+		gHeldBallBigDelta = glm::vec2();
+	}
+
 
 	// If mouse out of screen - drop the ball
 	if (!it_heldBall->fitToScreen(_worldXRadius, _worldYRadius)
@@ -485,10 +520,9 @@ void BBs::MouseActiveMotionCB(int x, int y) {
 		
 	}
 	
-	// Update mouse pos
+	// Update mouse pos and time
 	gMousePos = glm::ivec2(x, y);
-
+	gMouseActiveMotionTime = gTime;
 }
 
 
-//change behaviour; change times;
