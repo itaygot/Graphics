@@ -60,15 +60,15 @@ static ACTIVE_MOUSE_STATUS gActiveMouseStatus;
 
 
 
-/************************************************************/
-//	Note about tracking speed of held ball:
-// Basically, the active mouse callback, isn't called every loop iteration, (even when continously 
-// dragging the ball) thus we can't use the regular gDeltaTime, but need to have a delta time specific
-// to the active mouse callback.
-// Hence, to track speed of mouse dragging, one should keep track of last time the mouse active motion
-// function was called - 'gActiveMotionTime', which again, is different then the gTime, since again,
-// the active mouse call back isn't called every loop iteration.
-/************************************************************/
+/************************************************************************************************************/
+/* Note about tracking speed of held ball:																	*/
+/* Basically, the active mouse callback, isn't called every loop iteration, (even when continously			*/
+/* dragging the ball) thus we can't use the regular gDeltaTime, but need to have a delta time specific		*/
+/* to the active mouse callback.																			*/
+/* Hence, to track speed of mouse dragging, one should keep track of last time the mouse active motion		*/
+/* function was called - 'gActiveMotionTime', which again, is different then the gTime, since again,		*/
+/* the active mouse call back isn't called every loop iteration.											*/
+/************************************************************************************************************/
 
 
 
