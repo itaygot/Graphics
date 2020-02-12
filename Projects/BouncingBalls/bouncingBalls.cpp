@@ -48,7 +48,8 @@ static int gScreenWidth;			// For mouse's active motion (drop)
 static int gScreenHeight;
 typedef BouncingBalls BBs;
 
-static enum ACTIVE_MOUSE_STATUS { ACTIVE_MOUSE_ON, IDLE_FUNCTION_READ_ACTIVE_MOUSE_ON, ACTIVE_MOUSE_OFF };
+
+static enum ACTIVE_MOUSE_STATUS { ACTIVE_MOUSE_ON, ACTIVE_MOUSE_OFF };
 
 static int gTime;
 static int gMouseActiveMotionTime;  // see note about tracking the speed of held ball;
@@ -63,12 +64,28 @@ static ACTIVE_MOUSE_STATUS gActiveMouseStatus;
 /************************************************************************************************************/
 /* Note about tracking speed of held ball:																	*/
 /* Basically, the active mouse callback, isn't called every loop iteration, (even when continously			*/
-/* dragging the ball) thus we can't use the regular gDeltaTime, but need to have a delta time specific		*/
-/* to the active mouse callback.																			*/
+/* dragging the ball) thus we can't use the regular gDeltaTime(from last idle), but need to have a delta	*/
+/* time specific to the active mouse callback.																*/
 /* Hence, to track speed of mouse dragging, one should keep track of last time the mouse active motion		*/
 /* function was called - 'gActiveMotionTime', which again, is different then the gTime, since again,		*/
 /* the active mouse call back isn't called every loop iteration.											*/
 /************************************************************************************************************/
+
+/****************************************************************************************/
+/* Note about Idle function:															*/
+/* Idle function, I think, is called on loop iterations where no user input is received.*/
+/****************************************************************************************/
+
+
+/********************************************************************************************************/
+/* Note about active mouse status:																		*/
+/* if mouse release happenedand and there is a change in mouse position since the last active motion	*/
+/* call, then active motion will called before release function is called(and without idle), to			*/
+/* allow for the dragging to be calculated before release happens.										*/
+/* Thus, in order to tell wether a dragging has come to a stand still before a release one				*/
+/* can check which of the two was called before the release function: idleCB implies standstill,		*/
+/* while ActiveMouseMotionCB implies release without a halt.											*/
+/********************************************************************************************************/
 
 
 
@@ -475,15 +492,12 @@ void BBs::IdleCB() {
 		GLUTBeckendPostRedisplay();
 	
 
-	if (gActiveMouseStatus == ACTIVE_MOUSE_ON)
-		gActiveMouseStatus = IDLE_FUNCTION_READ_ACTIVE_MOUSE_ON;
-	else
-		gActiveMouseStatus = ACTIVE_MOUSE_OFF;
+
+	gActiveMouseStatus = ACTIVE_MOUSE_OFF;
 }
 
 void BBs::MouseActiveMotionCB(int x, int y) {
 	
-	assert(gActiveMouseStatus != ACTIVE_MOUSE_ON);
 
 	gActiveMouseStatus = ACTIVE_MOUSE_ON;
 
